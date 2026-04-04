@@ -3,20 +3,14 @@ package com.olamkatan.ui.animals
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.scaleIn
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -27,15 +21,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.olamkatan.audio.Sfx
-import com.olamkatan.theme.EarthBrown
 import com.olamkatan.theme.GrassGreen
 import com.olamkatan.ui.animals.components.AnimalDisplay
 import com.olamkatan.ui.animals.components.FoodItem
@@ -45,6 +35,8 @@ import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.ConfettiOverlay
 import com.olamkatan.ui.components.DragDropState
 import com.olamkatan.ui.components.DropZone
+import com.olamkatan.ui.components.GameBackground
+import com.olamkatan.ui.components.GameTopBar
 import com.olamkatan.ui.components.LocalDragDropState
 import com.olamkatan.ui.components.RoundCompleteSheet
 import kotlinx.coroutines.delay
@@ -75,59 +67,25 @@ fun AnimalGardenScreen(
     }
 
     CompositionLocalProvider(LocalDragDropState provides dragDropState) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(Color(0xFF81C784), Color(0xFF4CAF50), Color(0xFF388E3C))
-                    )
-                )
+        GameBackground(
+            colors = listOf(Color(0xFF81C784), Color(0xFF66BB6A), Color(0xFF4CAF50), Color(0xFF388E3C))
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(24.dp),
+                    .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(56.dp)
-                            .clip(CircleShape)
-                            .background(EarthBrown.copy(alpha = 0.7f))
-                            .clickable { onBack() },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("◀", fontSize = 24.sp, color = Color.White)
-                    }
+                GameTopBar(
+                    onBack = onBack,
+                    roundIndex = state.roundIndex,
+                    totalRounds = state.totalRounds,
+                    starsEarned = state.totalStarsEarned
+                )
 
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        repeat(state.totalRounds) { i ->
-                            Box(
-                                modifier = Modifier
-                                    .size(16.dp)
-                                    .clip(CircleShape)
-                                    .background(
-                                        when {
-                                            i < state.roundIndex -> Color(0xFFFFD700)
-                                            i == state.roundIndex -> Color.White
-                                            else -> Color.White.copy(alpha = 0.4f)
-                                        }
-                                    )
-                            )
-                        }
-                    }
+                Spacer(modifier = Modifier.height(8.dp))
 
-                    Text("⭐ ${state.totalStarsEarned}", fontSize = 24.sp, color = Color.White)
-                }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
+                // Animal in center with drop zone
                 Box(
                     modifier = Modifier.weight(1f),
                     contentAlignment = Alignment.Center
@@ -140,12 +98,13 @@ fun AnimalGardenScreen(
                     }
                 }
 
+                // Food tray at bottom
                 AnimatedVisibility(
                     visible = !state.roundComplete,
                     enter = fadeIn() + scaleIn()
                 ) {
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(24.dp),
+                        horizontalArrangement = Arrangement.spacedBy(20.dp),
                         modifier = Modifier.padding(bottom = 16.dp)
                     ) {
                         state.foodChoices.forEach { food ->

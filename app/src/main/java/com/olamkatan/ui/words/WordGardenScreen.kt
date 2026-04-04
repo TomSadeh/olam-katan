@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -55,6 +56,8 @@ import com.olamkatan.ui.common.LocalLanguage
 import com.olamkatan.ui.common.LocalSfxPlayer
 import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.ConfettiOverlay
+import com.olamkatan.ui.components.GameBackground
+import com.olamkatan.ui.components.GameTopBar
 import com.olamkatan.ui.components.RoundCompleteSheet
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -139,23 +142,19 @@ fun WordGardenScreen(onBack: () -> Unit, viewModel: WordGardenViewModel = viewMo
         }
     }
 
-    Box(
-        modifier = Modifier.fillMaxSize().background(
-            Brush.verticalGradient(listOf(Color(0xFFE8F5E9), Color(0xFFC8E6C9), Color(0xFFA5D6A7)))
-        )
+    GameBackground(
+        colors = listOf(Color(0xFFE8F5E9), Color(0xFFC8E6C9), Color(0xFFA5D6A7))
     ) {
         Column(
             modifier = Modifier.fillMaxSize().padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Box(
-                    modifier = Modifier.size(56.dp).clip(CircleShape).background(EarthBrown.copy(alpha = 0.7f)).clickable { onBack() },
-                    contentAlignment = Alignment.Center
-                ) { Text("◀", fontSize = 24.sp, color = Color.White) }
-                Text(BilingualText("גן המילים", "Word Garden").resolve(language), style = MaterialTheme.typography.headlineMedium, color = EarthBrown)
-                Text("⭐ ${state.totalStarsEarned}", fontSize = 24.sp, color = EarthBrown)
-            }
+            GameTopBar(
+                onBack = onBack,
+                roundIndex = state.roundIndex,
+                totalRounds = state.totalRounds,
+                starsEarned = state.totalStarsEarned
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -200,6 +199,7 @@ fun WordGardenScreen(onBack: () -> Unit, viewModel: WordGardenViewModel = viewMo
                             .shadow(8.dp, RoundedCornerShape(24.dp))
                             .clip(RoundedCornerShape(24.dp))
                             .background(Color.White)
+                            .border(2.dp, Color.White.copy(alpha = 0.4f), RoundedCornerShape(24.dp))
                             .clickable(interactionSource = interactionSource, indication = null) {
                                 val correct = viewModel.onLetterTapped(letter.id)
                                 if (correct) {
@@ -223,24 +223,6 @@ fun WordGardenScreen(onBack: () -> Unit, viewModel: WordGardenViewModel = viewMo
                         }
                         Text(displayLetter, fontSize = 56.sp, color = EarthBrown)
                     }
-                }
-            }
-
-            // Round dots
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                repeat(state.totalRounds) { i ->
-                    Box(
-                        modifier = Modifier
-                            .size(12.dp)
-                            .clip(CircleShape)
-                            .background(
-                                when {
-                                    i < state.roundIndex -> Color(0xFFFFD700)
-                                    i == state.roundIndex -> Color.White
-                                    else -> Color.White.copy(alpha = 0.4f)
-                                }
-                            )
-                    )
                 }
             }
 

@@ -35,7 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
@@ -44,11 +43,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.olamkatan.audio.Sfx
 import com.olamkatan.theme.CloudWhite
-import com.olamkatan.theme.EarthBrown
 import com.olamkatan.ui.common.LocalLanguage
 import com.olamkatan.ui.common.LocalSfxPlayer
 import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.ConfettiOverlay
+import com.olamkatan.ui.components.GameBackground
+import com.olamkatan.ui.components.GameTopBar
 import com.olamkatan.ui.components.RoundCompleteSheet
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -72,55 +72,19 @@ fun CountingGardenScreen(
         voicePlayer.play("voice_prompt_count_along", language)
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(Color(0xFFC8E6C9), Color(0xFFA5D6A7), Color(0xFF81C784))
-                )
-            )
+    GameBackground(
+        colors = listOf(Color(0xFFC8E6C9), Color(0xFFA5D6A7), Color(0xFF81C784))
     ) {
         Column(
             modifier = Modifier.fillMaxSize().padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Top bar
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(56.dp)
-                        .clip(CircleShape)
-                        .background(EarthBrown.copy(alpha = 0.7f))
-                        .clickable { onBack() },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("◀", fontSize = 24.sp, color = Color.White)
-                }
-
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    repeat(state.totalRounds) { i ->
-                        Box(
-                            modifier = Modifier
-                                .size(16.dp)
-                                .clip(CircleShape)
-                                .background(
-                                    when {
-                                        i < state.roundIndex -> Color(0xFFFFD700)
-                                        i == state.roundIndex -> Color.White
-                                        else -> Color.White.copy(alpha = 0.4f)
-                                    }
-                                )
-                        )
-                    }
-                }
-
-                Text("⭐ ${state.totalStarsEarned}", fontSize = 24.sp, color = Color.White)
-            }
+            GameTopBar(
+                onBack = onBack,
+                roundIndex = state.roundIndex,
+                totalRounds = state.totalRounds,
+                starsEarned = state.totalStarsEarned
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 

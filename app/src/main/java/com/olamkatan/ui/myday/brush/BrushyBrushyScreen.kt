@@ -34,7 +34,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
@@ -48,10 +47,10 @@ import com.olamkatan.OlamKatanApplication
 import com.olamkatan.audio.Sfx
 import com.olamkatan.data.models.BilingualText
 import com.olamkatan.theme.CloudWhite
-import com.olamkatan.theme.EarthBrown
 import com.olamkatan.ui.common.LocalLanguage
 import com.olamkatan.ui.common.LocalSfxPlayer
 import com.olamkatan.ui.common.LocalVoicePlayer
+import com.olamkatan.ui.components.GameBackground
 import com.olamkatan.ui.components.RoundCompleteSheet
 import com.olamkatan.ui.components.WigglingItem
 import kotlinx.coroutines.delay
@@ -94,22 +93,28 @@ fun BrushyBrushyScreen(onBack: () -> Unit, viewModel: BrushyBrushyViewModel = vi
         voicePlayer.play("voice_prompt_brush_teeth", language)
     }
 
-    Box(
-        modifier = Modifier.fillMaxSize().background(
-            Brush.verticalGradient(listOf(Color(0xFFB2EBF2), Color(0xFF80DEEA), Color(0xFF4DD0E1)))
-        )
+    GameBackground(
+        colors = listOf(Color(0xFFB2EBF2), Color(0xFF80DEEA), Color(0xFF4DD0E1))
     ) {
         Column(
             modifier = Modifier.fillMaxSize().padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Box(
-                    modifier = Modifier.size(56.dp).clip(CircleShape).background(EarthBrown.copy(alpha = 0.7f)).clickable { onBack() },
+                    modifier = Modifier
+                        .size(52.dp)
+                        .clip(CircleShape)
+                        .background(Color.White.copy(alpha = 0.25f))
+                        .clickable { onBack() },
                     contentAlignment = Alignment.Center
-                ) { Text("◀", fontSize = 24.sp, color = Color.White) }
+                ) { Text("◀", fontSize = 22.sp, color = Color.White) }
                 Text(BilingualText("צחצוח שיניים", "Brushy Brushy").resolve(language), style = MaterialTheme.typography.headlineMedium, color = CloudWhite)
-                Spacer(modifier = Modifier.width(56.dp))
+                Spacer(modifier = Modifier.width(52.dp))
             }
 
             Spacer(modifier = Modifier.height(16.dp))

@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -50,7 +51,8 @@ import com.olamkatan.theme.EarthBrown
 import com.olamkatan.ui.common.LocalLanguage
 import com.olamkatan.ui.common.LocalSfxPlayer
 import com.olamkatan.ui.common.LocalVoicePlayer
-import com.olamkatan.ui.components.ConfettiOverlay
+import com.olamkatan.ui.components.GameBackground
+import com.olamkatan.ui.components.GameTopBar
 import com.olamkatan.ui.components.RoundCompleteSheet
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -154,23 +156,19 @@ fun MusicMeadowScreen(onBack: () -> Unit, viewModel: MusicMeadowViewModel = view
         }
     }
 
-    Box(
-        modifier = Modifier.fillMaxSize().background(
-            Brush.verticalGradient(listOf(Color(0xFFFFF3E0), Color(0xFFFFE0B2), Color(0xFFFFCC80)))
-        )
+    GameBackground(
+        colors = listOf(Color(0xFFFFF3E0), Color(0xFFFFE0B2), Color(0xFFFFCC80))
     ) {
         Column(
             modifier = Modifier.fillMaxSize().padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Box(
-                    modifier = Modifier.size(56.dp).clip(CircleShape).background(EarthBrown.copy(alpha = 0.7f)).clickable { onBack() },
-                    contentAlignment = Alignment.Center
-                ) { Text("◀", fontSize = 24.sp, color = Color.White) }
-                Text(BilingualText("מרעה המוזיקה", "Music Meadow").resolve(language), style = MaterialTheme.typography.headlineMedium, color = EarthBrown)
-                Text("⭐ ${state.totalStarsEarned}", fontSize = 24.sp, color = EarthBrown)
-            }
+            GameTopBar(
+                onBack = onBack,
+                roundIndex = state.roundIndex,
+                totalRounds = state.totalRounds,
+                starsEarned = state.totalStarsEarned
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -215,7 +213,15 @@ fun MusicMeadowScreen(onBack: () -> Unit, viewModel: MusicMeadowViewModel = view
                                 .graphicsLayer { scaleX = scale; scaleY = scale }
                                 .shadow(if (isHighlighted) 16.dp else 8.dp, RoundedCornerShape(24.dp))
                                 .clip(RoundedCornerShape(24.dp))
-                                .background(if (isHighlighted) instrument.color else instrument.color.copy(alpha = 0.7f))
+                                .background(
+                                    Brush.verticalGradient(
+                                        listOf(
+                                            if (isHighlighted) instrument.color else instrument.color.copy(alpha = 0.8f),
+                                            if (isHighlighted) instrument.color.copy(alpha = 0.9f) else instrument.color.copy(alpha = 0.6f)
+                                        )
+                                    )
+                                )
+                                .border(2.dp, Color.White.copy(alpha = 0.4f), RoundedCornerShape(24.dp))
                                 .clickable(interactionSource = interactionSource, indication = null) {
                                     sfxPlayer.play(Sfx.POP)
                                     voicePlayer.play("voice_instrument_${instrument.id}", language)

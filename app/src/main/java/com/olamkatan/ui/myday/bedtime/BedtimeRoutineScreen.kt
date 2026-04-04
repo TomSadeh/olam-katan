@@ -134,22 +134,33 @@ fun BedtimeRoutineScreen(onBack: () -> Unit, viewModel: BedtimeRoutineViewModel 
             Spacer(modifier = Modifier.height(16.dp))
 
             // Progress dots
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
                 bedtimeSteps.forEachIndexed { i, step ->
-                    Box(
-                        modifier = Modifier
-                            .size(if (i == state.currentStep) 24.dp else 16.dp)
-                            .clip(CircleShape)
-                            .background(
-                                when {
-                                    i < state.currentStep -> Color(0xFFFFD700)
-                                    i == state.currentStep -> CloudWhite
-                                    else -> CloudWhite.copy(alpha = 0.3f)
-                                }
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        if (i < state.currentStep) Text("✓", fontSize = 10.sp, color = EarthBrown)
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Box(
+                            modifier = Modifier
+                                .size(if (i == state.currentStep) 28.dp else 18.dp)
+                                .clip(CircleShape)
+                                .background(
+                                    when {
+                                        i < state.currentStep -> Brush.radialGradient(
+                                            listOf(Color(0xFFFFE082), Color(0xFFFFD700))
+                                        )
+                                        i == state.currentStep -> Brush.radialGradient(
+                                            listOf(CloudWhite, CloudWhite.copy(alpha = 0.8f))
+                                        )
+                                        else -> Brush.radialGradient(
+                                            listOf(CloudWhite.copy(alpha = 0.35f), CloudWhite.copy(alpha = 0.2f))
+                                        )
+                                    }
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            if (i < state.currentStep) Text("✓", fontSize = 11.sp, color = EarthBrown)
+                        }
+                        if (i == state.currentStep) {
+                            Text(step.emoji, fontSize = 14.sp, modifier = Modifier.padding(top = 4.dp))
+                        }
                     }
                 }
             }
@@ -188,7 +199,11 @@ fun BedtimeRoutineScreen(onBack: () -> Unit, viewModel: BedtimeRoutineViewModel 
                         .size(width = 200.dp, height = 80.dp)
                         .shadow(8.dp, RoundedCornerShape(40.dp))
                         .clip(RoundedCornerShape(40.dp))
-                        .background(Color(0xFF7E57C2))
+                        .background(
+                            Brush.horizontalGradient(
+                                listOf(Color(0xFF9575CD), Color(0xFF7E57C2))
+                            )
+                        )
                         .clickable {
                             sfxPlayer.play(Sfx.POP)
                             viewModel.advanceStep()

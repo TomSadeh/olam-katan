@@ -27,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,6 +43,7 @@ import com.olamkatan.ui.common.LocalLanguage
 import com.olamkatan.ui.common.LocalSfxPlayer
 import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.DragDropState
+import com.olamkatan.ui.components.GameBackground
 import com.olamkatan.ui.components.DragTarget
 import com.olamkatan.ui.components.DropZone
 import com.olamkatan.ui.components.LocalDragDropState
@@ -95,22 +95,28 @@ fun TableTimeScreen(onBack: () -> Unit, viewModel: TableTimeViewModel = viewMode
     }
 
     CompositionLocalProvider(LocalDragDropState provides dragDropState) {
-        Box(
-            modifier = Modifier.fillMaxSize().background(
-                Brush.verticalGradient(listOf(Color(0xFFC8E6C9), Color(0xFFA5D6A7), Color(0xFF81C784)))
-            )
+        GameBackground(
+            colors = listOf(Color(0xFFC8E6C9), Color(0xFFA5D6A7), Color(0xFF81C784))
         ) {
             Column(
                 modifier = Modifier.fillMaxSize().padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Box(
-                        modifier = Modifier.size(56.dp).clip(CircleShape).background(EarthBrown.copy(alpha = 0.7f)).clickable { onBack() },
+                        modifier = Modifier
+                            .size(52.dp)
+                            .clip(CircleShape)
+                            .background(Color.White.copy(alpha = 0.25f))
+                            .clickable { onBack() },
                         contentAlignment = Alignment.Center
-                    ) { Text("◀", fontSize = 24.sp, color = Color.White) }
+                    ) { Text("◀", fontSize = 22.sp, color = Color.White) }
                     Text(BilingualText("ארוחה", "Table Time").resolve(language), style = MaterialTheme.typography.headlineMedium, color = CloudWhite)
-                    Spacer(modifier = Modifier.width(56.dp))
+                    Spacer(modifier = Modifier.width(52.dp))
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
