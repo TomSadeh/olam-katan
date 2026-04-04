@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import com.olamkatan.audio.MusicPlayer
 import com.olamkatan.audio.SfxPlayer
 import com.olamkatan.audio.TtsManager
 
@@ -14,6 +15,7 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var ttsManager: TtsManager
     private lateinit var sfxPlayer: SfxPlayer
+    private lateinit var musicPlayer: MusicPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +23,7 @@ class MainActivity : ComponentActivity() {
 
         ttsManager = TtsManager(this)
         sfxPlayer = SfxPlayer(this)
+        musicPlayer = MusicPlayer(this)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
         WindowInsetsControllerCompat(window, window.decorView).let { controller ->
@@ -35,15 +38,27 @@ class MainActivity : ComponentActivity() {
             OlamKatanApp(
                 ttsManager = ttsManager,
                 sfxPlayer = sfxPlayer,
+                musicPlayer = musicPlayer,
                 settingsRepository = app.settingsRepository,
                 progressRepository = app.progressRepository
             )
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        musicPlayer.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        musicPlayer.resume()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         ttsManager.shutdown()
         sfxPlayer.release()
+        musicPlayer.release()
     }
 }

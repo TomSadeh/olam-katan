@@ -5,7 +5,7 @@ import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,7 +40,7 @@ fun DragTarget(
             .onGloballyPositioned { coords ->
                 rootPosition = coords.positionInRoot()
             }
-            .offset {
+            .absoluteOffset {
                 IntOffset(
                     offsetAnim.value.x.roundToInt(),
                     offsetAnim.value.y.roundToInt()

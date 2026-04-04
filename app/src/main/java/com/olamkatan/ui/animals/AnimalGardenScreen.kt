@@ -176,9 +176,7 @@ fun AnimalGardenScreen(
                                             scope.launch {
                                                 delay(1500)
                                                 showRoundSuccess = false
-                                                if (state.roundIndex + 1 < state.totalRounds) {
-                                                    animalViewModel.nextRound()
-                                                }
+                                                animalViewModel.nextRound()
                                             }
                                         } else {
                                             sfxPlayer.play(Sfx.WRONG_GENTLE)

@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import com.olamkatan.audio.MusicPlayer
 import com.olamkatan.audio.Sfx
 import com.olamkatan.audio.SfxPlayer
 import com.olamkatan.audio.TtsManager
@@ -27,6 +28,7 @@ import com.olamkatan.theme.OlamKatanTheme
 import com.olamkatan.ui.common.AppViewModel
 import com.olamkatan.ui.common.LocalAppSettings
 import com.olamkatan.ui.common.LocalLanguage
+import com.olamkatan.ui.common.LocalMusicPlayer
 import com.olamkatan.ui.common.LocalSfxPlayer
 import com.olamkatan.ui.common.LocalTtsManager
 import com.olamkatan.ui.components.TimeLimitOverlay
@@ -36,6 +38,7 @@ import kotlinx.coroutines.delay
 fun OlamKatanApp(
     ttsManager: TtsManager,
     sfxPlayer: SfxPlayer,
+    musicPlayer: MusicPlayer,
     settingsRepository: SettingsRepository,
     progressRepository: ProgressRepository
 ) {
@@ -51,6 +54,7 @@ fun OlamKatanApp(
 
     LaunchedEffect(Unit) {
         Sfx.preloadAll(sfxPlayer)
+        musicPlayer.play(R.raw.music_hub)
     }
 
     LaunchedEffect(language) {
@@ -62,6 +66,10 @@ fun OlamKatanApp(
         ttsManager.enabled = settings.soundEnabled
     }
 
+    LaunchedEffect(settings.musicEnabled) {
+        musicPlayer.setEnabled(settings.musicEnabled)
+    }
+
     // Time limit tracking
     var showTimeLimit by remember { mutableStateOf(false) }
     var sessionStartTime by remember { mutableLongStateOf(System.currentTimeMillis()) }
@@ -71,7 +79,7 @@ fun OlamKatanApp(
             sessionStartTime = System.currentTimeMillis()
             showTimeLimit = false
             while (true) {
-                delay(30_000) // Check every 30 seconds
+                delay(30_000)
                 val elapsed = System.currentTimeMillis() - sessionStartTime
                 val limitMs = settings.timeLimitMinutes * 60_000L
                 if (elapsed >= limitMs) {
@@ -88,6 +96,7 @@ fun OlamKatanApp(
             LocalAppSettings provides settings,
             LocalTtsManager provides ttsManager,
             LocalSfxPlayer provides sfxPlayer,
+            LocalMusicPlayer provides musicPlayer,
             LocalLayoutDirection provides layoutDirection
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
