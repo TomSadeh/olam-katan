@@ -11,7 +11,7 @@ class MusicPlayer(private val context: Context) {
     fun play(resId: Int, loop: Boolean = true) {
         if (!enabled) return
         stop()
-        mediaPlayer = MediaPlayer.create(context, resId).apply {
+        mediaPlayer = MediaPlayer.create(context, resId)?.apply {
             isLooping = loop
             setVolume(0.4f, 0.4f)
             start()
