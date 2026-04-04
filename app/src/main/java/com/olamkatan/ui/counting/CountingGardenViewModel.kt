@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.olamkatan.OlamKatanApplication
 import com.olamkatan.data.content.CountingRound
+import com.olamkatan.data.content.countingRoundsForLevel
 import com.olamkatan.data.content.level1CountingRounds
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +16,7 @@ data class CountingState(
     val currentRound: CountingRound = level1CountingRounds[0],
     val currentCount: Int = 0,
     val roundIndex: Int = 0,
-    val totalRounds: Int = level1CountingRounds.size,
+    val totalRounds: Int = 4,
     val roundComplete: Boolean = false,
     val sessionComplete: Boolean = false,
     val totalStarsEarned: Int = 0
@@ -24,18 +25,24 @@ data class CountingState(
 class CountingGardenViewModel(application: Application) : AndroidViewModel(application) {
 
     private val progressRepository = (application as OlamKatanApplication).progressRepository
-    private val rounds = level1CountingRounds
+    private var rounds = emptyList<CountingRound>()
+    private var difficulty = 1
 
     private val _state = MutableStateFlow(CountingState())
     val state: StateFlow<CountingState> = _state.asStateFlow()
 
     init {
-        startRound(0)
+        viewModelScope.launch {
+            difficulty = progressRepository.getDifficulty("counting")
+            rounds = countingRoundsForLevel(difficulty).shuffled().take(4)
+            startRound(0)
+        }
     }
 
     private fun startRound(index: Int) {
         if (index >= rounds.size) {
             _state.value = _state.value.copy(sessionComplete = true)
+            viewModelScope.launch { progressRepository.incrementDifficulty("counting") }
             return
         }
         _state.value = CountingState(

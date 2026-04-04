@@ -1,9 +1,16 @@
 package com.olamkatan
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -22,6 +29,8 @@ import com.olamkatan.ui.common.LocalAppSettings
 import com.olamkatan.ui.common.LocalLanguage
 import com.olamkatan.ui.common.LocalSfxPlayer
 import com.olamkatan.ui.common.LocalTtsManager
+import com.olamkatan.ui.components.TimeLimitOverlay
+import kotlinx.coroutines.delay
 
 @Composable
 fun OlamKatanApp(
@@ -53,6 +62,26 @@ fun OlamKatanApp(
         ttsManager.enabled = settings.soundEnabled
     }
 
+    // Time limit tracking
+    var showTimeLimit by remember { mutableStateOf(false) }
+    var sessionStartTime by remember { mutableLongStateOf(System.currentTimeMillis()) }
+
+    LaunchedEffect(settings.timeLimitMinutes) {
+        if (settings.timeLimitMinutes > 0) {
+            sessionStartTime = System.currentTimeMillis()
+            showTimeLimit = false
+            while (true) {
+                delay(30_000) // Check every 30 seconds
+                val elapsed = System.currentTimeMillis() - sessionStartTime
+                val limitMs = settings.timeLimitMinutes * 60_000L
+                if (elapsed >= limitMs) {
+                    showTimeLimit = true
+                    break
+                }
+            }
+        }
+    }
+
     OlamKatanTheme {
         CompositionLocalProvider(
             LocalLanguage provides language,
@@ -61,8 +90,19 @@ fun OlamKatanApp(
             LocalSfxPlayer provides sfxPlayer,
             LocalLayoutDirection provides layoutDirection
         ) {
-            val navController = rememberNavController()
-            OlamKatanNavGraph(navController = navController)
+            Box(modifier = Modifier.fillMaxSize()) {
+                val navController = rememberNavController()
+                OlamKatanNavGraph(navController = navController)
+
+                if (showTimeLimit) {
+                    TimeLimitOverlay(
+                        onDismiss = {
+                            showTimeLimit = false
+                            sessionStartTime = System.currentTimeMillis()
+                        }
+                    )
+                }
+            }
         }
     }
 }

@@ -98,6 +98,39 @@ fun SettingsScreen(
                     labelOff = BilingualText("כבוי", "Off").resolve(language),
                     onToggle = { settingsViewModel.toggleMusic(settings.musicEnabled) }
                 )
+
+                // Time limit row
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(text = "⏰", fontSize = 28.sp)
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Text(
+                            text = BilingualText("הגבלת זמן", "Time Limit").resolve(language),
+                            style = MaterialTheme.typography.titleLarge,
+                            color = EarthBrown
+                        )
+                    }
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(GrassGreen.copy(alpha = 0.2f))
+                            .clickable { settingsViewModel.cycleTimeLimit(settings.timeLimitMinutes) }
+                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                    ) {
+                        Text(
+                            text = if (settings.timeLimitMinutes == 0)
+                                BilingualText("ללא", "Off").resolve(language)
+                            else
+                                "${settings.timeLimitMinutes} ${BilingualText("דקות", "min").resolve(language)}",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = EarthBrown
+                        )
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(32.dp))

@@ -54,6 +54,23 @@ val level1Animals = listOf(
     )
 )
 
+val level2Animals = listOf(
+    AnimalDef("horse", BilingualText("סוס", "Horse"), BilingualText("איהההה!", "Neigh!"), "\uD83D\uDC34", Color(0xFF8D6E63), "hay"),
+    AnimalDef("pig", BilingualText("חזיר", "Pig"), BilingualText("חרר!", "Oink!"), "\uD83D\uDC37", Color(0xFFFFCDD2), "corn"),
+    AnimalDef("sheep", BilingualText("כבשה", "Sheep"), BilingualText("מעע!", "Baa!"), "\uD83D\uDC11", Color(0xFFF5F5F5), "clover"),
+    AnimalDef("duck", BilingualText("ברווז", "Duck"), BilingualText("גע גע!", "Quack!"), "\uD83E\uDD86", Color(0xFFFFF9C4), "bread"),
+    AnimalDef("rabbit", BilingualText("ארנב", "Rabbit"), BilingualText("...", "..."), "\uD83D\uDC30", Color(0xFFE0E0E0), "carrot"),
+    AnimalDef("goat", BilingualText("עז", "Goat"), BilingualText("מעע!", "Maa!"), "\uD83D\uDC10", Color(0xFFBCAAA4), "leaves")
+)
+
+val level3Animals = listOf(
+    AnimalDef("lion", BilingualText("אריה", "Lion"), BilingualText("שאגה!", "Roar!"), "\uD83E\uDD81", Color(0xFFFFB74D), "meat"),
+    AnimalDef("elephant", BilingualText("פיל", "Elephant"), BilingualText("טרררר!", "Trumpet!"), "\uD83D\uDC18", Color(0xFFBDBDBD), "peanuts"),
+    AnimalDef("monkey", BilingualText("קוף", "Monkey"), BilingualText("או או!", "Ooh ooh!"), "\uD83D\uDC35", Color(0xFF8D6E63), "banana"),
+    AnimalDef("giraffe", BilingualText("ג׳ירפה", "Giraffe"), BilingualText("...", "..."), "\uD83E\uDD92", Color(0xFFFFE082), "leaves"),
+    AnimalDef("penguin", BilingualText("פינגווין", "Penguin"), BilingualText("...", "..."), "\uD83D\uDC27", Color(0xFF263238), "fish")
+)
+
 val level1Foods = listOf(
     FoodDef(
         id = "grass",
@@ -80,3 +97,30 @@ val level1Foods = listOf(
         color = Color(0xFFFFD54F)
     )
 )
+
+val level2Foods = level1Foods + listOf(
+    FoodDef("hay", BilingualText("חציר", "Hay"), "\uD83C\uDF3E", Color(0xFFFFE082)),
+    FoodDef("corn", BilingualText("תירס", "Corn"), "\uD83C\uDF3D", Color(0xFFFFF176)),
+    FoodDef("clover", BilingualText("תלתן", "Clover"), "☘\uFE0F", Color(0xFF66BB6A)),
+    FoodDef("bread", BilingualText("לחם", "Bread"), "\uD83C\uDF5E", Color(0xFFD7CCC8)),
+    FoodDef("carrot", BilingualText("גזר", "Carrot"), "\uD83E\uDD55", Color(0xFFFF7043)),
+    FoodDef("leaves", BilingualText("עלים", "Leaves"), "\uD83C\uDF43", Color(0xFF81C784))
+)
+
+val level3Foods = level2Foods + listOf(
+    FoodDef("meat", BilingualText("בשר", "Meat"), "\uD83E\uDD69", Color(0xFFEF5350)),
+    FoodDef("peanuts", BilingualText("בוטנים", "Peanuts"), "\uD83E\uDD5C", Color(0xFFBCAAA4)),
+    FoodDef("banana", BilingualText("בננה", "Banana"), "\uD83C\uDF4C", Color(0xFFFFEE58))
+)
+
+fun animalsForLevel(level: Int): List<AnimalDef> = when {
+    level >= 3 -> level3Animals
+    level >= 2 -> level2Animals
+    else -> level1Animals
+}
+
+fun foodsForLevel(level: Int): List<FoodDef> = when {
+    level >= 3 -> level3Foods
+    level >= 2 -> level2Foods
+    else -> level1Foods
+}

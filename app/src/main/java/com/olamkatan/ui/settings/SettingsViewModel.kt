@@ -28,4 +28,10 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     fun toggleMusic(enabled: Boolean) {
         viewModelScope.launch { settingsRepository.updateMusic(!enabled) }
     }
+
+    fun cycleTimeLimit(current: Int) {
+        val options = listOf(0, 15, 30, 45, 60)
+        val nextIndex = (options.indexOf(current) + 1) % options.size
+        viewModelScope.launch { settingsRepository.updateTimeLimit(options[nextIndex]) }
+    }
 }
