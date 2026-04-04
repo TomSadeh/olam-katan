@@ -10,12 +10,14 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.IntOffset
@@ -113,6 +115,24 @@ fun HubScreen(
             contentAlignment = Alignment.Center
         ) {
             Text(text = "⚙️", fontSize = 28.sp)
+        }
+
+        // Quit button — bottom start (long-press to exit)
+        val activity = LocalContext.current as? Activity
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(16.dp)
+                .size(56.dp)
+                .clip(CircleShape)
+                .background(EarthBrown.copy(alpha = 0.7f))
+                .combinedClickable(
+                    onClick = { },
+                    onLongClick = { activity?.finish() }
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = "\uD83D\uDEAA", fontSize = 28.sp)
         }
 
         // Canvas button — bottom end
