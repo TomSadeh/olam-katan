@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.olamkatan.OlamKatanApplication
 import com.olamkatan.data.content.ShapeDef
 import com.olamkatan.data.content.level1Shapes
-import com.olamkatan.data.content.shapesForLevel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,37 +19,30 @@ data class ShapeRoundState(
     val roundComplete: Boolean = false,
     val sessionComplete: Boolean = false,
     val totalStarsEarned: Int = 0,
-    val isLoading: Boolean = true
+    val isLoading: Boolean = false
 )
 
 class ShapePlaygroundViewModel(application: Application) : AndroidViewModel(application) {
 
     private val progressRepository = (application as OlamKatanApplication).progressRepository
-    private var rounds = emptyList<ShapeDef>()
-    private var allShapes = emptyList<ShapeDef>()
-    private var difficulty = 1
+    private var allShapes = level1Shapes
+    private var rounds = allShapes.shuffled().take(4)
 
     private val _state = MutableStateFlow(ShapeRoundState())
     val state: StateFlow<ShapeRoundState> = _state.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            difficulty = progressRepository.getDifficulty("shapes")
-            allShapes = shapesForLevel(difficulty)
-            rounds = allShapes.shuffled().take(4)
-            startRound(0)
-        }
+        startRound(0)
     }
 
     private fun startRound(index: Int) {
         if (index >= rounds.size) {
             _state.value = _state.value.copy(sessionComplete = true)
-            viewModelScope.launch { progressRepository.incrementDifficulty("shapes") }
             return
         }
         _state.value = ShapeRoundState(
             targetShape = rounds[index],
-            shapeChoices = allShapes.shuffled().take(if (difficulty >= 2) 6 else 4),
+            shapeChoices = allShapes.shuffled().take(4),
             roundIndex = index,
             totalRounds = rounds.size,
             totalStarsEarned = _state.value.totalStarsEarned,

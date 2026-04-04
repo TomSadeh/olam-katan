@@ -5,7 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.olamkatan.OlamKatanApplication
 import com.olamkatan.data.content.ColorDef
-import com.olamkatan.data.content.colorsForLevel
 import com.olamkatan.data.content.level1Colors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,35 +19,28 @@ data class ColorRoundState(
     val showSuccess: Boolean = false,
     val sessionComplete: Boolean = false,
     val totalStarsEarned: Int = 0,
-    val isLoading: Boolean = true
+    val isLoading: Boolean = false
 )
 
 class ColorSplashViewModel(application: Application) : AndroidViewModel(application) {
 
     private val progressRepository = (application as OlamKatanApplication).progressRepository
-    private var rounds = emptyList<ColorDef>()
-    private var allColors = emptyList<ColorDef>()
-    private var difficulty = 1
+    private var allColors = level1Colors
+    private var rounds = allColors.shuffled().take(4)
 
     private val _state = MutableStateFlow(ColorRoundState())
     val state: StateFlow<ColorRoundState> = _state.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            difficulty = progressRepository.getDifficulty("colors")
-            allColors = colorsForLevel(difficulty)
-            rounds = allColors.shuffled().take(4)
-            startRound(0)
-        }
+        startRound(0)
     }
 
     private fun startRound(index: Int) {
         if (index >= rounds.size) {
             _state.value = _state.value.copy(sessionComplete = true)
-            viewModelScope.launch { progressRepository.incrementDifficulty("colors") }
             return
         }
-        val choiceCount = if (difficulty >= 2) 6 else 4
+        val choiceCount = 4
         _state.value = ColorRoundState(
             targetColor = rounds[index],
             colorChoices = allColors.shuffled().take(choiceCount),

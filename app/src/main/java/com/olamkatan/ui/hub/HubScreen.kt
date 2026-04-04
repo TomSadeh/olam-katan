@@ -43,14 +43,7 @@ fun HubScreen(
 ) {
     val hubViewModel: HubViewModel = viewModel()
     val progress by hubViewModel.progress.collectAsStateWithLifecycle()
-    val newlyUnlocked by hubViewModel.newlyUnlocked.collectAsStateWithLifecycle()
-    val language = LocalLanguage.current
     val layoutDirection = LocalLayoutDirection.current
-
-    // Re-check unlocks when screen becomes visible (e.g., returning from a game)
-    LaunchedEffect(progress.totalStars) {
-        hubViewModel.checkForUnlocks()
-    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         HubBackground()
@@ -71,7 +64,7 @@ fun HubScreen(
 
                 IslandButton(
                     island = island,
-                    isUnlocked = hubViewModel.isIslandUnlocked(island.id, progress.totalStars),
+                    isUnlocked = true,
                     onClick = { onIslandClick(island.route) },
                     modifier = Modifier.offset(x = offsetX, y = offsetY)
                 )
@@ -117,7 +110,7 @@ fun HubScreen(
             Text(text = "⚙️", fontSize = 28.sp)
         }
 
-        // Quit button — bottom start (long-press to exit)
+        // Quit button — bottom start (double-tap to exit)
         val activity = LocalContext.current as? Activity
         Box(
             modifier = Modifier
@@ -128,7 +121,7 @@ fun HubScreen(
                 .background(EarthBrown.copy(alpha = 0.7f))
                 .combinedClickable(
                     onClick = { },
-                    onLongClick = { activity?.finish() }
+                    onDoubleClick = { activity?.finishAndRemoveTask() }
                 ),
             contentAlignment = Alignment.Center
         ) {
@@ -151,15 +144,5 @@ fun HubScreen(
             Text(text = "\uD83C\uDFA8", fontSize = 28.sp)
         }
 
-        // Unlock ceremony overlay
-        val unlockedIslandDefs = newlyUnlocked.mapNotNull { id ->
-            allIslands.find { it.id == id }
-        }
-        if (unlockedIslandDefs.isNotEmpty()) {
-            UnlockCeremony(
-                unlockedIslands = unlockedIslandDefs,
-                onDismiss = { hubViewModel.dismissUnlockCeremony() }
-            )
-        }
     }
 }

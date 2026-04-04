@@ -182,11 +182,13 @@ fun CountingGardenScreen(
                         .clip(CircleShape)
                         .background(state.currentRound.itemColor)
                         .clickable(interactionSource = interactionSource, indication = null) {
-                            val complete = viewModel.onItemTapped()
+                            val newCount = viewModel.onItemTapped()
                             sfxPlayer.play(Sfx.POP)
-                            // Speak the number
-                            voicePlayer.play("voice_number_${state.currentCount}", language)
-                            if (complete) {
+                            if (newCount > 0) {
+                                voicePlayer.play("voice_number_$newCount", language)
+                            } else {
+                                // Round complete
+                                voicePlayer.play("voice_number_${state.currentRound.targetNumber}", language)
                                 sfxPlayer.play(Sfx.SUCCESS)
                                 showRoundSuccess = true
                                 scope.launch {

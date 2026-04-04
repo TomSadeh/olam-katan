@@ -6,9 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.olamkatan.OlamKatanApplication
 import com.olamkatan.data.content.AnimalDef
 import com.olamkatan.data.content.FoodDef
-import com.olamkatan.data.content.animalsForLevel
-import com.olamkatan.data.content.foodsForLevel
 import com.olamkatan.data.content.level1Animals
+import com.olamkatan.data.content.level1Foods
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,7 +22,7 @@ data class AnimalRoundState(
     val sessionComplete: Boolean = false,
     val totalStarsEarned: Int = 0,
     val showSuccess: Boolean = false,
-    val isLoading: Boolean = true
+    val isLoading: Boolean = false
 )
 
 class AnimalGardenViewModel(application: Application) : AndroidViewModel(application) {
@@ -33,35 +32,21 @@ class AnimalGardenViewModel(application: Application) : AndroidViewModel(applica
     private val _state = MutableStateFlow(AnimalRoundState())
     val state: StateFlow<AnimalRoundState> = _state.asStateFlow()
 
-    private var animals = emptyList<AnimalDef>()
-    private var allFoods = emptyList<FoodDef>()
-    private var difficulty = 1
-    private var consecutiveSuccesses = 0
+    private var animals = level1Animals.shuffled().take(4)
+    private var allFoods = level1Foods
 
     init {
-        viewModelScope.launch {
-            difficulty = progressRepository.getDifficulty("animals")
-            animals = animalsForLevel(difficulty).shuffled().take(4)
-            allFoods = foodsForLevel(difficulty)
-            startRound(0)
-        }
+        startRound(0)
     }
 
     private fun startRound(index: Int) {
         if (index >= animals.size) {
             _state.value = _state.value.copy(sessionComplete = true)
-            viewModelScope.launch {
-                consecutiveSuccesses++
-                if (consecutiveSuccesses >= 3) {
-                    progressRepository.incrementDifficulty("animals")
-                }
-            }
             return
         }
         val animal = animals[index]
         val correctFood = allFoods.first { it.id == animal.foodId }
-        val distractorCount = if (difficulty >= 2) 3 else 2
-        val distractors = allFoods.filter { it.id != animal.foodId }.shuffled().take(distractorCount)
+        val distractors = allFoods.filter { it.id != animal.foodId }.shuffled().take(2)
         val foodChoices = (listOf(correctFood) + distractors).shuffled()
 
         _state.value = AnimalRoundState(

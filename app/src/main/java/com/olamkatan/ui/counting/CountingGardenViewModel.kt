@@ -5,7 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.olamkatan.OlamKatanApplication
 import com.olamkatan.data.content.CountingRound
-import com.olamkatan.data.content.countingRoundsForLevel
 import com.olamkatan.data.content.level1CountingRounds
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,30 +19,24 @@ data class CountingState(
     val roundComplete: Boolean = false,
     val sessionComplete: Boolean = false,
     val totalStarsEarned: Int = 0,
-    val isLoading: Boolean = true
+    val isLoading: Boolean = false
 )
 
 class CountingGardenViewModel(application: Application) : AndroidViewModel(application) {
 
     private val progressRepository = (application as OlamKatanApplication).progressRepository
-    private var rounds = emptyList<CountingRound>()
-    private var difficulty = 1
+    private var rounds = level1CountingRounds.shuffled().take(4)
 
     private val _state = MutableStateFlow(CountingState())
     val state: StateFlow<CountingState> = _state.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            difficulty = progressRepository.getDifficulty("counting")
-            rounds = countingRoundsForLevel(difficulty).shuffled().take(4)
-            startRound(0)
-        }
+        startRound(0)
     }
 
     private fun startRound(index: Int) {
         if (index >= rounds.size) {
             _state.value = _state.value.copy(sessionComplete = true)
-            viewModelScope.launch { progressRepository.incrementDifficulty("counting") }
             return
         }
         _state.value = CountingState(
@@ -56,7 +49,8 @@ class CountingGardenViewModel(application: Application) : AndroidViewModel(appli
         )
     }
 
-    fun onItemTapped(): Boolean {
+    /** Returns the new count (1-based), or -1 if round is complete. */
+    fun onItemTapped(): Int {
         val current = _state.value
         val newCount = current.currentCount + 1
         val isComplete = newCount >= current.currentRound.targetNumber
@@ -71,7 +65,7 @@ class CountingGardenViewModel(application: Application) : AndroidViewModel(appli
             viewModelScope.launch { progressRepository.addStars(1) }
         }
 
-        return isComplete
+        return if (isComplete) -1 else newCount
     }
 
     fun nextRound() {
