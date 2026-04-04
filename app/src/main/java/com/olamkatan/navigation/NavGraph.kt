@@ -44,67 +44,83 @@ object Routes {
 
 @Composable
 fun OlamKatanNavGraph(navController: NavHostController) {
+    // Safe back navigation — prevents double-tap from popping past the hub
+    val safeBack: () -> Unit = {
+        if (navController.currentBackStackEntry?.destination?.route != Routes.HUB) {
+            navController.popBackStack()
+        }
+    }
+
+    // Safe navigate — prevents duplicate destinations from rapid tapping
+    val safeNavigate: (String) -> Unit = { route ->
+        if (navController.currentBackStackEntry?.destination?.route != route) {
+            navController.navigate(route) {
+                launchSingleTop = true
+            }
+        }
+    }
+
     NavHost(
         navController = navController,
         startDestination = Routes.HUB
     ) {
         composable(Routes.HUB) {
             HubScreen(
-                onIslandClick = { route -> navController.navigate(route) },
-                onSettingsClick = { navController.navigate(Routes.SETTINGS) },
-                onStickersClick = { navController.navigate(Routes.STICKERS) }
+                onIslandClick = safeNavigate,
+                onSettingsClick = { safeNavigate(Routes.SETTINGS) },
+                onStickersClick = { safeNavigate(Routes.STICKERS) }
             )
         }
         composable(Routes.ANIMALS) {
-            AnimalGardenScreen(onBack = { navController.popBackStack() })
+            AnimalGardenScreen(onBack = safeBack)
         }
         composable(Routes.COLORS) {
-            ColorSplashScreen(onBack = { navController.popBackStack() })
+            ColorSplashScreen(onBack = safeBack)
         }
         composable(Routes.SHAPES) {
-            ShapePlaygroundScreen(onBack = { navController.popBackStack() })
+            ShapePlaygroundScreen(onBack = safeBack)
         }
         composable(Routes.COUNTING) {
-            CountingGardenScreen(onBack = { navController.popBackStack() })
+            CountingGardenScreen(onBack = safeBack)
         }
         composable(Routes.MUSIC) {
-            MusicMeadowScreen(onBack = { navController.popBackStack() })
+            MusicMeadowScreen(onBack = safeBack)
         }
         composable(Routes.WORDS) {
-            WordGardenScreen(onBack = { navController.popBackStack() })
+            WordGardenScreen(onBack = safeBack)
         }
         composable(Routes.MY_DAY) {
             MyDayScreen(
-                onRoomClick = { route -> navController.navigate(route) },
-                onBack = { navController.popBackStack() }
+                onRoomClick = safeNavigate,
+                onBack = safeBack
             )
         }
         composable(Routes.MY_DAY_BATH) {
-            BathTimeScreen(onBack = { navController.popBackStack() })
+            BathTimeScreen(onBack = safeBack)
         }
         composable(Routes.MY_DAY_BRUSH) {
-            BrushyBrushyScreen(onBack = { navController.popBackStack() })
+            BrushyBrushyScreen(onBack = safeBack)
         }
         composable(Routes.MY_DAY_TIDY) {
-            TidyUpScreen(onBack = { navController.popBackStack() })
+            TidyUpScreen(onBack = safeBack)
         }
         composable(Routes.MY_DAY_DRESS) {
-            GettingDressedScreen(onBack = { navController.popBackStack() })
+            GettingDressedScreen(onBack = safeBack)
         }
         composable(Routes.MY_DAY_TABLE) {
-            TableTimeScreen(onBack = { navController.popBackStack() })
+            TableTimeScreen(onBack = safeBack)
         }
         composable(Routes.MY_DAY_BEDTIME) {
-            BedtimeRoutineScreen(onBack = { navController.popBackStack() })
+            BedtimeRoutineScreen(onBack = safeBack)
         }
         composable(Routes.CANVAS) {
-            FreeCanvasScreen(onBack = { navController.popBackStack() })
+            FreeCanvasScreen(onBack = safeBack)
         }
         composable(Routes.STICKERS) {
-            StickerAlbumScreen(onBack = { navController.popBackStack() })
+            StickerAlbumScreen(onBack = safeBack)
         }
         composable(Routes.SETTINGS) {
-            SettingsScreen(onBack = { navController.popBackStack() })
+            SettingsScreen(onBack = safeBack)
         }
     }
 }
