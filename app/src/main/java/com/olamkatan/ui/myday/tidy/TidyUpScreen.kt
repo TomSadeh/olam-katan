@@ -43,7 +43,7 @@ import com.olamkatan.theme.CloudWhite
 import com.olamkatan.theme.EarthBrown
 import com.olamkatan.ui.common.LocalLanguage
 import com.olamkatan.ui.common.LocalSfxPlayer
-import com.olamkatan.ui.common.LocalTtsManager
+import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.DragDropState
 import com.olamkatan.ui.components.DragTarget
 import com.olamkatan.ui.components.DropZone
@@ -94,13 +94,13 @@ class TidyUpViewModel(application: Application) : AndroidViewModel(application) 
 fun TidyUpScreen(onBack: () -> Unit, viewModel: TidyUpViewModel = viewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val language = LocalLanguage.current
-    val ttsManager = LocalTtsManager.current
+    val voicePlayer = LocalVoicePlayer.current
     val sfxPlayer = LocalSfxPlayer.current
     val dragDropState = remember { DragDropState() }
 
     LaunchedEffect(Unit) {
         delay(500)
-        ttsManager.speakBilingual(BilingualText("בוא נסדר את החדר!", "Let's tidy up the room!"), language)
+        voicePlayer.play("voice_prompt_tidy_up", language)
     }
 
     CompositionLocalProvider(LocalDragDropState provides dragDropState) {
@@ -164,7 +164,7 @@ fun TidyUpScreen(onBack: () -> Unit, viewModel: TidyUpViewModel = viewModel()) {
                                     val correct = viewModel.onItemDropped(item.id, dropId)
                                     if (correct) {
                                         sfxPlayer.play(Sfx.SUCCESS)
-                                        ttsManager.speakBilingual(item.name, language)
+                                        voicePlayer.play("voice_tidy_${item.id}", language)
                                     } else {
                                         sfxPlayer.play(Sfx.WRONG_GENTLE)
                                     }

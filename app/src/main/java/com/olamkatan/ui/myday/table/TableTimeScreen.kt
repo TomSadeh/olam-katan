@@ -42,7 +42,7 @@ import com.olamkatan.theme.CloudWhite
 import com.olamkatan.theme.EarthBrown
 import com.olamkatan.ui.common.LocalLanguage
 import com.olamkatan.ui.common.LocalSfxPlayer
-import com.olamkatan.ui.common.LocalTtsManager
+import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.DragDropState
 import com.olamkatan.ui.components.DragTarget
 import com.olamkatan.ui.components.DropZone
@@ -85,13 +85,13 @@ class TableTimeViewModel(application: Application) : AndroidViewModel(applicatio
 fun TableTimeScreen(onBack: () -> Unit, viewModel: TableTimeViewModel = viewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val language = LocalLanguage.current
-    val ttsManager = LocalTtsManager.current
+    val voicePlayer = LocalVoicePlayer.current
     val sfxPlayer = LocalSfxPlayer.current
     val dragDropState = remember { DragDropState() }
 
     LaunchedEffect(Unit) {
         delay(500)
-        ttsManager.speakBilingual(BilingualText("בוא נערוך את השולחן!", "Let's set the table!"), language)
+        voicePlayer.play("voice_prompt_set_table", language)
     }
 
     CompositionLocalProvider(LocalDragDropState provides dragDropState) {
@@ -165,7 +165,7 @@ fun TableTimeScreen(onBack: () -> Unit, viewModel: TableTimeViewModel = viewMode
                                     val correct = viewModel.onItemPlaced(item.id, dropId)
                                     if (correct) {
                                         sfxPlayer.play(Sfx.DROP)
-                                        ttsManager.speakBilingual(item.name, language)
+                                        voicePlayer.play("voice_table_${item.id}", language)
                                     } else {
                                         sfxPlayer.play(Sfx.WRONG_GENTLE)
                                     }

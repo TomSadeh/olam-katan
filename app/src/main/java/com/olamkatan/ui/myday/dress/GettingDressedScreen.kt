@@ -47,7 +47,7 @@ import com.olamkatan.theme.CloudWhite
 import com.olamkatan.theme.EarthBrown
 import com.olamkatan.ui.common.LocalLanguage
 import com.olamkatan.ui.common.LocalSfxPlayer
-import com.olamkatan.ui.common.LocalTtsManager
+import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.RoundCompleteSheet
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -99,12 +99,12 @@ class GettingDressedViewModel(application: Application) : AndroidViewModel(appli
 fun GettingDressedScreen(onBack: () -> Unit, viewModel: GettingDressedViewModel = viewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val language = LocalLanguage.current
-    val ttsManager = LocalTtsManager.current
+    val voicePlayer = LocalVoicePlayer.current
     val sfxPlayer = LocalSfxPlayer.current
 
     LaunchedEffect(Unit) {
         delay(500)
-        ttsManager.speakBilingual(BilingualText("בוא נתלבש! מה שמים קודם?", "Let's get dressed! What goes on first?"), language)
+        voicePlayer.play("voice_prompt_get_dressed", language)
     }
 
     LaunchedEffect(state.currentStep) {
@@ -112,7 +112,7 @@ fun GettingDressedScreen(onBack: () -> Unit, viewModel: GettingDressedViewModel 
             val nextItem = state.clothes.getOrNull(state.currentStep)
             if (nextItem != null) {
                 delay(300)
-                ttsManager.speakBilingual(BilingualText("עכשיו ה${nextItem.name.he}!", "Now the ${nextItem.name.en}!"), language)
+                voicePlayer.play("voice_clothing_${nextItem.id}", language)
             }
         }
     }
@@ -184,10 +184,10 @@ fun GettingDressedScreen(onBack: () -> Unit, viewModel: GettingDressedViewModel 
                                     val correct = viewModel.onClothingTapped(item.id)
                                     if (correct) {
                                         sfxPlayer.play(Sfx.SUCCESS)
-                                        ttsManager.speakBilingual(item.name, language)
+                                        voicePlayer.play("voice_clothing_${item.id}", language)
                                     } else {
                                         sfxPlayer.play(Sfx.WRONG_GENTLE)
-                                        ttsManager.speakBilingual(BilingualText("לא עכשיו, ננסה משהו אחר!", "Not yet, try something else!"), language)
+                                        voicePlayer.play("voice_prompt_try_again", language)
                                     }
                                 },
                             contentAlignment = Alignment.Center

@@ -45,7 +45,7 @@ import com.olamkatan.theme.CloudWhite
 import com.olamkatan.theme.EarthBrown
 import com.olamkatan.ui.common.LocalLanguage
 import com.olamkatan.ui.common.LocalSfxPlayer
-import com.olamkatan.ui.common.LocalTtsManager
+import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.RoundCompleteSheet
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -95,7 +95,7 @@ class BedtimeRoutineViewModel(application: Application) : AndroidViewModel(appli
 fun BedtimeRoutineScreen(onBack: () -> Unit, viewModel: BedtimeRoutineViewModel = viewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val language = LocalLanguage.current
-    val ttsManager = LocalTtsManager.current
+    val voicePlayer = LocalVoicePlayer.current
     val sfxPlayer = LocalSfxPlayer.current
 
     // Gradually darken the background as steps progress
@@ -109,7 +109,7 @@ fun BedtimeRoutineScreen(onBack: () -> Unit, viewModel: BedtimeRoutineViewModel 
     LaunchedEffect(state.currentStep) {
         if (!state.isComplete && state.currentStep < bedtimeSteps.size) {
             delay(500)
-            ttsManager.speakBilingual(bedtimeSteps[state.currentStep].instruction, language)
+            voicePlayer.play("voice_prompt_good_night", language)
         }
     }
 

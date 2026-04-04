@@ -43,7 +43,7 @@ import com.olamkatan.theme.CloudWhite
 import com.olamkatan.theme.EarthBrown
 import com.olamkatan.ui.common.LocalLanguage
 import com.olamkatan.ui.common.LocalSfxPlayer
-import com.olamkatan.ui.common.LocalTtsManager
+import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.ConfettiOverlay
 import com.olamkatan.ui.components.RoundCompleteSheet
 import kotlinx.coroutines.delay
@@ -56,18 +56,15 @@ fun ColorSplashScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val language = LocalLanguage.current
-    val ttsManager = LocalTtsManager.current
+    val voicePlayer = LocalVoicePlayer.current
     val sfxPlayer = LocalSfxPlayer.current
     val scope = rememberCoroutineScope()
     var showRoundSuccess by remember { mutableStateOf(false) }
 
     LaunchedEffect(state.roundIndex) {
         delay(500)
-        ttsManager.speakBilingual(
-            BilingualText(
-                "תלחץ על ${state.targetColor.name.he}!",
-                "Tap the ${state.targetColor.name.en} one!"
-            ),
+        voicePlayer.playSequence(
+            listOf("voice_prompt_tap_the", "voice_color_${state.targetColor.id}"),
             language
         )
     }
@@ -157,10 +154,7 @@ fun ColorSplashScreen(
                                 }
                             } else {
                                 sfxPlayer.play(Sfx.WRONG_GENTLE)
-                                ttsManager.speakBilingual(
-                                    BilingualText("לא, ננסה שוב!", "Nope, try again!"),
-                                    language
-                                )
+                                voicePlayer.play("voice_prompt_try_again", language)
                             }
                         }
                     )

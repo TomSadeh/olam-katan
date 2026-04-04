@@ -49,7 +49,7 @@ import com.olamkatan.theme.CloudWhite
 import com.olamkatan.theme.EarthBrown
 import com.olamkatan.ui.common.LocalLanguage
 import com.olamkatan.ui.common.LocalSfxPlayer
-import com.olamkatan.ui.common.LocalTtsManager
+import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.ConfettiOverlay
 import com.olamkatan.ui.components.RoundCompleteSheet
 import kotlinx.coroutines.delay
@@ -130,13 +130,13 @@ class MusicMeadowViewModel(application: Application) : AndroidViewModel(applicat
 fun MusicMeadowScreen(onBack: () -> Unit, viewModel: MusicMeadowViewModel = viewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val language = LocalLanguage.current
-    val ttsManager = LocalTtsManager.current
+    val voicePlayer = LocalVoicePlayer.current
     val sfxPlayer = LocalSfxPlayer.current
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         delay(500)
-        ttsManager.speakBilingual(BilingualText("ברוך הבא למרעה המוזיקה! תלחץ על כלי נגינה!", "Welcome to Music Meadow! Tap an instrument!"), language)
+        voicePlayer.play("voice_prompt_tap_the", language)
     }
 
     // Show pattern animation
@@ -218,12 +218,12 @@ fun MusicMeadowScreen(onBack: () -> Unit, viewModel: MusicMeadowViewModel = view
                                 .background(if (isHighlighted) instrument.color else instrument.color.copy(alpha = 0.7f))
                                 .clickable(interactionSource = interactionSource, indication = null) {
                                     sfxPlayer.play(Sfx.POP)
-                                    ttsManager.speakBilingual(instrument.name, language)
+                                    voicePlayer.play("voice_instrument_${instrument.id}", language)
                                     if (state.phase == MusicPhase.PLAYER_TURN) {
                                         val result = viewModel.onInstrumentTapped(index)
                                         if (result == false) {
                                             sfxPlayer.play(Sfx.WRONG_GENTLE)
-                                            ttsManager.speakBilingual(BilingualText("ננסה שוב!", "Let's try again!"), language)
+                                            voicePlayer.play("voice_prompt_try_again", language)
                                         } else if (result == true) {
                                             sfxPlayer.play(Sfx.SUCCESS)
                                         }

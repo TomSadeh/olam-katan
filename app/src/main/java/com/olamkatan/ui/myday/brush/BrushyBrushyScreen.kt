@@ -51,7 +51,7 @@ import com.olamkatan.theme.CloudWhite
 import com.olamkatan.theme.EarthBrown
 import com.olamkatan.ui.common.LocalLanguage
 import com.olamkatan.ui.common.LocalSfxPlayer
-import com.olamkatan.ui.common.LocalTtsManager
+import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.RoundCompleteSheet
 import com.olamkatan.ui.components.WigglingItem
 import kotlinx.coroutines.delay
@@ -86,12 +86,12 @@ class BrushyBrushyViewModel(application: Application) : AndroidViewModel(applica
 fun BrushyBrushyScreen(onBack: () -> Unit, viewModel: BrushyBrushyViewModel = viewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val language = LocalLanguage.current
-    val ttsManager = LocalTtsManager.current
+    val voicePlayer = LocalVoicePlayer.current
     val sfxPlayer = LocalSfxPlayer.current
 
     LaunchedEffect(Unit) {
         delay(500)
-        ttsManager.speakBilingual(BilingualText("בוא נצחצח שיניים!", "Let's brush our teeth!"), language)
+        voicePlayer.play("voice_prompt_brush_teeth", language)
     }
 
     Box(

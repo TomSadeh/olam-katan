@@ -45,7 +45,7 @@ import com.olamkatan.theme.CloudWhite
 import com.olamkatan.theme.EarthBrown
 import com.olamkatan.ui.common.LocalLanguage
 import com.olamkatan.ui.common.LocalSfxPlayer
-import com.olamkatan.ui.common.LocalTtsManager
+import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.ConfettiOverlay
 import com.olamkatan.ui.components.DragDropState
 import com.olamkatan.ui.components.DragTarget
@@ -64,7 +64,7 @@ fun ShapePlaygroundScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val language = LocalLanguage.current
-    val ttsManager = LocalTtsManager.current
+    val voicePlayer = LocalVoicePlayer.current
     val sfxPlayer = LocalSfxPlayer.current
     val scope = rememberCoroutineScope()
     val dragDropState = remember { DragDropState() }
@@ -72,11 +72,8 @@ fun ShapePlaygroundScreen(
 
     LaunchedEffect(state.roundIndex) {
         delay(500)
-        ttsManager.speakBilingual(
-            BilingualText(
-                "גרור את ה${state.targetShape.name.he} למקום שלו!",
-                "Drag the ${state.targetShape.name.en} to its place!"
-            ),
+        voicePlayer.playSequence(
+            listOf("voice_prompt_drag_it", "voice_shape_${state.targetShape.id}"),
             language
         )
     }
@@ -177,10 +174,7 @@ fun ShapePlaygroundScreen(
                                             }
                                         } else {
                                             sfxPlayer.play(Sfx.WRONG_GENTLE)
-                                            ttsManager.speakBilingual(
-                                                BilingualText("לא, ננסה שוב!", "Nope, try again!"),
-                                                language
-                                            )
+                                            voicePlayer.play("voice_prompt_try_again", language)
                                         }
                                     }
                                 }

@@ -29,9 +29,8 @@ import androidx.compose.ui.unit.sp
 import com.olamkatan.data.content.AnimalDef
 import com.olamkatan.theme.CloudWhite
 import com.olamkatan.ui.common.LocalLanguage
-import com.olamkatan.ui.common.LocalTtsManager
+import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.WigglingItem
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -40,7 +39,7 @@ fun AnimalDisplay(
     modifier: Modifier = Modifier
 ) {
     val language = LocalLanguage.current
-    val ttsManager = LocalTtsManager.current
+    val voicePlayer = LocalVoicePlayer.current
     val scope = rememberCoroutineScope()
     val interactionSource = remember { MutableInteractionSource() }
     var isBouncing by remember { mutableStateOf(false) }
@@ -69,11 +68,12 @@ fun AnimalDisplay(
                     .clickable(interactionSource = interactionSource, indication = null) {
                         scope.launch {
                             isBouncing = true
-                            ttsManager.speakBilingual(animal.name, language)
-                            delay(1200)
-                            ttsManager.speakBilingual(animal.sound, language, flush = false)
-                            delay(600)
-                            isBouncing = false
+                            voicePlayer.playSequence(
+                                listOf("voice_animal_${animal.id}", "voice_sound_${animal.id}"),
+                                language
+                            ) {
+                                isBouncing = false
+                            }
                         }
                     },
                 contentAlignment = Alignment.Center

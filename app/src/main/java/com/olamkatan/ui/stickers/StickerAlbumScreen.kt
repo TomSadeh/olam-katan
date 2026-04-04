@@ -49,7 +49,7 @@ import com.olamkatan.theme.CloudWhite
 import com.olamkatan.theme.EarthBrown
 import com.olamkatan.ui.common.LocalLanguage
 import com.olamkatan.ui.common.LocalSfxPlayer
-import com.olamkatan.ui.common.LocalTtsManager
+import com.olamkatan.ui.common.LocalVoicePlayer
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -92,7 +92,7 @@ class StickerAlbumViewModel(application: Application) : AndroidViewModel(applica
 @Composable
 fun StickerAlbumScreen(onBack: () -> Unit, viewModel: StickerAlbumViewModel = viewModel()) {
     val language = LocalLanguage.current
-    val ttsManager = LocalTtsManager.current
+    val voicePlayer = LocalVoicePlayer.current
     val sfxPlayer = LocalSfxPlayer.current
     val progress by viewModel.appProgress.collectAsStateWithLifecycle(GameProgress())
 
@@ -142,7 +142,7 @@ fun StickerAlbumScreen(onBack: () -> Unit, viewModel: StickerAlbumViewModel = vi
                             .clickable(interactionSource = interactionSource, indication = null) {
                                 if (isUnlocked) {
                                     sfxPlayer.play(Sfx.POP)
-                                    ttsManager.speakBilingual(sticker.name, language)
+                                    voicePlayer.play("voice_sticker_${sticker.id}", language)
                                 }
                             },
                         contentAlignment = Alignment.Center

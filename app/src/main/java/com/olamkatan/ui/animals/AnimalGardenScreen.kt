@@ -35,14 +35,13 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.olamkatan.audio.Sfx
-import com.olamkatan.data.models.BilingualText
 import com.olamkatan.theme.EarthBrown
 import com.olamkatan.theme.GrassGreen
 import com.olamkatan.ui.animals.components.AnimalDisplay
 import com.olamkatan.ui.animals.components.FoodItem
 import com.olamkatan.ui.common.LocalLanguage
 import com.olamkatan.ui.common.LocalSfxPlayer
-import com.olamkatan.ui.common.LocalTtsManager
+import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.ConfettiOverlay
 import com.olamkatan.ui.components.DragDropState
 import com.olamkatan.ui.components.DropZone
@@ -58,21 +57,17 @@ fun AnimalGardenScreen(
 ) {
     val state by animalViewModel.state.collectAsStateWithLifecycle()
     val language = LocalLanguage.current
-    val ttsManager = LocalTtsManager.current
+    val voicePlayer = LocalVoicePlayer.current
     val sfxPlayer = LocalSfxPlayer.current
     val scope = rememberCoroutineScope()
     val dragDropState = remember { DragDropState() }
 
     var showRoundSuccess by remember { mutableStateOf(false) }
 
-    // Speak animal name when a new round starts
     LaunchedEffect(state.roundIndex) {
         delay(500)
-        ttsManager.speakBilingual(
-            BilingualText(
-                "מי רוצה אוכל? זה ${state.currentAnimal.name.he}!",
-                "Who's hungry? It's a ${state.currentAnimal.name.en}!"
-            ),
+        voicePlayer.playSequence(
+            listOf("voice_prompt_whos_hungry", "voice_animal_${state.currentAnimal.id}"),
             language
         )
     }
@@ -93,7 +88,6 @@ fun AnimalGardenScreen(
                     .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Top bar: back button + round dots
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -107,14 +101,9 @@ fun AnimalGardenScreen(
                             .clickable { onBack() },
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = "◀",
-                            fontSize = 24.sp,
-                            color = Color.White
-                        )
+                        Text("◀", fontSize = 24.sp, color = Color.White)
                     }
 
-                    // Round indicator dots
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         repeat(state.totalRounds) { i ->
                             Box(
@@ -132,17 +121,11 @@ fun AnimalGardenScreen(
                         }
                     }
 
-                    // Star count for this session
-                    Text(
-                        text = "⭐ ${state.totalStarsEarned}",
-                        fontSize = 24.sp,
-                        color = Color.White
-                    )
+                    Text("⭐ ${state.totalStarsEarned}", fontSize = 24.sp, color = Color.White)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Animal in center with drop zone
                 Box(
                     modifier = Modifier.weight(1f),
                     contentAlignment = Alignment.Center
@@ -155,7 +138,6 @@ fun AnimalGardenScreen(
                     }
                 }
 
-                // Food tray at bottom
                 AnimatedVisibility(
                     visible = !state.roundComplete,
                     enter = fadeIn() + scaleIn()
@@ -180,10 +162,7 @@ fun AnimalGardenScreen(
                                             }
                                         } else {
                                             sfxPlayer.play(Sfx.WRONG_GENTLE)
-                                            ttsManager.speakBilingual(
-                                                BilingualText("לא, ננסה שוב!", "Nope, try again!"),
-                                                language
-                                            )
+                                            voicePlayer.play("voice_prompt_try_again", language)
                                         }
                                     } else {
                                         sfxPlayer.play(Sfx.WRONG_GENTLE)
@@ -195,18 +174,12 @@ fun AnimalGardenScreen(
                 }
             }
 
-            // Success confetti per round
             ConfettiOverlay(show = showRoundSuccess)
 
-            // Session complete overlay
             if (state.sessionComplete) {
                 RoundCompleteSheet(
                     starsEarned = state.totalStarsEarned,
-                    onContinue = {
-                        // Restart
-                        // For now, just go back
-                        onBack()
-                    },
+                    onContinue = { onBack() },
                     onHome = onBack
                 )
             }

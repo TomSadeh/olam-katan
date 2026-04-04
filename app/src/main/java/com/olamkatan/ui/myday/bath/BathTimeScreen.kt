@@ -44,7 +44,7 @@ import com.olamkatan.theme.CloudWhite
 import com.olamkatan.theme.EarthBrown
 import com.olamkatan.ui.common.LocalLanguage
 import com.olamkatan.ui.common.LocalSfxPlayer
-import com.olamkatan.ui.common.LocalTtsManager
+import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.ConfettiOverlay
 import com.olamkatan.ui.components.DragDropState
 import com.olamkatan.ui.components.DragTarget
@@ -95,14 +95,14 @@ class BathTimeViewModel(application: Application) : AndroidViewModel(application
 fun BathTimeScreen(onBack: () -> Unit, viewModel: BathTimeViewModel = viewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val language = LocalLanguage.current
-    val ttsManager = LocalTtsManager.current
+    val voicePlayer = LocalVoicePlayer.current
     val sfxPlayer = LocalSfxPlayer.current
     val scope = rememberCoroutineScope()
     val dragDropState = androidx.compose.runtime.remember { DragDropState() }
 
     LaunchedEffect(Unit) {
         delay(500)
-        ttsManager.speakBilingual(BilingualText("בוא נתרחץ! גרור את הסבון!", "Let's take a bath! Drag the soap!"), language)
+        voicePlayer.play("voice_prompt_bath", language)
     }
 
     CompositionLocalProvider(LocalDragDropState provides dragDropState) {
@@ -163,7 +163,7 @@ fun BathTimeScreen(onBack: () -> Unit, viewModel: BathTimeViewModel = viewModel(
                             .background(Color(0xFF29B6F6))
                             .clickable {
                                 sfxPlayer.play(Sfx.WHOOSH)
-                                ttsManager.speakBilingual(BilingualText("שטיפה!", "Rinse!"), language)
+                                voicePlayer.play("voice_prompt_bath", language)
                                 viewModel.onRinse()
                             },
                         contentAlignment = Alignment.Center
@@ -177,7 +177,7 @@ fun BathTimeScreen(onBack: () -> Unit, viewModel: BathTimeViewModel = viewModel(
                                 viewModel.onSoapDropped(dropId)
                                 sfxPlayer.play(Sfx.POP)
                                 val part = state.bodyParts.find { it.id == dropId }
-                                if (part != null) ttsManager.speakBilingual(part.name, language)
+                                if (part != null) voicePlayer.play("voice_body_${part.id}", language)
                             }
                         }
                     ) {

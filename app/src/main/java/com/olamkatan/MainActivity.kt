@@ -10,12 +10,14 @@ import androidx.core.view.WindowInsetsControllerCompat
 import com.olamkatan.audio.MusicPlayer
 import com.olamkatan.audio.SfxPlayer
 import com.olamkatan.audio.TtsManager
+import com.olamkatan.audio.VoicePlayer
 
 class MainActivity : ComponentActivity() {
 
     private lateinit var ttsManager: TtsManager
     private lateinit var sfxPlayer: SfxPlayer
     private lateinit var musicPlayer: MusicPlayer
+    private lateinit var voicePlayer: VoicePlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +26,7 @@ class MainActivity : ComponentActivity() {
         ttsManager = TtsManager(this)
         sfxPlayer = SfxPlayer(this)
         musicPlayer = MusicPlayer(this)
+        voicePlayer = VoicePlayer(this)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
         WindowInsetsControllerCompat(window, window.decorView).let { controller ->
@@ -39,6 +42,7 @@ class MainActivity : ComponentActivity() {
                 ttsManager = ttsManager,
                 sfxPlayer = sfxPlayer,
                 musicPlayer = musicPlayer,
+                voicePlayer = voicePlayer,
                 settingsRepository = app.settingsRepository,
                 progressRepository = app.progressRepository
             )
@@ -60,5 +64,6 @@ class MainActivity : ComponentActivity() {
         ttsManager.shutdown()
         sfxPlayer.release()
         musicPlayer.release()
+        voicePlayer.release()
     }
 }

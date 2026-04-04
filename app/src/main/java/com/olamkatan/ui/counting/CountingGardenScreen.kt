@@ -43,13 +43,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.olamkatan.audio.Sfx
-import com.olamkatan.data.content.hebrewNumbers
-import com.olamkatan.data.models.BilingualText
 import com.olamkatan.theme.CloudWhite
 import com.olamkatan.theme.EarthBrown
 import com.olamkatan.ui.common.LocalLanguage
 import com.olamkatan.ui.common.LocalSfxPlayer
-import com.olamkatan.ui.common.LocalTtsManager
+import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.ConfettiOverlay
 import com.olamkatan.ui.components.RoundCompleteSheet
 import kotlinx.coroutines.delay
@@ -62,20 +60,14 @@ fun CountingGardenScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val language = LocalLanguage.current
-    val ttsManager = LocalTtsManager.current
+    val voicePlayer = LocalVoicePlayer.current
     val sfxPlayer = LocalSfxPlayer.current
     val scope = rememberCoroutineScope()
     var showRoundSuccess by remember { mutableStateOf(false) }
 
     LaunchedEffect(state.roundIndex) {
         delay(500)
-        ttsManager.speakBilingual(
-            BilingualText(
-                "שים ${state.currentRound.targetNumber} ${state.currentRound.itemName.he} בגינה!",
-                "Put ${state.currentRound.targetNumber} ${state.currentRound.itemName.en} in the garden!"
-            ),
-            language
-        )
+        voicePlayer.play("voice_prompt_count_along", language)
     }
 
     Box(
@@ -191,10 +183,7 @@ fun CountingGardenScreen(
                             val complete = viewModel.onItemTapped()
                             sfxPlayer.play(Sfx.POP)
                             // Speak the number
-                            val numIndex = state.currentCount - 1
-                            if (numIndex in hebrewNumbers.indices) {
-                                ttsManager.speakBilingual(hebrewNumbers[numIndex], language)
-                            }
+                            voicePlayer.play("voice_number_${state.currentCount}", language)
                             if (complete) {
                                 sfxPlayer.play(Sfx.SUCCESS)
                                 showRoundSuccess = true

@@ -20,6 +20,7 @@ import com.olamkatan.audio.MusicPlayer
 import com.olamkatan.audio.Sfx
 import com.olamkatan.audio.SfxPlayer
 import com.olamkatan.audio.TtsManager
+import com.olamkatan.audio.VoicePlayer
 import com.olamkatan.data.ProgressRepository
 import com.olamkatan.data.SettingsRepository
 import com.olamkatan.data.models.Language
@@ -31,6 +32,7 @@ import com.olamkatan.ui.common.LocalLanguage
 import com.olamkatan.ui.common.LocalMusicPlayer
 import com.olamkatan.ui.common.LocalSfxPlayer
 import com.olamkatan.ui.common.LocalTtsManager
+import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.TimeLimitOverlay
 import kotlinx.coroutines.delay
 
@@ -39,6 +41,7 @@ fun OlamKatanApp(
     ttsManager: TtsManager,
     sfxPlayer: SfxPlayer,
     musicPlayer: MusicPlayer,
+    voicePlayer: VoicePlayer,
     settingsRepository: SettingsRepository,
     progressRepository: ProgressRepository
 ) {
@@ -64,6 +67,7 @@ fun OlamKatanApp(
     LaunchedEffect(settings.soundEnabled) {
         sfxPlayer.enabled = settings.soundEnabled
         ttsManager.enabled = settings.soundEnabled
+        voicePlayer.enabled = settings.soundEnabled
     }
 
     LaunchedEffect(settings.musicEnabled) {
@@ -97,6 +101,7 @@ fun OlamKatanApp(
             LocalTtsManager provides ttsManager,
             LocalSfxPlayer provides sfxPlayer,
             LocalMusicPlayer provides musicPlayer,
+            LocalVoicePlayer provides voicePlayer,
             LocalLayoutDirection provides layoutDirection
         ) {
             Box(modifier = Modifier.fillMaxSize()) {

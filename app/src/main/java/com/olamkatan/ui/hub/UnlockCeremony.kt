@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.olamkatan.data.models.BilingualText
 import com.olamkatan.theme.CloudWhite
 import com.olamkatan.ui.common.LocalLanguage
+import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.ConfettiOverlay
 
 @Composable
@@ -32,6 +34,13 @@ fun UnlockCeremony(
     modifier: Modifier = Modifier
 ) {
     val language = LocalLanguage.current
+    val voicePlayer = LocalVoicePlayer.current
+
+    LaunchedEffect(unlockedIslands) {
+        if (unlockedIslands.isNotEmpty()) {
+            voicePlayer.play("voice_prompt_new_island", language)
+        }
+    }
 
     AnimatedVisibility(
         visible = unlockedIslands.isNotEmpty(),
