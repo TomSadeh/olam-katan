@@ -1,0 +1,93 @@
+package com.olamkatan.ui.animals.components
+
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.olamkatan.data.content.AnimalDef
+import com.olamkatan.theme.CloudWhite
+import com.olamkatan.ui.common.LocalLanguage
+import com.olamkatan.ui.common.LocalTtsManager
+import com.olamkatan.ui.components.WigglingItem
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+
+@Composable
+fun AnimalDisplay(
+    animal: AnimalDef,
+    modifier: Modifier = Modifier
+) {
+    val language = LocalLanguage.current
+    val ttsManager = LocalTtsManager.current
+    val scope = rememberCoroutineScope()
+    val interactionSource = remember { MutableInteractionSource() }
+    var isBouncing by remember { mutableStateOf(false) }
+
+    val bounceScale by animateFloatAsState(
+        targetValue = if (isBouncing) 1.15f else 1f,
+        animationSpec = spring(dampingRatio = 0.4f, stiffness = 300f),
+        label = "bounce"
+    )
+
+    WigglingItem(enabled = !isBouncing) {
+        Column(
+            modifier = modifier
+                .graphicsLayer {
+                    scaleX = bounceScale
+                    scaleY = bounceScale
+                },
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(160.dp)
+                    .shadow(12.dp, CircleShape)
+                    .clip(CircleShape)
+                    .background(animal.color)
+                    .clickable(interactionSource = interactionSource, indication = null) {
+                        scope.launch {
+                            isBouncing = true
+                            ttsManager.speakBilingual(animal.name, language)
+                            delay(1200)
+                            ttsManager.speakBilingual(animal.sound, language, flush = false)
+                            delay(600)
+                            isBouncing = false
+                        }
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = animal.emoji, fontSize = 80.sp)
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = animal.name.resolve(language),
+                style = MaterialTheme.typography.headlineMedium,
+                color = CloudWhite
+            )
+        }
+    }
+}

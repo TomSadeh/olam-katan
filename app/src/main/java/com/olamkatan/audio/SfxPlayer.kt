@@ -6,6 +6,8 @@ import android.media.SoundPool
 
 class SfxPlayer(private val context: Context) {
 
+    var enabled = true
+
     private val soundPool: SoundPool = SoundPool.Builder()
         .setMaxStreams(6)
         .setAudioAttributes(
@@ -22,8 +24,9 @@ class SfxPlayer(private val context: Context) {
         loadedSounds[name] = soundPool.load(context, resId, 1)
     }
 
-    fun play(name: String, volume: Float = 1f) {
-        loadedSounds[name]?.let { soundId ->
+    fun play(sfx: Sfx, volume: Float = 1f) {
+        if (!enabled) return
+        loadedSounds[sfx.name]?.let { soundId ->
             soundPool.play(soundId, volume, volume, 1, 0, 1f)
         }
     }

@@ -10,6 +10,7 @@ import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.olamkatan.data.models.GameProgress
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 private val Context.progressDataStore: DataStore<Preferences> by preferencesDataStore(name = "progress")
@@ -54,11 +55,8 @@ class ProgressRepository(private val context: Context) {
     }
 
     suspend fun getDifficulty(island: String): Int {
-        var level = 1
-        context.progressDataStore.edit { prefs ->
-            level = prefs[difficultyKey(island)] ?: 1
-        }
-        return level
+        val prefs = context.progressDataStore.data.first()
+        return prefs[difficultyKey(island)] ?: 1
     }
 
     suspend fun incrementDifficulty(island: String) {
@@ -66,5 +64,19 @@ class ProgressRepository(private val context: Context) {
             val current = prefs[difficultyKey(island)] ?: 1
             prefs[difficultyKey(island)] = current + 1
         }
+    }
+
+    suspend fun checkAndUnlockIslands(): Set<String> {
+        var newUnlocks = emptySet<String>()
+        context.progressDataStore.edit { prefs ->
+            val totalStars = prefs[Keys.TOTAL_STARS] ?: 0
+            val unlocked = prefs[Keys.UNLOCKED_ISLANDS] ?: setOf("animals")
+            val toUnlock = ProgressionManager.getUnlockableIslands(totalStars, unlocked)
+            if (toUnlock.isNotEmpty()) {
+                prefs[Keys.UNLOCKED_ISLANDS] = unlocked + toUnlock
+                newUnlocks = toUnlock
+            }
+        }
+        return newUnlocks
     }
 }
