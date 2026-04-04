@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.olamkatan.data.models.BilingualText
+import com.olamkatan.data.models.Gender
 import com.olamkatan.data.models.Language
 import com.olamkatan.theme.CloudWhite
 import com.olamkatan.theme.EarthBrown
@@ -79,6 +80,15 @@ fun SettingsScreen(
                     labelOn = "עברית",
                     labelOff = "English",
                     onToggle = { settingsViewModel.toggleLanguage(language) }
+                )
+
+                SettingsToggleRow(
+                    label = BilingualText("ילד/ה", "Boy/Girl").resolve(language),
+                    emoji = "\uD83E\uDDD2",
+                    checked = settings.gender == Gender.GIRL,
+                    labelOn = BilingualText("ילדה 👧", "Girl 👧").resolve(language),
+                    labelOff = BilingualText("ילד 👦", "Boy 👦").resolve(language),
+                    onToggle = { settingsViewModel.toggleGender(settings.gender) }
                 )
 
                 SettingsToggleRow(

@@ -19,7 +19,8 @@ data class ShapeRoundState(
     val totalRounds: Int = 4,
     val roundComplete: Boolean = false,
     val sessionComplete: Boolean = false,
-    val totalStarsEarned: Int = 0
+    val totalStarsEarned: Int = 0,
+    val isLoading: Boolean = true
 )
 
 class ShapePlaygroundViewModel(application: Application) : AndroidViewModel(application) {
@@ -52,7 +53,8 @@ class ShapePlaygroundViewModel(application: Application) : AndroidViewModel(appl
             shapeChoices = allShapes.shuffled().take(if (difficulty >= 2) 6 else 4),
             roundIndex = index,
             totalRounds = rounds.size,
-            totalStarsEarned = _state.value.totalStarsEarned
+            totalStarsEarned = _state.value.totalStarsEarned,
+            isLoading = false
         )
     }
 

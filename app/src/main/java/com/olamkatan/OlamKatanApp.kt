@@ -29,6 +29,7 @@ import com.olamkatan.theme.OlamKatanTheme
 import com.olamkatan.ui.common.AppViewModel
 import com.olamkatan.ui.common.LocalAppSettings
 import com.olamkatan.ui.common.LocalLanguage
+import com.olamkatan.ui.common.LocalGender
 import com.olamkatan.ui.common.LocalMusicPlayer
 import com.olamkatan.ui.common.LocalSfxPlayer
 import com.olamkatan.ui.common.LocalTtsManager
@@ -70,6 +71,10 @@ fun OlamKatanApp(
         voicePlayer.enabled = settings.soundEnabled
     }
 
+    LaunchedEffect(settings.gender) {
+        voicePlayer.gender = settings.gender
+    }
+
     LaunchedEffect(settings.musicEnabled) {
         musicPlayer.setEnabled(settings.musicEnabled)
     }
@@ -97,6 +102,7 @@ fun OlamKatanApp(
     OlamKatanTheme {
         CompositionLocalProvider(
             LocalLanguage provides language,
+            LocalGender provides settings.gender,
             LocalAppSettings provides settings,
             LocalTtsManager provides ttsManager,
             LocalSfxPlayer provides sfxPlayer,

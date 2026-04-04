@@ -6,9 +6,11 @@ import com.olamkatan.audio.SfxPlayer
 import com.olamkatan.audio.TtsManager
 import com.olamkatan.audio.VoicePlayer
 import com.olamkatan.data.models.AppSettings
+import com.olamkatan.data.models.Gender
 import com.olamkatan.data.models.Language
 
 val LocalLanguage = compositionLocalOf { Language.HEBREW }
+val LocalGender = compositionLocalOf { Gender.GIRL }
 val LocalAppSettings = compositionLocalOf { AppSettings() }
 val LocalTtsManager = compositionLocalOf<TtsManager> { error("No TtsManager provided") }
 val LocalSfxPlayer = compositionLocalOf<SfxPlayer> { error("No SfxPlayer provided") }

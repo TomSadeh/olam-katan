@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.olamkatan.OlamKatanApplication
+import com.olamkatan.data.models.Gender
 import com.olamkatan.data.models.Language
 import kotlinx.coroutines.launch
 
@@ -27,6 +28,16 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
     fun toggleMusic(enabled: Boolean) {
         viewModelScope.launch { settingsRepository.updateMusic(!enabled) }
+    }
+
+    fun toggleGender(current: Gender) {
+        viewModelScope.launch {
+            val next = when (current) {
+                Gender.GIRL -> Gender.BOY
+                Gender.BOY -> Gender.GIRL
+            }
+            settingsRepository.updateGender(next)
+        }
     }
 
     fun cycleTimeLimit(current: Int) {

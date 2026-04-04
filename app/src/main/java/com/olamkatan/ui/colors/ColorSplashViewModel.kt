@@ -19,7 +19,8 @@ data class ColorRoundState(
     val totalRounds: Int = 4,
     val showSuccess: Boolean = false,
     val sessionComplete: Boolean = false,
-    val totalStarsEarned: Int = 0
+    val totalStarsEarned: Int = 0,
+    val isLoading: Boolean = true
 )
 
 class ColorSplashViewModel(application: Application) : AndroidViewModel(application) {
@@ -53,7 +54,8 @@ class ColorSplashViewModel(application: Application) : AndroidViewModel(applicat
             colorChoices = allColors.shuffled().take(choiceCount),
             roundIndex = index,
             totalRounds = rounds.size,
-            totalStarsEarned = _state.value.totalStarsEarned
+            totalStarsEarned = _state.value.totalStarsEarned,
+            isLoading = false
         )
     }
 

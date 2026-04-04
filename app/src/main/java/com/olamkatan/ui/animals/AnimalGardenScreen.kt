@@ -64,6 +64,8 @@ fun AnimalGardenScreen(
 
     var showRoundSuccess by remember { mutableStateOf(false) }
 
+    if (state.isLoading) return
+
     LaunchedEffect(state.roundIndex) {
         delay(500)
         voicePlayer.playSequence(

@@ -22,7 +22,8 @@ data class AnimalRoundState(
     val roundComplete: Boolean = false,
     val sessionComplete: Boolean = false,
     val totalStarsEarned: Int = 0,
-    val showSuccess: Boolean = false
+    val showSuccess: Boolean = false,
+    val isLoading: Boolean = true
 )
 
 class AnimalGardenViewModel(application: Application) : AndroidViewModel(application) {
@@ -68,7 +69,8 @@ class AnimalGardenViewModel(application: Application) : AndroidViewModel(applica
             foodChoices = foodChoices,
             roundIndex = index,
             totalRounds = animals.size,
-            totalStarsEarned = _state.value.totalStarsEarned
+            totalStarsEarned = _state.value.totalStarsEarned,
+            isLoading = false
         )
     }
 
