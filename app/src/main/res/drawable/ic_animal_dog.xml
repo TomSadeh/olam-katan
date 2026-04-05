@@ -1,0 +1,66 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    <!-- Body -->
+    <path android:fillColor="#D2B48C"
+        android:pathData="M35,50 Q35,35 60,33 Q85,35 85,50 Q85,78 60,82 Q35,78 35,50Z"/>
+    <!-- Belly -->
+    <path android:fillColor="#F5DEB3"
+        android:pathData="M45,55 Q45,65 60,70 Q75,65 75,55 Q75,50 60,48 Q45,50 45,55Z"/>
+    <!-- Head -->
+    <path android:fillColor="#D2B48C"
+        android:pathData="M38,38 Q38,15 60,13 Q82,15 82,38 Q82,48 60,50 Q38,48 38,38Z"/>
+    <!-- Ears (floppy) -->
+    <path android:fillColor="#A0522D"
+        android:pathData="M38,25 Q25,20 22,35 Q24,48 35,42Z"/>
+    <path android:fillColor="#A0522D"
+        android:pathData="M82,25 Q95,20 98,35 Q96,48 85,42Z"/>
+    <!-- Inner ears -->
+    <path android:fillColor="#FFAB91"
+        android:pathData="M35,28 Q27,25 26,35 Q28,43 34,39Z"/>
+    <path android:fillColor="#FFAB91"
+        android:pathData="M85,28 Q93,25 94,35 Q92,43 86,39Z"/>
+    <!-- Eyes -->
+    <path android:fillColor="#3E2723"
+        android:pathData="M50,30 A4,4 0 1,1 50,30.01Z"/>
+    <path android:fillColor="#3E2723"
+        android:pathData="M70,30 A4,4 0 1,1 70,30.01Z"/>
+    <!-- Eye shine -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M48,28 A2,2 0 1,1 48,28.01Z"/>
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M68,28 A2,2 0 1,1 68,28.01Z"/>
+    <!-- Nose -->
+    <path android:fillColor="#3E2723"
+        android:pathData="M55,37 Q55,34 60,34 Q65,34 65,37 Q65,40 60,41 Q55,40 55,37Z"/>
+    <!-- Nose shine -->
+    <path android:fillColor="#5D4037"
+        android:pathData="M57,35 A1.5,1 0 1,1 57,35.01Z"/>
+    <!-- Mouth -->
+    <path android:fillColor="@android:color/transparent"
+        android:strokeColor="#5D4037"
+        android:strokeWidth="1.5"
+        android:pathData="M60,41 L60,44"/>
+    <path android:fillColor="@android:color/transparent"
+        android:strokeColor="#5D4037"
+        android:strokeWidth="1.2"
+        android:pathData="M54,44 Q60,48 66,44"/>
+    <!-- Tongue -->
+    <path android:fillColor="#EF9A9A"
+        android:pathData="M58,44 Q58,49 60,50 Q62,49 62,44Z"/>
+    <!-- Legs -->
+    <path android:fillColor="#C8A882"
+        android:pathData="M42,75 L42,98 L50,98 L50,75Z"/>
+    <path android:fillColor="#C8A882"
+        android:pathData="M70,75 L70,98 L78,98 L78,75Z"/>
+    <!-- Paws -->
+    <path android:fillColor="#D2B48C"
+        android:pathData="M40,95 Q40,102 46,102 L50,102 Q54,102 54,95Z"/>
+    <path android:fillColor="#D2B48C"
+        android:pathData="M68,95 Q68,102 74,102 L78,102 Q82,102 82,95Z"/>
+    <!-- Tail -->
+    <path android:fillColor="#D2B48C"
+        android:pathData="M83,50 Q95,40 100,45 Q102,50 95,48"/>
+</vector>

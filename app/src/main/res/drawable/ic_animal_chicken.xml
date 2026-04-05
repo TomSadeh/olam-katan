@@ -1,0 +1,61 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    <!-- Body -->
+    <path android:fillColor="#FFF8DC"
+        android:pathData="M35,45 Q35,28 60,25 Q85,28 85,45 Q85,75 60,80 Q35,75 35,45Z"/>
+    <!-- Wing -->
+    <path android:fillColor="#FFE082"
+        android:pathData="M78,40 Q90,45 88,60 Q85,70 75,65 Q72,55 78,40Z"/>
+    <!-- Wing detail -->
+    <path android:fillColor="#FFD54F"
+        android:pathData="M80,48 Q86,50 85,58 Q82,62 78,58Z"/>
+    <!-- Head -->
+    <path android:fillColor="#FFF8DC"
+        android:pathData="M42,30 Q42,10 60,8 Q78,10 78,30 Q78,40 60,42 Q42,40 42,30Z"/>
+    <!-- Comb -->
+    <path android:fillColor="#EF5350"
+        android:pathData="M50,12 Q48,2 55,5 Q52,0 58,3 Q56,0 62,4 Q60,0 66,5 Q64,2 70,12Z"/>
+    <!-- Eyes -->
+    <path android:fillColor="#3E2723"
+        android:pathData="M50,24 A3,3 0 1,1 50,24.01Z"/>
+    <path android:fillColor="#3E2723"
+        android:pathData="M70,24 A3,3 0 1,1 70,24.01Z"/>
+    <!-- Eye shine -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M49,22 A1.5,1.5 0 1,1 49,22.01Z"/>
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M69,22 A1.5,1.5 0 1,1 69,22.01Z"/>
+    <!-- Beak -->
+    <path android:fillColor="#FF8F00"
+        android:pathData="M55,30 L60,38 L65,30Z"/>
+    <!-- Beak top -->
+    <path android:fillColor="#FFB300"
+        android:pathData="M55,30 L60,34 L65,30Z"/>
+    <!-- Wattle -->
+    <path android:fillColor="#EF5350"
+        android:pathData="M57,36 Q60,42 63,36Z"/>
+    <!-- Tail feathers -->
+    <path android:fillColor="#FFB74D"
+        android:pathData="M30,50 Q20,40 25,35 Q28,38 30,45Z"/>
+    <path android:fillColor="#FFD54F"
+        android:pathData="M28,55 Q16,48 20,40 Q24,44 28,50Z"/>
+    <path android:fillColor="#FFA726"
+        android:pathData="M32,58 Q18,55 22,45 Q26,50 32,55Z"/>
+    <!-- Legs -->
+    <path android:fillColor="#FF8F00"
+        android:pathData="M50,75 L50,92 L54,92 L54,75Z"/>
+    <path android:fillColor="#FF8F00"
+        android:pathData="M66,75 L66,92 L70,92 L70,75Z"/>
+    <!-- Feet -->
+    <path android:fillColor="#FF8F00"
+        android:pathData="M44,92 L50,92 L50,95 L42,95Z"/>
+    <path android:fillColor="#FF8F00"
+        android:pathData="M54,92 L54,95 L58,95 L54,92Z"/>
+    <path android:fillColor="#FF8F00"
+        android:pathData="M60,92 L66,92 L66,95 L58,95Z"/>
+    <path android:fillColor="#FF8F00"
+        android:pathData="M70,92 L70,95 L74,95 L70,92Z"/>
+</vector>

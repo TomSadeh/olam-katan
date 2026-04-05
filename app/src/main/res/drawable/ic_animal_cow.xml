@@ -1,0 +1,68 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    <!-- Body -->
+    <path android:fillColor="#F5F5DC"
+        android:pathData="M30,55 Q30,35 60,35 Q90,35 90,55 Q90,85 60,90 Q30,85 30,55Z"/>
+    <!-- Spots -->
+    <path android:fillColor="#8D6E63"
+        android:pathData="M45,50 Q50,45 55,50 Q50,55 45,50Z"/>
+    <path android:fillColor="#8D6E63"
+        android:pathData="M65,60 Q72,55 75,62 Q70,67 65,60Z"/>
+    <!-- Head -->
+    <path android:fillColor="#F5F5DC"
+        android:pathData="M40,40 Q40,20 60,18 Q80,20 80,40 Q80,50 60,52 Q40,50 40,40Z"/>
+    <!-- Ears -->
+    <path android:fillColor="#FFCC80"
+        android:pathData="M38,28 L28,22 L36,35Z"/>
+    <path android:fillColor="#FFCC80"
+        android:pathData="M82,28 L92,22 L84,35Z"/>
+    <!-- Horns -->
+    <path android:fillColor="#FFE082"
+        android:pathData="M45,22 L42,10 L48,18Z"/>
+    <path android:fillColor="#FFE082"
+        android:pathData="M75,22 L78,10 L72,18Z"/>
+    <!-- Eyes -->
+    <path android:fillColor="#4E342E"
+        android:pathData="M50,33 A3,3 0 1,1 50,33.01Z"/>
+    <path android:fillColor="#4E342E"
+        android:pathData="M70,33 A3,3 0 1,1 70,33.01Z"/>
+    <!-- Eye shine -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M49,31 A1.5,1.5 0 1,1 49,31.01Z"/>
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M69,31 A1.5,1.5 0 1,1 69,31.01Z"/>
+    <!-- Snout -->
+    <path android:fillColor="#FFCC80"
+        android:pathData="M52,38 Q52,42 60,44 Q68,42 68,38 Q68,36 60,35 Q52,36 52,38Z"/>
+    <!-- Nostrils -->
+    <path android:fillColor="#A1887F"
+        android:pathData="M56,39 A1.5,1 0 1,1 56,39.01Z"/>
+    <path android:fillColor="#A1887F"
+        android:pathData="M64,39 A1.5,1 0 1,1 64,39.01Z"/>
+    <!-- Mouth (smile) -->
+    <path android:fillColor="@android:color/transparent"
+        android:strokeColor="#A1887F"
+        android:strokeWidth="1.2"
+        android:pathData="M56,42 Q60,45 64,42"/>
+    <!-- Legs -->
+    <path android:fillColor="#D7CCC8"
+        android:pathData="M38,80 L38,100 L46,100 L46,80Z"/>
+    <path android:fillColor="#D7CCC8"
+        android:pathData="M74,80 L74,100 L82,100 L82,80Z"/>
+    <!-- Hooves -->
+    <path android:fillColor="#5D4037"
+        android:pathData="M36,97 L48,97 L48,102 L36,102Z"/>
+    <path android:fillColor="#5D4037"
+        android:pathData="M72,97 L84,97 L84,102 L72,102Z"/>
+    <!-- Tail -->
+    <path android:fillColor="@android:color/transparent"
+        android:strokeColor="#A1887F"
+        android:strokeWidth="2"
+        android:pathData="M88,60 Q100,55 95,65 Q92,70 96,68"/>
+    <!-- Tail tuft -->
+    <path android:fillColor="#8D6E63"
+        android:pathData="M94,65 Q100,62 98,70 Q93,68 94,65Z"/>
+</vector>

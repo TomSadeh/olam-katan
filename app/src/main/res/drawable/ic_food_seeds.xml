@@ -1,0 +1,28 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="80dp"
+    android:height="80dp"
+    android:viewportWidth="80"
+    android:viewportHeight="80">
+    <!-- Bowl -->
+    <path android:fillColor="#8D6E63"
+        android:pathData="M15,35 Q15,60 40,65 Q65,60 65,35Z"/>
+    <path android:fillColor="#A1887F"
+        android:pathData="M12,35 L68,35 L65,40 L15,40Z"/>
+    <!-- Seeds -->
+    <path android:fillColor="#FFD54F"
+        android:pathData="M25,38 Q27,32 30,35 Q28,40 25,38Z"/>
+    <path android:fillColor="#FFC107"
+        android:pathData="M35,36 Q37,30 40,33 Q38,38 35,36Z"/>
+    <path android:fillColor="#FFD54F"
+        android:pathData="M45,37 Q47,31 50,34 Q48,39 45,37Z"/>
+    <path android:fillColor="#FFB300"
+        android:pathData="M30,42 Q32,36 35,39 Q33,44 30,42Z"/>
+    <path android:fillColor="#FFD54F"
+        android:pathData="M40,40 Q42,34 45,37 Q43,42 40,40Z"/>
+    <path android:fillColor="#FFC107"
+        android:pathData="M50,38 Q52,32 55,35 Q53,40 50,38Z"/>
+    <path android:fillColor="#FFD54F"
+        android:pathData="M22,42 Q24,38 26,41 Q24,44 22,42Z"/>
+    <path android:fillColor="#FFB300"
+        android:pathData="M55,40 Q57,36 58,39 Q56,42 55,40Z"/>
+</vector>

@@ -1,5 +1,6 @@
 package com.olamkatan.ui.animals.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -15,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.olamkatan.data.content.FoodDef
@@ -56,7 +58,15 @@ fun FoodItem(
             contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = food.emoji, fontSize = 48.sp)
+                if (food.drawableRes != 0) {
+                    Image(
+                        painter = painterResource(id = food.drawableRes),
+                        contentDescription = food.name.en,
+                        modifier = Modifier.size(60.dp)
+                    )
+                } else {
+                    Text(text = food.emoji, fontSize = 48.sp)
+                }
                 Text(
                     text = food.name.resolve(language),
                     fontSize = 12.sp,

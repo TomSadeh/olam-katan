@@ -29,9 +29,11 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.olamkatan.data.content.AnimalDef
+import androidx.compose.foundation.Image
 import com.olamkatan.theme.CloudWhite
 import com.olamkatan.ui.common.LocalLanguage
 import com.olamkatan.ui.common.LocalVoicePlayer
@@ -99,7 +101,15 @@ fun AnimalDisplay(
                     },
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = animal.emoji, fontSize = 88.sp)
+                if (animal.drawableRes != 0) {
+                    Image(
+                        painter = painterResource(id = animal.drawableRes),
+                        contentDescription = animal.name.en,
+                        modifier = Modifier.size(120.dp)
+                    )
+                } else {
+                    Text(text = animal.emoji, fontSize = 88.sp)
+                }
             }
 
             Spacer(modifier = Modifier.height(12.dp))

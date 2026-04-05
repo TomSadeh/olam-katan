@@ -1,6 +1,8 @@
 package com.olamkatan.data.content
 
+import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color
+import com.olamkatan.R
 import com.olamkatan.data.models.BilingualText
 
 data class AnimalDef(
@@ -9,14 +11,16 @@ data class AnimalDef(
     val sound: BilingualText,
     val emoji: String,
     val color: Color,
-    val foodId: String
+    val foodId: String,
+    @DrawableRes val drawableRes: Int = 0
 )
 
 data class FoodDef(
     val id: String,
     val name: BilingualText,
     val emoji: String,
-    val color: Color
+    val color: Color,
+    @DrawableRes val drawableRes: Int = 0
 )
 
 val level1Animals = listOf(
@@ -26,7 +30,8 @@ val level1Animals = listOf(
         sound = BilingualText("מוּ!", "Moo!"),
         emoji = "\uD83D\uDC04",
         color = Color(0xFFF5F5DC),
-        foodId = "grass"
+        foodId = "grass",
+        drawableRes = R.drawable.ic_animal_cow
     ),
     AnimalDef(
         id = "dog",
@@ -34,7 +39,8 @@ val level1Animals = listOf(
         sound = BilingualText("הב הב!", "Woof!"),
         emoji = "\uD83D\uDC36",
         color = Color(0xFFD2B48C),
-        foodId = "bone"
+        foodId = "bone",
+        drawableRes = R.drawable.ic_animal_dog
     ),
     AnimalDef(
         id = "cat",
@@ -42,7 +48,8 @@ val level1Animals = listOf(
         sound = BilingualText("מיאו!", "Meow!"),
         emoji = "\uD83D\uDC31",
         color = Color(0xFFFFB347),
-        foodId = "fish"
+        foodId = "fish",
+        drawableRes = R.drawable.ic_animal_cat
     ),
     AnimalDef(
         id = "chicken",
@@ -50,7 +57,8 @@ val level1Animals = listOf(
         sound = BilingualText("קוקוריקו!", "Cock-a-doodle-doo!"),
         emoji = "\uD83D\uDC14",
         color = Color(0xFFFFF8DC),
-        foodId = "seeds"
+        foodId = "seeds",
+        drawableRes = R.drawable.ic_animal_chicken
     )
 )
 
@@ -76,25 +84,29 @@ val level1Foods = listOf(
         id = "grass",
         name = BilingualText("עשב", "Grass"),
         emoji = "\uD83C\uDF3F",
-        color = Color(0xFF4CAF50)
+        color = Color(0xFF4CAF50),
+        drawableRes = R.drawable.ic_food_grass
     ),
     FoodDef(
         id = "bone",
         name = BilingualText("עצם", "Bone"),
         emoji = "\uD83E\uDDB4",
-        color = Color(0xFFF5F5DC)
+        color = Color(0xFFF5F5DC),
+        drawableRes = R.drawable.ic_food_bone
     ),
     FoodDef(
         id = "fish",
         name = BilingualText("דג", "Fish"),
         emoji = "\uD83D\uDC1F",
-        color = Color(0xFF64B5F6)
+        color = Color(0xFF64B5F6),
+        drawableRes = R.drawable.ic_food_fish
     ),
     FoodDef(
         id = "seeds",
         name = BilingualText("גרעינים", "Seeds"),
         emoji = "\uD83C\uDF3E",
-        color = Color(0xFFFFD54F)
+        color = Color(0xFFFFD54F),
+        drawableRes = R.drawable.ic_food_seeds
     )
 )
 
