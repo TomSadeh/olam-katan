@@ -1,0 +1,34 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    <!-- Body -->
+    <path android:fillColor="#FFF9C4"
+        android:pathData="M30,55 Q25,35 55,30 Q85,35 85,55 Q85,80 55,85 Q25,80 30,55Z"/>
+    <!-- Wing -->
+    <path android:fillColor="#FFF176"
+        android:pathData="M70,45 Q85,50 80,65 Q75,75 65,70 Q60,60 70,45Z"/>
+    <!-- Head -->
+    <path android:fillColor="#FFF9C4"
+        android:pathData="M35,40 Q35,18 55,15 Q70,18 70,35 Q70,50 55,52 Q35,50 35,40Z"/>
+    <!-- Eye -->
+    <path android:fillColor="#4E342E"
+        android:pathData="M48,30 A3.5,3.5 0 1,1 48,30.01Z"/>
+    <!-- Eye shine -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M47,28 A1.5,1.5 0 1,1 47,28.01Z"/>
+    <!-- Beak -->
+    <path android:fillColor="#FF8F00"
+        android:pathData="M30,38 L20,35 L20,42 Z"/>
+    <path android:fillColor="#F57F17"
+        android:pathData="M30,38 L20,38 L20,42 L30,42Z"/>
+    <!-- Feet -->
+    <path android:fillColor="#FF8F00"
+        android:pathData="M40,82 L30,95 L38,90 L42,98 L48,90 L55,95 L50,82Z"/>
+    <path android:fillColor="#FF8F00"
+        android:pathData="M60,82 L52,95 L58,90 L62,98 L68,90 L75,95 L70,82Z"/>
+    <!-- Tail feathers -->
+    <path android:fillColor="#FFF176"
+        android:pathData="M82,50 Q95,42 92,55 Q90,62 85,58Z"/>
+</vector>

@@ -1,0 +1,20 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="80dp"
+    android:height="80dp"
+    android:viewportWidth="80"
+    android:viewportHeight="80">
+    <!-- Bread loaf body -->
+    <path android:fillColor="#D7CCC8"
+        android:pathData="M10,35 Q10,18 40,15 Q70,18 70,35 Q70,60 40,65 Q10,60 10,35Z"/>
+    <!-- Top crust -->
+    <path android:fillColor="#BCAAA4"
+        android:pathData="M10,35 Q10,18 40,15 Q70,18 70,35 Q70,30 40,26 Q10,30 10,35Z"/>
+    <!-- Score lines on top -->
+    <path android:fillColor="@android:color/transparent"
+        android:strokeColor="#A1887F"
+        android:strokeWidth="1.5"
+        android:pathData="M22,22 Q30,20 38,22 M42,22 Q50,20 58,22"/>
+    <!-- Bread slice face -->
+    <path android:fillColor="#EFEBE9"
+        android:pathData="M40,65 Q70,60 70,35 L72,35 Q72,62 42,68Z"/>
+</vector>

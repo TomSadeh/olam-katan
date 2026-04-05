@@ -32,6 +32,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.olamkatan.data.models.Language
@@ -112,7 +114,15 @@ fun IslandButton(
                 },
             contentAlignment = Alignment.Center
         ) {
-            Text(text = island.emoji, fontSize = 40.sp)
+            if (island.drawableRes != 0) {
+                Image(
+                    painter = painterResource(id = island.drawableRes),
+                    contentDescription = island.name.en,
+                    modifier = Modifier.size(70.dp)
+                )
+            } else {
+                Text(text = island.emoji, fontSize = 40.sp)
+            }
             if (!isUnlocked) {
                 Text(text = "\uD83D\uDD12", fontSize = 24.sp, modifier = Modifier.align(Alignment.BottomEnd).padding(4.dp))
             }

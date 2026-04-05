@@ -1,0 +1,21 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="80dp"
+    android:height="80dp"
+    android:viewportWidth="80"
+    android:viewportHeight="80">
+    <!-- Carrot body -->
+    <path android:fillColor="#FF7043"
+        android:pathData="M30,20 Q25,20 28,55 Q32,75 40,78 Q48,75 52,55 Q55,20 50,20Z"/>
+    <!-- Carrot lines -->
+    <path android:fillColor="@android:color/transparent"
+        android:strokeColor="#E64A19"
+        android:strokeWidth="1"
+        android:pathData="M32,35 Q40,33 48,35 M34,48 Q40,46 46,48 M36,60 Q40,58 44,60"/>
+    <!-- Leaves -->
+    <path android:fillColor="#66BB6A"
+        android:pathData="M38,20 L32,5 L36,12 L38,2 L42,12 L44,4 L48,15 L42,20Z"/>
+    <path android:fillColor="#81C784"
+        android:pathData="M34,18 L26,8 L32,14Z"/>
+    <path android:fillColor="#81C784"
+        android:pathData="M46,18 L54,8 L48,14Z"/>
+</vector>

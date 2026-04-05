@@ -63,20 +63,20 @@ val level1Animals = listOf(
 )
 
 val level2Animals = listOf(
-    AnimalDef("horse", BilingualText("סוס", "Horse"), BilingualText("איהההה!", "Neigh!"), "\uD83D\uDC34", Color(0xFF8D6E63), "hay"),
-    AnimalDef("pig", BilingualText("חזיר", "Pig"), BilingualText("חרר!", "Oink!"), "\uD83D\uDC37", Color(0xFFFFCDD2), "corn"),
-    AnimalDef("sheep", BilingualText("כבשה", "Sheep"), BilingualText("מעע!", "Baa!"), "\uD83D\uDC11", Color(0xFFF5F5F5), "clover"),
-    AnimalDef("duck", BilingualText("ברווז", "Duck"), BilingualText("גע גע!", "Quack!"), "\uD83E\uDD86", Color(0xFFFFF9C4), "bread"),
-    AnimalDef("rabbit", BilingualText("ארנב", "Rabbit"), BilingualText("...", "..."), "\uD83D\uDC30", Color(0xFFE0E0E0), "carrot"),
-    AnimalDef("goat", BilingualText("עז", "Goat"), BilingualText("מעע!", "Maa!"), "\uD83D\uDC10", Color(0xFFBCAAA4), "leaves")
+    AnimalDef("horse", BilingualText("סוס", "Horse"), BilingualText("איהההה!", "Neigh!"), "\uD83D\uDC34", Color(0xFF8D6E63), "hay", R.drawable.ic_animal_horse),
+    AnimalDef("pig", BilingualText("חזיר", "Pig"), BilingualText("חרר!", "Oink!"), "\uD83D\uDC37", Color(0xFFFFCDD2), "corn", R.drawable.ic_animal_pig),
+    AnimalDef("sheep", BilingualText("כבשה", "Sheep"), BilingualText("מעע!", "Baa!"), "\uD83D\uDC11", Color(0xFFF5F5F5), "clover", R.drawable.ic_animal_sheep),
+    AnimalDef("duck", BilingualText("ברווז", "Duck"), BilingualText("גע גע!", "Quack!"), "\uD83E\uDD86", Color(0xFFFFF9C4), "bread", R.drawable.ic_animal_duck),
+    AnimalDef("rabbit", BilingualText("ארנב", "Rabbit"), BilingualText("...", "..."), "\uD83D\uDC30", Color(0xFFE0E0E0), "carrot", R.drawable.ic_animal_rabbit),
+    AnimalDef("goat", BilingualText("עז", "Goat"), BilingualText("מעע!", "Maa!"), "\uD83D\uDC10", Color(0xFFBCAAA4), "leaves", R.drawable.ic_animal_goat)
 )
 
 val level3Animals = listOf(
-    AnimalDef("lion", BilingualText("אריה", "Lion"), BilingualText("שאגה!", "Roar!"), "\uD83E\uDD81", Color(0xFFFFB74D), "meat"),
-    AnimalDef("elephant", BilingualText("פיל", "Elephant"), BilingualText("טרררר!", "Trumpet!"), "\uD83D\uDC18", Color(0xFFBDBDBD), "peanuts"),
-    AnimalDef("monkey", BilingualText("קוף", "Monkey"), BilingualText("או או!", "Ooh ooh!"), "\uD83D\uDC35", Color(0xFF8D6E63), "banana"),
-    AnimalDef("giraffe", BilingualText("ג׳ירפה", "Giraffe"), BilingualText("...", "..."), "\uD83E\uDD92", Color(0xFFFFE082), "leaves"),
-    AnimalDef("penguin", BilingualText("פינגווין", "Penguin"), BilingualText("...", "..."), "\uD83D\uDC27", Color(0xFF263238), "fish")
+    AnimalDef("lion", BilingualText("אריה", "Lion"), BilingualText("שאגה!", "Roar!"), "\uD83E\uDD81", Color(0xFFFFB74D), "meat", R.drawable.ic_animal_lion),
+    AnimalDef("elephant", BilingualText("פיל", "Elephant"), BilingualText("טרררר!", "Trumpet!"), "\uD83D\uDC18", Color(0xFFBDBDBD), "peanuts", R.drawable.ic_animal_elephant),
+    AnimalDef("monkey", BilingualText("קוף", "Monkey"), BilingualText("או או!", "Ooh ooh!"), "\uD83D\uDC35", Color(0xFF8D6E63), "banana", R.drawable.ic_animal_monkey),
+    AnimalDef("giraffe", BilingualText("ג׳ירפה", "Giraffe"), BilingualText("...", "..."), "\uD83E\uDD92", Color(0xFFFFE082), "leaves", R.drawable.ic_animal_giraffe),
+    AnimalDef("penguin", BilingualText("פינגווין", "Penguin"), BilingualText("...", "..."), "\uD83D\uDC27", Color(0xFF263238), "fish", R.drawable.ic_animal_penguin)
 )
 
 val level1Foods = listOf(
@@ -111,18 +111,18 @@ val level1Foods = listOf(
 )
 
 val level2Foods = level1Foods + listOf(
-    FoodDef("hay", BilingualText("חציר", "Hay"), "\uD83C\uDF3E", Color(0xFFFFE082)),
-    FoodDef("corn", BilingualText("תירס", "Corn"), "\uD83C\uDF3D", Color(0xFFFFF176)),
-    FoodDef("clover", BilingualText("תלתן", "Clover"), "☘\uFE0F", Color(0xFF66BB6A)),
-    FoodDef("bread", BilingualText("לחם", "Bread"), "\uD83C\uDF5E", Color(0xFFD7CCC8)),
-    FoodDef("carrot", BilingualText("גזר", "Carrot"), "\uD83E\uDD55", Color(0xFFFF7043)),
-    FoodDef("leaves", BilingualText("עלים", "Leaves"), "\uD83C\uDF43", Color(0xFF81C784))
+    FoodDef("hay", BilingualText("חציר", "Hay"), "\uD83C\uDF3E", Color(0xFFFFE082), R.drawable.ic_food_hay),
+    FoodDef("corn", BilingualText("תירס", "Corn"), "\uD83C\uDF3D", Color(0xFFFFF176), R.drawable.ic_food_corn),
+    FoodDef("clover", BilingualText("תלתן", "Clover"), "☘\uFE0F", Color(0xFF66BB6A), R.drawable.ic_food_clover),
+    FoodDef("bread", BilingualText("לחם", "Bread"), "\uD83C\uDF5E", Color(0xFFD7CCC8), R.drawable.ic_food_bread),
+    FoodDef("carrot", BilingualText("גזר", "Carrot"), "\uD83E\uDD55", Color(0xFFFF7043), R.drawable.ic_food_carrot),
+    FoodDef("leaves", BilingualText("עלים", "Leaves"), "\uD83C\uDF43", Color(0xFF81C784), R.drawable.ic_food_leaves)
 )
 
 val level3Foods = level2Foods + listOf(
-    FoodDef("meat", BilingualText("בשר", "Meat"), "\uD83E\uDD69", Color(0xFFEF5350)),
-    FoodDef("peanuts", BilingualText("בוטנים", "Peanuts"), "\uD83E\uDD5C", Color(0xFFBCAAA4)),
-    FoodDef("banana", BilingualText("בננה", "Banana"), "\uD83C\uDF4C", Color(0xFFFFEE58))
+    FoodDef("meat", BilingualText("בשר", "Meat"), "\uD83E\uDD69", Color(0xFFEF5350), R.drawable.ic_food_meat),
+    FoodDef("peanuts", BilingualText("בוטנים", "Peanuts"), "\uD83E\uDD5C", Color(0xFFBCAAA4), R.drawable.ic_food_peanuts),
+    FoodDef("banana", BilingualText("בננה", "Banana"), "\uD83C\uDF4C", Color(0xFFFFEE58), R.drawable.ic_food_banana)
 )
 
 fun animalsForLevel(level: Int): List<AnimalDef> = when {

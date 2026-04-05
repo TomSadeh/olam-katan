@@ -1,0 +1,29 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="80dp"
+    android:height="80dp"
+    android:viewportWidth="80"
+    android:viewportHeight="80">
+    <!-- Peanut 1 - top lobe -->
+    <path android:fillColor="#BCAAA4"
+        android:pathData="M30,20 A12,10 0 1,1 30,20.01Z"/>
+    <!-- Peanut 1 - bottom lobe -->
+    <path android:fillColor="#BCAAA4"
+        android:pathData="M30,40 A12,10 0 1,1 30,40.01Z"/>
+    <!-- Peanut 1 - waist -->
+    <path android:fillColor="#A1887F"
+        android:pathData="M20,28 Q30,32 40,28 Q40,32 30,35 Q20,32 20,28Z"/>
+    <!-- Peanut 1 - texture lines -->
+    <path android:fillColor="@android:color/transparent"
+        android:strokeColor="#8D6E63"
+        android:strokeWidth="0.8"
+        android:pathData="M22,18 Q30,15 38,18 M22,38 Q30,35 38,38"/>
+    <!-- Peanut 2 - top lobe -->
+    <path android:fillColor="#D7CCC8"
+        android:pathData="M55,30 A10,8 0 1,1 55,30.01Z"/>
+    <!-- Peanut 2 - bottom lobe -->
+    <path android:fillColor="#D7CCC8"
+        android:pathData="M55,48 A10,8 0 1,1 55,48.01Z"/>
+    <!-- Peanut 2 - waist -->
+    <path android:fillColor="#BCAAA4"
+        android:pathData="M47,36 Q55,40 63,36 Q63,40 55,43 Q47,40 47,36Z"/>
+</vector>

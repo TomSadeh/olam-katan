@@ -1,6 +1,8 @@
 package com.olamkatan.ui.hub
 
+import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color
+import com.olamkatan.R
 import com.olamkatan.data.models.BilingualText
 import com.olamkatan.navigation.Routes
 import com.olamkatan.theme.CoralPink
@@ -16,6 +18,7 @@ data class IslandDef(
     val route: String,
     val color: Color,
     val emoji: String,
+    @DrawableRes val drawableRes: Int = 0,
     val starsToUnlock: Int,
     val fractionalX: Float,
     val fractionalY: Float
@@ -28,6 +31,7 @@ val allIslands = listOf(
         route = Routes.ANIMALS,
         color = GrassGreen,
         emoji = "\uD83D\uDC04",
+        drawableRes = R.drawable.ic_island_animals,
         starsToUnlock = 0,
         fractionalX = 0.12f,
         fractionalY = 0.35f
@@ -38,6 +42,7 @@ val allIslands = listOf(
         route = Routes.COLORS,
         color = CoralPink,
         emoji = "\uD83C\uDFA8",
+        drawableRes = R.drawable.ic_island_colors,
         starsToUnlock = 4,
         fractionalX = 0.32f,
         fractionalY = 0.28f
@@ -48,6 +53,7 @@ val allIslands = listOf(
         route = Routes.SHAPES,
         color = SoftPurple,
         emoji = "\uD83D\uDD37",
+        drawableRes = R.drawable.ic_island_shapes,
         starsToUnlock = 10,
         fractionalX = 0.50f,
         fractionalY = 0.32f
@@ -58,6 +64,7 @@ val allIslands = listOf(
         route = Routes.COUNTING,
         color = SunYellow,
         emoji = "\uD83C\uDF3B",
+        drawableRes = R.drawable.ic_island_counting,
         starsToUnlock = 18,
         fractionalX = 0.68f,
         fractionalY = 0.28f
@@ -68,6 +75,7 @@ val allIslands = listOf(
         route = Routes.MUSIC,
         color = WarmOrange,
         emoji = "\uD83C\uDFB5",
+        drawableRes = R.drawable.ic_island_music,
         starsToUnlock = 40,
         fractionalX = 0.85f,
         fractionalY = 0.35f
@@ -78,6 +86,7 @@ val allIslands = listOf(
         route = Routes.WORDS,
         color = CoralPink,
         emoji = "\uD83D\uDCD6",
+        drawableRes = R.drawable.ic_island_words,
         starsToUnlock = 60,
         fractionalX = 0.88f,
         fractionalY = 0.60f
@@ -88,6 +97,7 @@ val allIslands = listOf(
         route = Routes.MY_DAY,
         color = EarthBrown,
         emoji = "\uD83C\uDFE0",
+        drawableRes = R.drawable.ic_island_myday,
         starsToUnlock = 25,
         fractionalX = 0.50f,
         fractionalY = 0.70f

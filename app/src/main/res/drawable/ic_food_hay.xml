@@ -1,0 +1,19 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="80dp"
+    android:height="80dp"
+    android:viewportWidth="80"
+    android:viewportHeight="80">
+    <!-- Hay bale body -->
+    <path android:fillColor="#FFE082"
+        android:pathData="M15,25 Q15,15 40,12 Q65,15 65,25 Q65,65 40,70 Q15,65 15,25Z"/>
+    <!-- Bale lines -->
+    <path android:fillColor="@android:color/transparent"
+        android:strokeColor="#F9A825"
+        android:strokeWidth="1.5"
+        android:pathData="M18,30 Q40,28 62,30 M18,42 Q40,40 62,42 M18,54 Q40,52 62,54"/>
+    <!-- Straw bits sticking out -->
+    <path android:fillColor="#FFD54F"
+        android:pathData="M30,12 L28,5 L32,8 L34,2 L36,9 L38,4 L40,12Z"/>
+    <path android:fillColor="#FFD54F"
+        android:pathData="M45,12 L44,6 L48,3 L50,10Z"/>
+</vector>

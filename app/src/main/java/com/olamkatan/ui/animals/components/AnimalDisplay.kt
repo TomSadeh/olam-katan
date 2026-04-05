@@ -66,28 +66,9 @@ fun AnimalDisplay(
                 },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Outer glow ring
             Box(
                 modifier = Modifier
                     .size(180.dp)
-                    .shadow(16.dp, CircleShape)
-                    .clip(CircleShape)
-                    .background(
-                        Brush.radialGradient(
-                            colors = listOf(
-                                animal.color,
-                                animal.color.copy(alpha = 0.6f),
-                                Color.White.copy(alpha = 0.2f)
-                            )
-                        )
-                    )
-                    .border(
-                        width = 4.dp,
-                        brush = Brush.linearGradient(
-                            colors = listOf(Color.White.copy(alpha = 0.6f), Color.White.copy(alpha = 0.1f))
-                        ),
-                        shape = CircleShape
-                    )
                     .clickable(interactionSource = interactionSource, indication = null) {
                         scope.launch {
                             isBouncing = true

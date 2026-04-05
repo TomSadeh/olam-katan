@@ -1,0 +1,48 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    <!-- Body -->
+    <path android:fillColor="#BCAAA4"
+        android:pathData="M28,52 Q28,35 60,32 Q92,35 92,52 Q92,78 60,84 Q28,78 28,52Z"/>
+    <!-- Head -->
+    <path android:fillColor="#BCAAA4"
+        android:pathData="M40,45 Q40,22 60,18 Q80,22 80,45 Q80,55 60,58 Q40,55 40,45Z"/>
+    <!-- Horns -->
+    <path android:fillColor="#8D6E63"
+        android:pathData="M48,22 Q42,8 38,5 Q44,10 46,18Z"/>
+    <path android:fillColor="#8D6E63"
+        android:pathData="M72,22 Q78,8 82,5 Q76,10 74,18Z"/>
+    <!-- Ears -->
+    <path android:fillColor="#A1887F"
+        android:pathData="M38,30 L28,26 L36,36Z"/>
+    <path android:fillColor="#A1887F"
+        android:pathData="M82,30 L92,26 L84,36Z"/>
+    <!-- Eyes -->
+    <path android:fillColor="#4E342E"
+        android:pathData="M52,35 A3,3 0 1,1 52,35.01Z"/>
+    <path android:fillColor="#4E342E"
+        android:pathData="M68,35 A3,3 0 1,1 68,35.01Z"/>
+    <!-- Eye shine -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M51,33 A1.5,1.5 0 1,1 51,33.01Z"/>
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M67,33 A1.5,1.5 0 1,1 67,33.01Z"/>
+    <!-- Nose -->
+    <path android:fillColor="#8D6E63"
+        android:pathData="M56,44 Q56,42 60,42 Q64,42 64,44 Q64,46 60,47 Q56,46 56,44Z"/>
+    <!-- Beard -->
+    <path android:fillColor="#A1887F"
+        android:pathData="M58,55 Q56,65 58,68 Q60,70 62,68 Q64,65 62,55Z"/>
+    <!-- Legs -->
+    <path android:fillColor="#A1887F"
+        android:pathData="M38,74 L38,98 L46,98 L46,74Z"/>
+    <path android:fillColor="#A1887F"
+        android:pathData="M74,74 L74,98 L82,98 L82,74Z"/>
+    <!-- Hooves -->
+    <path android:fillColor="#5D4037"
+        android:pathData="M36,95 L48,95 L48,100 L36,100Z"/>
+    <path android:fillColor="#5D4037"
+        android:pathData="M72,95 L84,95 L84,100 L72,100Z"/>
+</vector>

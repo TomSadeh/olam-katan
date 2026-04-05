@@ -1,0 +1,48 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    <!-- Fluffy body -->
+    <path android:fillColor="#F5F5F5"
+        android:pathData="M25,55 Q20,35 40,30 Q60,25 80,30 Q100,35 95,55 Q95,80 60,85 Q25,80 25,55Z"/>
+    <!-- Fluffy bumps top -->
+    <path android:fillColor="#EEEEEE"
+        android:pathData="M35,32 A10,8 0 1,1 55,32 A10,8 0 1,1 75,32 A10,8 0 1,1 85,38"/>
+    <!-- Head -->
+    <path android:fillColor="#E0E0E0"
+        android:pathData="M42,45 Q42,25 60,22 Q78,25 78,45 Q78,55 60,58 Q42,55 42,45Z"/>
+    <!-- Ears -->
+    <path android:fillColor="#BDBDBD"
+        android:pathData="M40,32 L30,28 L38,38Z"/>
+    <path android:fillColor="#BDBDBD"
+        android:pathData="M80,32 L90,28 L82,38Z"/>
+    <!-- Eyes -->
+    <path android:fillColor="#4E342E"
+        android:pathData="M52,38 A3,3 0 1,1 52,38.01Z"/>
+    <path android:fillColor="#4E342E"
+        android:pathData="M68,38 A3,3 0 1,1 68,38.01Z"/>
+    <!-- Eye shine -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M51,36 A1.5,1.5 0 1,1 51,36.01Z"/>
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M67,36 A1.5,1.5 0 1,1 67,36.01Z"/>
+    <!-- Nose -->
+    <path android:fillColor="#9E9E9E"
+        android:pathData="M57,46 Q57,44 60,44 Q63,44 63,46 Q63,48 60,49 Q57,48 57,46Z"/>
+    <!-- Mouth -->
+    <path android:fillColor="@android:color/transparent"
+        android:strokeColor="#9E9E9E"
+        android:strokeWidth="1"
+        android:pathData="M57,50 Q60,53 63,50"/>
+    <!-- Legs -->
+    <path android:fillColor="#9E9E9E"
+        android:pathData="M38,78 L38,100 L46,100 L46,78Z"/>
+    <path android:fillColor="#9E9E9E"
+        android:pathData="M74,78 L74,100 L82,100 L82,78Z"/>
+    <!-- Hooves -->
+    <path android:fillColor="#616161"
+        android:pathData="M36,97 L48,97 L48,102 L36,102Z"/>
+    <path android:fillColor="#616161"
+        android:pathData="M72,97 L84,97 L84,102 L72,102Z"/>
+</vector>

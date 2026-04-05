@@ -236,7 +236,17 @@ fun MusicMeadowScreen(onBack: () -> Unit, viewModel: MusicMeadowViewModel = view
                                     }
                                 },
                             contentAlignment = Alignment.Center
-                        ) { Text(instrument.emoji, fontSize = 52.sp) }
+                        ) {
+                            if (instrument.drawableRes != 0) {
+                                androidx.compose.foundation.Image(
+                                    painter = androidx.compose.ui.res.painterResource(id = instrument.drawableRes),
+                                    contentDescription = instrument.name.en,
+                                    modifier = androidx.compose.ui.Modifier.size(80.dp)
+                                )
+                            } else {
+                                Text(instrument.emoji, fontSize = 52.sp)
+                            }
+                        }
                         Text(instrument.name.resolve(language), style = MaterialTheme.typography.labelLarge, color = EarthBrown)
                     }
                 }

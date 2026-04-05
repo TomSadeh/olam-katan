@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="80dp"
+    android:height="80dp"
+    android:viewportWidth="80"
+    android:viewportHeight="80">
+    <!-- Banana body -->
+    <path android:fillColor="#FFEE58"
+        android:pathData="M20,55 Q10,35 20,18 Q30,5 45,8 Q50,10 48,15 Q35,12 28,22 Q18,38 28,55 Q32,62 25,60Z"/>
+    <!-- Banana inner curve highlight -->
+    <path android:fillColor="#FFF59D"
+        android:pathData="M25,50 Q18,35 25,22 Q32,12 42,12 Q38,14 32,22 Q22,36 28,50Z"/>
+    <!-- Stem -->
+    <path android:fillColor="#8D6E63"
+        android:pathData="M44,8 L50,4 L52,6 L46,10Z"/>
+    <!-- Tip -->
+    <path android:fillColor="#A1887F"
+        android:pathData="M20,55 Q18,60 22,62 Q25,60 20,55Z"/>
+</vector>

@@ -1,0 +1,30 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="100dp"
+    android:height="100dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+    <!-- Book body -->
+    <path android:fillColor="#42A5F5"
+        android:pathData="M15,20 L15,80 L85,80 L85,20Z"/>
+    <!-- Book spine -->
+    <path android:fillColor="#1E88E5"
+        android:pathData="M15,20 L15,80 L20,80 L20,20Z"/>
+    <!-- Left page -->
+    <path android:fillColor="#FAFAFA"
+        android:pathData="M20,22 L20,78 L48,78 L48,22Z"/>
+    <!-- Right page -->
+    <path android:fillColor="#FAFAFA"
+        android:pathData="M52,22 L52,78 L80,78 L80,22Z"/>
+    <!-- Center fold -->
+    <path android:fillColor="#E0E0E0"
+        android:pathData="M48,22 L48,78 L52,78 L52,22Z"/>
+    <!-- Letter A on left page -->
+    <path android:fillColor="#F44336"
+        android:pathData="M28,35 L34,55 L38,55 L44,35 L40,35 L36,48 L32,35Z"/>
+    <!-- Letter B on right page -->
+    <path android:fillColor="#4CAF50"
+        android:pathData="M58,35 L58,55 L66,55 Q72,55 72,48 Q72,45 68,44 Q72,43 72,40 Q72,35 66,35Z M62,38 L66,38 Q68,38 68,40 Q68,42 66,42 L62,42Z M62,45 L66,45 Q68,45 68,48 Q68,52 66,52 L62,52Z"/>
+    <!-- Sparkle stars -->
+    <path android:fillColor="#FFEB3B"
+        android:pathData="M75,15 L77,20 L82,18 L78,22 L82,26 L77,24 L75,28 L73,24 L68,26 L72,22 L68,18 L73,20Z"/>
+</vector>

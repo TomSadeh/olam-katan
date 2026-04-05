@@ -1,0 +1,56 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+    <!-- Body -->
+    <path android:fillColor="#FFB74D"
+        android:pathData="M30,58 Q30,40 60,38 Q90,40 90,58 Q90,82 60,88 Q30,82 30,58Z"/>
+    <!-- Mane (big circle behind head) -->
+    <path android:fillColor="#E65100"
+        android:pathData="M60,35 A25,25 0 1,1 60,35.01Z"/>
+    <!-- Head -->
+    <path android:fillColor="#FFB74D"
+        android:pathData="M42,38 Q42,20 60,18 Q78,20 78,38 Q78,52 60,55 Q42,52 42,38Z"/>
+    <!-- Ears -->
+    <path android:fillColor="#FF9800"
+        android:pathData="M44,22 A5,5 0 1,1 44,22.01Z"/>
+    <path android:fillColor="#FF9800"
+        android:pathData="M76,22 A5,5 0 1,1 76,22.01Z"/>
+    <!-- Eyes -->
+    <path android:fillColor="#4E342E"
+        android:pathData="M52,34 A3,3 0 1,1 52,34.01Z"/>
+    <path android:fillColor="#4E342E"
+        android:pathData="M68,34 A3,3 0 1,1 68,34.01Z"/>
+    <!-- Eye shine -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M51,32 A1.5,1.5 0 1,1 51,32.01Z"/>
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M67,32 A1.5,1.5 0 1,1 67,32.01Z"/>
+    <!-- Nose -->
+    <path android:fillColor="#5D4037"
+        android:pathData="M57,42 Q57,40 60,39 Q63,40 63,42 Q63,44 60,45 Q57,44 57,42Z"/>
+    <!-- Mouth -->
+    <path android:fillColor="@android:color/transparent"
+        android:strokeColor="#5D4037"
+        android:strokeWidth="1.2"
+        android:pathData="M56,46 Q60,50 64,46"/>
+    <!-- Legs -->
+    <path android:fillColor="#FFA726"
+        android:pathData="M38,78 L38,100 L46,100 L46,78Z"/>
+    <path android:fillColor="#FFA726"
+        android:pathData="M74,78 L74,100 L82,100 L82,78Z"/>
+    <!-- Paws -->
+    <path android:fillColor="#FFB74D"
+        android:pathData="M36,97 L48,97 L48,103 L36,103Z"/>
+    <path android:fillColor="#FFB74D"
+        android:pathData="M72,97 L84,97 L84,103 L72,103Z"/>
+    <!-- Tail -->
+    <path android:fillColor="@android:color/transparent"
+        android:strokeColor="#FFB74D"
+        android:strokeWidth="3"
+        android:pathData="M88,60 Q102,55 100,70 Q98,78 95,75"/>
+    <!-- Tail tuft -->
+    <path android:fillColor="#E65100"
+        android:pathData="M93,73 Q98,68 100,75 Q98,80 93,78Z"/>
+</vector>
