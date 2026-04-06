@@ -118,7 +118,7 @@ fun IslandButton(
                 Image(
                     painter = painterResource(id = island.drawableRes),
                     contentDescription = island.name.en,
-                    modifier = Modifier.size(70.dp)
+                    modifier = Modifier.size(85.dp)
                 )
             } else {
                 Text(text = island.emoji, fontSize = 40.sp)

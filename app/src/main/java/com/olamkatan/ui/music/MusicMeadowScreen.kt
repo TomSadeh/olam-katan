@@ -209,7 +209,7 @@ fun MusicMeadowScreen(onBack: () -> Unit, viewModel: MusicMeadowViewModel = view
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Box(
                             modifier = Modifier
-                                .size(120.dp)
+                                .size(150.dp)
                                 .graphicsLayer { scaleX = scale; scaleY = scale }
                                 .shadow(if (isHighlighted) 16.dp else 8.dp, RoundedCornerShape(24.dp))
                                 .clip(RoundedCornerShape(24.dp))
@@ -241,7 +241,7 @@ fun MusicMeadowScreen(onBack: () -> Unit, viewModel: MusicMeadowViewModel = view
                                 androidx.compose.foundation.Image(
                                     painter = androidx.compose.ui.res.painterResource(id = instrument.drawableRes),
                                     contentDescription = instrument.name.en,
-                                    modifier = androidx.compose.ui.Modifier.size(80.dp)
+                                    modifier = androidx.compose.ui.Modifier.size(110.dp)
                                 )
                             } else {
                                 Text(instrument.emoji, fontSize = 52.sp)

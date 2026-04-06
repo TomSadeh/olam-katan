@@ -3,20 +3,23 @@
     android:height="80dp"
     android:viewportWidth="80"
     android:viewportHeight="80">
-    <!-- Left knob -->
+    <!-- Left knobs -->
     <path android:fillColor="#F5F5DC"
-        android:pathData="M18,28 A8,8 0 1,1 18,28.01Z"/>
+        android:pathData="M18,30 A9,9 0 1,1 18,30.01Z"/>
     <path android:fillColor="#F5F5DC"
-        android:pathData="M18,52 A8,8 0 1,1 18,52.01Z"/>
-    <!-- Right knob -->
+        android:pathData="M18,50 A9,9 0 1,1 18,50.01Z"/>
+    <!-- Right knobs -->
     <path android:fillColor="#F5F5DC"
-        android:pathData="M62,28 A8,8 0 1,1 62,28.01Z"/>
+        android:pathData="M62,30 A9,9 0 1,1 62,30.01Z"/>
     <path android:fillColor="#F5F5DC"
-        android:pathData="M62,52 A8,8 0 1,1 62,52.01Z"/>
-    <!-- Shaft -->
+        android:pathData="M62,50 A9,9 0 1,1 62,50.01Z"/>
+    <!-- Shaft (centered) -->
     <path android:fillColor="#F5F5DC"
-        android:pathData="M18,32 L62,32 L62,48 L18,48Z"/>
+        android:pathData="M18,33 L62,33 L62,47 L18,47Z"/>
     <!-- Highlight -->
     <path android:fillColor="#FFFDE7"
-        android:pathData="M22,34 L58,34 L58,38 L22,38Z"/>
+        android:pathData="M20,35 L60,35 L60,39 L20,39Z"/>
+    <!-- Shadow -->
+    <path android:fillColor="#E8E0C8"
+        android:pathData="M20,43 L60,43 L60,46 L20,46Z"/>
 </vector>

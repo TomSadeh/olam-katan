@@ -68,7 +68,7 @@ fun AnimalDisplay(
         ) {
             Box(
                 modifier = Modifier
-                    .size(180.dp)
+                    .size(240.dp)
                     .clickable(interactionSource = interactionSource, indication = null) {
                         scope.launch {
                             isBouncing = true
@@ -86,7 +86,7 @@ fun AnimalDisplay(
                     Image(
                         painter = painterResource(id = animal.drawableRes),
                         contentDescription = animal.name.en,
-                        modifier = Modifier.size(120.dp)
+                        modifier = Modifier.size(180.dp)
                     )
                 } else {
                     Text(text = animal.emoji, fontSize = 88.sp)

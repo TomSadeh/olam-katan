@@ -37,7 +37,7 @@ fun FoodItem(
                 Image(
                     painter = painterResource(id = food.drawableRes),
                     contentDescription = food.name.en,
-                    modifier = Modifier.size(80.dp)
+                    modifier = Modifier.size(110.dp)
                 )
             } else {
                 Text(text = food.emoji, fontSize = 56.sp)
