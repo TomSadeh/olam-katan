@@ -21,6 +21,7 @@ Then run scripts/check_voices.py to confirm nothing the app plays is missing.
 
 import argparse
 import os
+import re
 import sys
 import zlib
 
@@ -235,23 +236,55 @@ voice_lines = [
     ("voice_praise_2", "Wonderful!", "יוֹפִי!"),
     ("voice_praise_3", "You're a champion!", ("אֵיזוֹ אַלּוּפָה!", "אֵיזֶה אַלּוּף!")),
     ("voice_praise_4", "Wow, excellent!", "וָאוּ, מְצוּיָּן!"),
-    ("voice_praise_5", "You did it!", ("הִצְלַחְתְּ!", "הִצְלַחְתָּ!")),
+    ("voice_praise_5", "You did it!", ("את הצלחת!", "אתה הצלחת!")),
 
     # --- Greeting on the hub, and the end of a game ---
     ("voice_hello", "Hello! Where shall we sail today?", "שָׁלוֹם! לְאָן נָשׁוּט הַיּוֹם?"),
-    ("voice_round_done", "All done! Great job!", ("סִיַּמְתְּ! כָּל הַכָּבוֹד!", "סִיַּמְתָּ! כָּל הַכָּבוֹד!")),
+    ("voice_round_done", "All done! Great job!", ("את סיימת! כל הכבוד!", "אתה סיימת! כל הכבוד!")),
 ]
 
 # Lines with the child's name, generated only with --child-name. "{name}" is
 # replaced by the name; (girl, boy) picks the form by --child-gender.
 name_lines = [
     ("voice_praise_name_1", "כָּל הַכָּבוֹד, {name}!"),
-    ("voice_praise_name_2", ("{name}, אַתְּ אַלּוּפָה!", "{name}, אַתָּה אַלּוּף!")),
+    ("voice_praise_name_2", ("{name}, את אלופה!", "{name}, אתה אלוף!")),
     ("voice_praise_name_3", "יוֹפִי, {name}!"),
     ("voice_praise_name_4", "וָאוּ {name}, אֵיזֶה יוֹפִי!"),
     ("voice_hello_name", "שָׁלוֹם {name}! לְאָן נָשׁוּט הַיּוֹם?"),
-    ("voice_round_done_name", ("{name}, סִיַּמְתְּ! כָּל הַכָּבוֹד!", "{name}, סִיַּמְתָּ! כָּל הַכָּבוֹד!")),
+    ("voice_round_done_name", ("{name}, את סיימת! כל הכבוד!", "{name}, אתה סיימת! כל הכבוד!")),
 ]
+
+
+# BlueTTS's Hebrew pronunciation model garbles text that already has nikud, so
+# nikud above is only a reading aid and is stripped before synthesis. Where plain
+# spelling is ambiguous (letter names, animal sounds, some verb forms), the exact
+# pronunciation is given as phonemes instead, keyed by output file name.
+PHONEMES = {
+    "voice_sound_cow_he": "mˈuuu!",
+    "voice_sound_chicken_he": "kukuʁikˈu!",
+    "voice_sound_horse_he": "ʔihihihˈi!",
+    "voice_sound_pig_he": "ʔˈojnk ʔˈojnk!",
+    "voice_sound_sheep_he": "mˈeee!",
+    "voice_sound_goat_he": "mˈeee!",
+    "voice_sound_elephant_he": "tʁˈuuu!",
+    "voice_sound_giraffe_he": "hˈam, hˈam, hˈam!",
+    "voice_letter_alef_he": "zˈot haʔˈot ʔˈalef.",
+    "voice_letter_bet_he": "zˈot haʔˈot bˈet.",
+    "voice_letter_dalet_he": "zˈot haʔˈot dˈalet.",
+    "voice_letter_he_he": "zˈot haʔˈot hˈe.",
+    "voice_letter_vav_he": "zˈot haʔˈot vˈav.",
+    "voice_bedtime_brush_he": "netsaχtsˈeaχ ʃinˈajim!",
+    "voice_bedtime_teddy_he": "nasˈim ʔˈet hadˈubi bamitˈa!",
+    "voice_music_listen_he_m": "takʃˈiv vetizkˈoʁ!",
+    "voice_music_your_turn_he_f": "ʔaχʃˈav toʁˈeχ!",
+    "voice_music_your_turn_he_m": "ʔaχʃˈav toʁχˈa!",
+}
+
+NIKUD = re.compile(r"[\u0591-\u05C7]")
+
+
+def strip_nikud(text):
+    return NIKUD.sub("", text)
 
 
 def outputs_for(name, en_text, he_text, lang):
@@ -305,7 +338,12 @@ def main():
     for i, (stem, text) in enumerate(jobs, 1):
         # Seed per file so re-running gives the same take
         np.random.seed(zlib.crc32(stem.encode()))
-        samples, sr = tts.synthesize(text, lang=args.lang, total_step=STEPS, speed=SPEED)
+        if stem in PHONEMES:
+            text = PHONEMES[stem]
+            samples, sr = tts.synthesize(text, lang=args.lang, total_step=STEPS, speed=SPEED, text_is_phonemes=True)
+        else:
+            text = strip_nikud(text)
+            samples, sr = tts.synthesize(text, lang=args.lang, total_step=STEPS, speed=SPEED)
         # A short tail so the last syllable isn't cut off by the player
         samples = np.concatenate([samples, np.zeros(int(sr * 0.15), dtype=np.float32)])
         sf.write(os.path.join(args.out, f"{stem}.ogg"), samples, sr, format="OGG", subtype="VORBIS")

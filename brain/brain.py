@@ -27,9 +27,9 @@ import soundfile as sf
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from doorbell import CFG, LLAMA_URL, log  # noqa: E402
 
-NAME = CFG.get("child_name") or ""
+NAME = re.sub(r"[\u0591-\u05C7]", "", CFG.get("child_name") or "")
 GIRL = CFG.get("child_gender", "girl") == "girl"
-COMPANION = CFG.get("companion_name", "פּוּקִי")
+COMPANION = re.sub(r"[\u0591-\u05C7]", "", CFG.get("companion_name", "פוקי"))
 CHILD = NAME or ("הילדה" if GIRL else "הילד")
 
 
@@ -53,6 +53,8 @@ def system_prompt(lang):
         "לפעמים אתה מוסיף קול מצחיק שמתאים למצב: 'יאמי!' או 'מממ!' רק כשמישהו אוכל, "
         "ובשאר המקרים 'הופ!', 'וואו!' או 'יש!'. אל תחזור על אותה מילה פעמיים, "
         "ואל תוסיף קריאה בסוף המשפט (כמו 'איזה כיף!'); תסיים במשהו על מה שקרה. "
+        f"אל תחמיא {'לה' if GIRL else 'לו'} על {'עצמה' if GIRL else 'עצמו'} "
+        "(בלי 'את מקסימה', 'את חכמה', 'את מתוקה' וכדומה); תגיב על הדבר עצמו: החיה, הצבע, האוכל. "
         "בלי אימוג'ים, בלי אנגלית ובלי שאלות שצריך לענות עליהן. כתוב רק את מה שהתוכי אומר."
     )
 
@@ -61,22 +63,25 @@ def system_prompt(lang):
 def examples(lang):
     if lang == "en":
         return [
-            ("The child fed the cow grass. That's right.", "Yum! The cow loves grass! Great job!"),
-            ("The child tapped blue, but the target was red.", "Ooh, blue is pretty! Let's find red!"),
+            ("The child fed the cow grass. That's right.", "Yum! The cow loves grass! She's so happy!"),
+            ("The child tapped blue, but the target was red.", "Ooh, blue! Let's find red!"),
+            ('The child said to you: "hi Pooki".', "Hi! I'm so happy you came!"),
         ]
-    n = f", {NAME}" if NAME else ""
+    n = f" {NAME}" if NAME else ""
     if GIRL:
         return [
-            ("הילדה האכילה את הפרה בעשב. זה נכון.", f"מממ! הפרה אוהבת עשב! כל הכבוד{n}!"),
-            ("הילדה לחצה על כחול, אבל חיפשנו אדום.", "אוו, כחול זה יפה! בואי נמצא אדום!"),
-            ("הילדה ספרה שלושה פרפרים.", "אחת, שתיים, שלוש! איזו אלופה!"),
+            ("הילדה האכילה את הפרה בעשב. זה נכון.", "מממ! הפרה אוהבת עשב! היא ממש שמחה!"),
+            ("הילדה לחצה על כחול, אבל חיפשנו אדום.", "אוו, כחול! בואי נמצא אדום!"),
+            ("הילדה ספרה שלושה פרפרים.", "אחת, שתיים, שלוש! שלושה פרפרים עפים!"),
             ("הילדה לחצה על הצבע הירוק. זה נכון.", "יש! ירוק כמו העשב!"),
+            ('הילדה אמרה לך: "היי פוקי".', f"היי{n}! אני כל כך שמח שבאת!"),
         ]
     return [
-        ("הילד האכיל את הפרה בעשב. זה נכון.", f"מממ! הפרה אוהבת עשב! כל הכבוד{n}!"),
-        ("הילד לחץ על כחול, אבל חיפשנו אדום.", "אוו, כחול זה יפה! בוא נמצא אדום!"),
-        ("הילד ספר שלושה פרפרים.", "אחת, שתיים, שלוש! איזה אלוף!"),
+        ("הילד האכיל את הפרה בעשב. זה נכון.", "מממ! הפרה אוהבת עשב! היא ממש שמחה!"),
+        ("הילד לחץ על כחול, אבל חיפשנו אדום.", "אוו, כחול! בוא נמצא אדום!"),
+        ("הילד ספר שלושה פרפרים.", "אחת, שתיים, שלוש! שלושה פרפרים עפים!"),
         ("הילד לחץ על הצבע הירוק. זה נכון.", "יש! ירוק כמו העשב!"),
+        ('הילד אמר לך: "היי פוקי".', f"היי{n}! אני כל כך שמח שבאת!"),
     ]
 
 
@@ -85,11 +90,27 @@ ENGLISH_OK = re.compile(r"^[A-Za-z\s,.!?'\-]+$")
 BANNED = ["טעות", "רע", "טיפש", "לא נכון", "wrong", "bad", "stupid"]
 
 
+# Compliments about the child herself ("את מקסימה!") sound odd tacked onto every line
+COMPLIMENT = re.compile(
+    r"^(את|אתה|you'?re|you are)\s+(כל כך |ממש |כזאת |כזה |מאוד |so |really |such an? )*"
+    r"(מקסימה|מקסים|מתוקה|מתוק|חכמה|חכם|מדהימה|מדהים|מיוחדת|מיוחד|טובה|טוב|יפה|נהדרת|נהדר|"
+    r"עושה (יופי|טוב|כל כך טוב)|sweet|smart|amazing|special|great|lovely|clever)\b",
+    re.IGNORECASE,
+)
+
+
+def drop_compliments(text):
+    sentences = [s.strip() for s in re.findall(r"[^!?.]+[!?.]*", text) if s.strip()]
+    kept = [s for s in sentences if not COMPLIMENT.match(s)]
+    return " ".join(kept) if kept else text
+
+
 def clean(text, lang):
     """Return a safe line or None."""
     text = re.sub(r"<[^>]+>", "", text)          # stray tags
     text = text.strip().strip('"').strip()
     text = text.splitlines()[0].strip() if text else ""
+    text = drop_compliments(text)
     if not text or len(text) > 90 or len(text.split()) > 14:
         return None
     if not (ENGLISH_OK if lang == "en" else HEBREW_OK).match(text):
@@ -107,7 +128,7 @@ def clean(text, lang):
 # sound and lists the last few lines to avoid.
 FOOD_WORDS = ("האכיל", "אוכל", "fed", "eat")
 OPENERS = {
-    "he": {"food": ["יאמי", "מממ", "הַם הַם"], "other": ["הופ", "יש", "אוהו", "יופי", "טה-דה", "הידד", ""]},
+    "he": {"food": ["יאמי", "מממ", "אמממ"], "other": ["הופ", "יש", "אוהו", "יופי", "טה-דה", "הידד", ""]},
     "en": {"food": ["Yum", "Mmm", "Munch munch"], "other": ["Hooray", "Yay", "Ooh", "Ta-da", "Woohoo", ""]},
 }
 recent = deque(maxlen=6)
@@ -166,8 +187,9 @@ TTS = BlueTTS(
 )
 
 
-def speak(text, lang):  # noqa: D401
-    samples, sr = TTS.synthesize(text, lang=lang, total_step=8, speed=0.92)
+def speak(text, lang):
+    # BlueTTS mispronounces text that already has nikud (e.g. a name with nikud came out garbled)
+    samples, sr = TTS.synthesize(re.sub(r"[\u0591-\u05C7]", "", text), lang=lang, total_step=8, speed=0.92)
     samples = np.concatenate([samples, np.zeros(int(sr * 0.15), dtype=np.float32)])
     buf = io.BytesIO()
     sf.write(buf, samples, sr, format="OGG", subtype="VORBIS")
