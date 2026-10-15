@@ -58,7 +58,7 @@ fun OlamKatanApp(
 
     LaunchedEffect(Unit) {
         Sfx.preloadAll(sfxPlayer)
-        musicPlayer.play(R.raw.music_hub)
+        musicPlayer.playTrack("music_hub")
     }
 
     LaunchedEffect(settings.soundEnabled) {
