@@ -1,5 +1,6 @@
 package com.olamkatan.ui.animals
 
+import com.olamkatan.ui.common.LocalCompanion
 import com.olamkatan.ui.components.rememberReactionState
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -51,6 +52,7 @@ fun AnimalGardenScreen(
     val state by animalViewModel.state.collectAsStateWithLifecycle()
     val language = LocalLanguage.current
     val voicePlayer = LocalVoicePlayer.current
+    val companion = LocalCompanion.current
     val sfxPlayer = LocalSfxPlayer.current
     val scope = rememberCoroutineScope()
     val dragDropState = remember { DragDropState() }
@@ -61,6 +63,7 @@ fun AnimalGardenScreen(
     if (state.isLoading) return
 
     LaunchedEffect(state.roundIndex) {
+        companion?.scene = "במשחק החיות: ${state.currentAnimal.name.he} מחכה לאוכל."
         delay(500)
         voicePlayer.playSequence(
             listOf("voice_prompt_whos_hungry", "voice_animal_${state.currentAnimal.id}"),
@@ -117,7 +120,7 @@ fun AnimalGardenScreen(
                                         val correct = animalViewModel.onFoodDropped(food.id)
                                         if (correct) {
                                             sfxPlayer.play(Sfx.SUCCESS)
-                                            voicePlayer.playPraise(language)
+                                            if (companion != null) companion.react("נתנו ל${state.currentAnimal.name.he} ${food.name.he}. זה האוכל הנכון!") { voicePlayer.playPraise(language) } else voicePlayer.playPraise(language)
                                             showRoundSuccess = true
                                             scope.launch {
                                                 // Munch the food, then a happy hop
@@ -125,13 +128,13 @@ fun AnimalGardenScreen(
                                                 animalReaction.celebrate()
                                             }
                                             scope.launch {
-                                                delay(2400)
+                                                delay(if (companion?.isReady == true) 3600 else 2400)
                                                 showRoundSuccess = false
                                                 animalViewModel.nextRound()
                                             }
                                         } else {
                                             sfxPlayer.play(Sfx.WRONG_GENTLE)
-                                            voicePlayer.play("voice_prompt_try_again", language)
+                                            if (companion != null) companion.react("ניסו לתת ל${state.currentAnimal.name.he} ${food.name.he}, אבל זה לא האוכל שלו.") { voicePlayer.play("voice_prompt_try_again", language) } else voicePlayer.play("voice_prompt_try_again", language)
                                             scope.launch { animalReaction.shake() }
                                         }
                                     } else {

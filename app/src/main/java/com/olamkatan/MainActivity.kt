@@ -1,5 +1,10 @@
 package com.olamkatan
 
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.CoroutineScope
+import com.olamkatan.audio.Companion
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,6 +21,8 @@ class MainActivity : ComponentActivity() {
     private lateinit var sfxPlayer: SfxPlayer
     private lateinit var musicPlayer: MusicPlayer
     private lateinit var voicePlayer: VoicePlayer
+    private lateinit var companion: Companion
+    private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +31,7 @@ class MainActivity : ComponentActivity() {
         sfxPlayer = SfxPlayer(this)
         musicPlayer = MusicPlayer(this)
         voicePlayer = VoicePlayer(this)
+        companion = Companion(this, voicePlayer, appScope)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
         WindowInsetsControllerCompat(window, window.decorView).let { controller ->
@@ -39,6 +47,7 @@ class MainActivity : ComponentActivity() {
                 sfxPlayer = sfxPlayer,
                 musicPlayer = musicPlayer,
                 voicePlayer = voicePlayer,
+                companion = companion,
                 settingsRepository = app.settingsRepository,
                 progressRepository = app.progressRepository
             )
@@ -60,5 +69,6 @@ class MainActivity : ComponentActivity() {
         sfxPlayer.release()
         musicPlayer.release()
         voicePlayer.release()
+        appScope.cancel()
     }
 }

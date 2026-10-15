@@ -1,5 +1,6 @@
 package com.olamkatan.ui.words
 
+import com.olamkatan.ui.common.LocalCompanion
 import com.olamkatan.ui.components.reaction
 import com.olamkatan.ui.components.rememberReactionState
 import android.app.Application
@@ -132,6 +133,7 @@ fun WordGardenScreen(onBack: () -> Unit, viewModel: WordGardenViewModel = viewMo
     val state by viewModel.state.collectAsStateWithLifecycle()
     val language = LocalLanguage.current
     val voicePlayer = LocalVoicePlayer.current
+    val companion = LocalCompanion.current
     val sfxPlayer = LocalSfxPlayer.current
     val scope = rememberCoroutineScope()
     var showRoundSuccess by remember { mutableStateOf(false) }
@@ -141,6 +143,7 @@ fun WordGardenScreen(onBack: () -> Unit, viewModel: WordGardenViewModel = viewMo
     }
 
     LaunchedEffect(state.roundIndex) {
+        companion?.scene = "במשחק האותיות: מחפשים את האות ${state.targetLetter.hebrewLetter}, כמו ${state.targetLetter.exampleWord.he}."
         if (state.letterChoices.isNotEmpty()) {
             delay(500)
             voicePlayer.play("voice_letter_${state.targetLetter.id}", language)
@@ -215,17 +218,17 @@ fun WordGardenScreen(onBack: () -> Unit, viewModel: WordGardenViewModel = viewMo
                                 val correct = viewModel.onLetterTapped(letter.id)
                                 if (correct) {
                                     sfxPlayer.play(Sfx.SUCCESS)
-                                    voicePlayer.playPraise(language)
+                                    if (companion != null) companion.react("מצאו את האות ${letter.hebrewLetter}, כמו ${state.targetLetter.exampleWord.he}!") { voicePlayer.playPraise(language) } else voicePlayer.playPraise(language)
                                     showRoundSuccess = true
                                     scope.launch { letterReaction.celebrate() }
                                     scope.launch {
-                                        delay(2000)
+                                        delay(if (companion?.isReady == true) 3400 else 2000)
                                         showRoundSuccess = false
                                         viewModel.nextRound()
                                     }
                                 } else {
                                     sfxPlayer.play(Sfx.WRONG_GENTLE)
-                                    voicePlayer.playSequence(listOf("voice_letter_${letter.id}", "voice_prompt_try_again"), language)
+                                    if (companion != null) companion.react("בחרו את האות ${letter.hebrewLetter}, אבל חיפשנו את ${state.targetLetter.hebrewLetter}.") { voicePlayer.playSequence(listOf("voice_letter_${letter.id}", "voice_prompt_try_again"), language) } else voicePlayer.playSequence(listOf("voice_letter_${letter.id}", "voice_prompt_try_again"), language)
                                     scope.launch { letterReaction.shake() }
                                 }
                             },

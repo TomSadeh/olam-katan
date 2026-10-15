@@ -1,5 +1,15 @@
 package com.olamkatan.ui.settings
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.OutlinedTextField
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -113,6 +123,30 @@ fun SettingsScreen(
                     labelOff = BilingualText("כבוי", "Off").resolve(language),
                     onToggle = { settingsViewModel.toggleMusic(settings.musicEnabled) }
                 )
+
+                SettingsToggleRow(
+                    label = BilingualText("התוכי פּוּקִי", "Pooki the parrot").resolve(language),
+                    icon = R.drawable.ic_companion_parrot,
+                    checked = settings.companionEnabled,
+                    labelOn = BilingualText("פועל", "On").resolve(language),
+                    labelOff = BilingualText("כבוי", "Off").resolve(language),
+                    onToggle = { settingsViewModel.toggleCompanion(settings.companionEnabled) }
+                )
+                if (settings.companionEnabled) {
+                    // Address of the PC running brain/doorbell.py (saved when editing finishes)
+                    var address by remember(settings.companionAddress) { mutableStateOf(settings.companionAddress) }
+                    OutlinedTextField(
+                        value = address,
+                        onValueChange = { address = it },
+                        label = { Text(BilingualText("כתובת המחשב", "PC address").resolve(language)) },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri, imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(onDone = { settingsViewModel.setCompanionAddress(address) }),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onFocusChanged { if (!it.isFocused) settingsViewModel.setCompanionAddress(address) }
+                    )
+                }
 
                 // Time limit row
                 Row(

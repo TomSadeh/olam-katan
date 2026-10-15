@@ -40,6 +40,14 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    fun toggleCompanion(enabled: Boolean) {
+        viewModelScope.launch { settingsRepository.updateCompanionEnabled(!enabled) }
+    }
+
+    fun setCompanionAddress(address: String) {
+        viewModelScope.launch { settingsRepository.updateCompanionAddress(address) }
+    }
+
     fun cycleTimeLimit(current: Int) {
         val options = listOf(0, 15, 30, 45, 60)
         val nextIndex = (options.indexOf(current) + 1) % options.size

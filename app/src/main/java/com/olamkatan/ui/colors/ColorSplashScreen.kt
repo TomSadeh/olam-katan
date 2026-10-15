@@ -1,5 +1,6 @@
 package com.olamkatan.ui.colors
 
+import com.olamkatan.ui.common.LocalCompanion
 import com.olamkatan.ui.components.reaction
 import com.olamkatan.ui.components.rememberReactionState
 import androidx.compose.animation.core.animateFloatAsState
@@ -62,6 +63,7 @@ fun ColorSplashScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val language = LocalLanguage.current
     val voicePlayer = LocalVoicePlayer.current
+    val companion = LocalCompanion.current
     val sfxPlayer = LocalSfxPlayer.current
     val scope = rememberCoroutineScope()
     var showRoundSuccess by remember { mutableStateOf(false) }
@@ -69,6 +71,7 @@ fun ColorSplashScreen(
     if (state.isLoading) return
 
     LaunchedEffect(state.roundIndex) {
+        companion?.scene = "במשחק הצבעים: מחפשים את הצבע ${state.targetColor.name.he}."
         delay(500)
         voicePlayer.playSequence(
             listOf("voice_prompt_tap_the", "voice_color_${state.targetColor.id}"),
@@ -120,17 +123,17 @@ fun ColorSplashScreen(
                             val correct = viewModel.onColorTapped(color.id)
                             if (correct) {
                                 sfxPlayer.play(Sfx.SUCCESS)
-                                voicePlayer.playPraise(language)
+                                if (companion != null) companion.react("במשחק הצבעים בחרו ${color.name.he}. זה נכון!") { voicePlayer.playPraise(language) } else voicePlayer.playPraise(language)
                                 showRoundSuccess = true
                                 scope.launch { blobReaction.celebrate() }
                                 scope.launch {
-                                    delay(2000)
+                                    delay(if (companion?.isReady == true) 3400 else 2000)
                                     showRoundSuccess = false
                                     viewModel.nextRound()
                                 }
                             } else {
                                 sfxPlayer.play(Sfx.WRONG_GENTLE)
-                                voicePlayer.playSequence(listOf("voice_color_${color.id}", "voice_prompt_try_again"), language)
+                                if (companion != null) companion.react("במשחק הצבעים בחרו ${color.name.he}, אבל חיפשנו ${state.targetColor.name.he}.") { voicePlayer.playSequence(listOf("voice_color_${color.id}", "voice_prompt_try_again"), language) } else voicePlayer.playSequence(listOf("voice_color_${color.id}", "voice_prompt_try_again"), language)
                                 scope.launch { blobReaction.shake() }
                             }
                         }

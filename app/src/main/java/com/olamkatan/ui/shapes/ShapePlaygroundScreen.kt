@@ -1,5 +1,6 @@
 package com.olamkatan.ui.shapes
 
+import com.olamkatan.ui.common.LocalCompanion
 import com.olamkatan.ui.components.reaction
 import com.olamkatan.ui.components.rememberReactionState
 import androidx.compose.foundation.Canvas
@@ -63,6 +64,7 @@ fun ShapePlaygroundScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val language = LocalLanguage.current
     val voicePlayer = LocalVoicePlayer.current
+    val companion = LocalCompanion.current
     val sfxPlayer = LocalSfxPlayer.current
     val scope = rememberCoroutineScope()
     val dragDropState = remember { DragDropState() }
@@ -72,6 +74,7 @@ fun ShapePlaygroundScreen(
     if (state.isLoading) return
 
     LaunchedEffect(state.roundIndex) {
+        companion?.scene = "במשחק הצורות: מחפשים ${state.targetShape.name.he}."
         delay(500)
         voicePlayer.playSequence(
             listOf("voice_prompt_drag_it", "voice_shape_${state.targetShape.id}"),
@@ -134,17 +137,17 @@ fun ShapePlaygroundScreen(
                                         val correct = viewModel.onShapeDropped(shape.id)
                                         if (correct) {
                                             sfxPlayer.play(Sfx.SUCCESS)
-                                            voicePlayer.playPraise(language)
+                                            if (companion != null) companion.react("במשחק הצורות שמו את ה${shape.name.he} במקום הנכון!") { voicePlayer.playPraise(language) } else voicePlayer.playPraise(language)
                                             showRoundSuccess = true
                                             scope.launch { targetReaction.celebrate() }
                                             scope.launch {
-                                                delay(2000)
+                                                delay(if (companion?.isReady == true) 3400 else 2000)
                                                 showRoundSuccess = false
                                                 viewModel.nextRound()
                                             }
                                         } else {
                                             sfxPlayer.play(Sfx.WRONG_GENTLE)
-                                            voicePlayer.play("voice_prompt_try_again", language)
+                                            if (companion != null) companion.react("במשחק הצורות ניסו לשים ${shape.name.he} במקום של ${state.targetShape.name.he}.") { voicePlayer.play("voice_prompt_try_again", language) } else voicePlayer.play("voice_prompt_try_again", language)
                                             scope.launch { shapeReaction.shake() }
                                         }
                                     }

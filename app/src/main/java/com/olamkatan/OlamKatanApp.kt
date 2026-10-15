@@ -1,5 +1,7 @@
 package com.olamkatan
 
+import com.olamkatan.ui.common.LocalCompanion
+import com.olamkatan.audio.Companion
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -40,6 +42,7 @@ fun OlamKatanApp(
     sfxPlayer: SfxPlayer,
     musicPlayer: MusicPlayer,
     voicePlayer: VoicePlayer,
+    companion: Companion,
     settingsRepository: SettingsRepository,
     progressRepository: ProgressRepository
 ) {
@@ -61,6 +64,12 @@ fun OlamKatanApp(
     LaunchedEffect(settings.soundEnabled) {
         sfxPlayer.enabled = settings.soundEnabled
         voicePlayer.enabled = settings.soundEnabled
+    }
+
+    LaunchedEffect(settings.companionEnabled, settings.companionAddress, language) {
+        companion.enabled = settings.companionEnabled
+        companion.address = settings.companionAddress
+        companion.language = language
     }
 
     LaunchedEffect(settings.gender) {
@@ -99,6 +108,7 @@ fun OlamKatanApp(
             LocalSfxPlayer provides sfxPlayer,
             LocalMusicPlayer provides musicPlayer,
             LocalVoicePlayer provides voicePlayer,
+            LocalCompanion provides companion,
             LocalLayoutDirection provides layoutDirection
         ) {
             Box(modifier = Modifier.fillMaxSize()) {

@@ -1,5 +1,6 @@
 package com.olamkatan.ui.music
 
+import com.olamkatan.ui.common.LocalCompanion
 import android.app.Application
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -134,10 +135,12 @@ fun MusicMeadowScreen(onBack: () -> Unit, viewModel: MusicMeadowViewModel = view
     val state by viewModel.state.collectAsStateWithLifecycle()
     val language = LocalLanguage.current
     val voicePlayer = LocalVoicePlayer.current
+    val companion = LocalCompanion.current
     val sfxPlayer = LocalSfxPlayer.current
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
+        companion?.scene = "במשחק המוזיקה: יש תוף, קסילופון, תוף מרים ומרקסים."
         delay(500)
         voicePlayer.play("voice_music_free", language)
     }
@@ -145,7 +148,9 @@ fun MusicMeadowScreen(onBack: () -> Unit, viewModel: MusicMeadowViewModel = view
     // Show pattern animation
     LaunchedEffect(state.phase) {
         if (state.phase == MusicPhase.PLAYER_TURN) voicePlayer.play("voice_music_your_turn", language)
-        if (state.phase == MusicPhase.SUCCESS) voicePlayer.playPraise(language)
+        if (state.phase == MusicPhase.SUCCESS) {
+            if (companion != null) companion.react("ניגנו את המנגינה בדיוק נכון!") { voicePlayer.playPraise(language) } else voicePlayer.playPraise(language)
+        }
         if (state.phase == MusicPhase.SHOW_PATTERN) {
             // "Listen and remember!" first, then the pattern
             voicePlayer.play("voice_music_listen", language)

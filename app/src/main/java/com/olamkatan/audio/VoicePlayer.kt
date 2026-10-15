@@ -37,6 +37,30 @@ class VoicePlayer(private val context: Context) {
         }
     }
 
+    /** Plays an audio file (e.g. a companion line from the brain server). */
+    fun playFile(file: java.io.File, onComplete: (() -> Unit)? = null) {
+        if (!enabled) {
+            onComplete?.invoke()
+            return
+        }
+        stop()
+        mediaPlayer = runCatching {
+            MediaPlayer().apply {
+                setDataSource(file.absolutePath)
+                setOnCompletionListener {
+                    it.release()
+                    mediaPlayer = null
+                    onComplete?.invoke()
+                }
+                prepare()
+                start()
+            }
+        }.getOrElse {
+            onComplete?.invoke()
+            null
+        }
+    }
+
     fun playSequence(voiceKeys: List<String>, language: Language, onAllComplete: (() -> Unit)? = null) {
         if (voiceKeys.isEmpty()) {
             onAllComplete?.invoke()
@@ -85,6 +109,8 @@ class VoicePlayer(private val context: Context) {
         if (gendered != 0) return gendered
         return context.resources.getIdentifier("$voiceKey$suffix", "raw", context.packageName)
     }
+
+    fun isPlaying(): Boolean = runCatching { mediaPlayer?.isPlaying == true }.getOrDefault(false)
 
     fun stop() {
         mediaPlayer?.apply {

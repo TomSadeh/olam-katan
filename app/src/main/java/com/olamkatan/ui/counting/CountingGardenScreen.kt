@@ -1,5 +1,6 @@
 package com.olamkatan.ui.counting
 
+import com.olamkatan.ui.common.LocalCompanion
 import com.olamkatan.ui.components.reaction
 import com.olamkatan.ui.components.ReactionState
 import androidx.compose.animation.core.RepeatMode
@@ -74,6 +75,7 @@ fun CountingGardenScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val language = LocalLanguage.current
     val voicePlayer = LocalVoicePlayer.current
+    val companion = LocalCompanion.current
     val sfxPlayer = LocalSfxPlayer.current
     val scope = rememberCoroutineScope()
     var showRoundSuccess by remember { mutableStateOf(false) }
@@ -81,6 +83,7 @@ fun CountingGardenScreen(
     if (state.isLoading) return
 
     LaunchedEffect(state.roundIndex) {
+        companion?.scene = "במשחק הספירה: סופרים ${state.currentRound.itemName.he}."
         delay(500)
         voicePlayer.play("voice_prompt_count_along", language)
     }
@@ -188,14 +191,14 @@ fun CountingGardenScreen(
                                 voicePlayer.play("voice_number_$newCount", language)
                             } else {
                                 // Round complete
-                                voicePlayer.playSequence(
-                                    listOfNotNull("voice_number_${state.currentRound.targetNumber}", voicePlayer.praiseKey(language)),
-                                    language
-                                )
+                                val counted = "ספרו ${state.currentRound.targetNumber} ${state.currentRound.itemName.he}!"
+                                voicePlayer.play("voice_number_${state.currentRound.targetNumber}", language) {
+                                    if (companion != null) companion.react(counted) { voicePlayer.playPraise(language) } else voicePlayer.playPraise(language)
+                                }
                                 sfxPlayer.play(Sfx.SUCCESS)
                                 showRoundSuccess = true
                                 scope.launch {
-                                    delay(2600)
+                                    delay(if (companion?.isReady == true) 3800 else 2600)
                                     showRoundSuccess = false
                                     viewModel.nextRound()
                                 }
