@@ -1,4 +1,4 @@
-# פּוּקִי's brain (companion server)
+# פוקי's brain (companion server)
 
 The parrot in the games gets its words from the family PC: Gemma 4 E4B writes a
 short line about what just happened, and BlueTTS speaks it with the Noa voice.
@@ -51,7 +51,7 @@ tablet ──Wi-Fi──▶ doorbell.py :8790 ──starts on demand──▶ ll
    ```
    pythonw.exe "C:\Users\user\Documents\olam-katan\brain\doorbell.py"
    ```
-6. In the app, go to parent settings (long-press the gear). Under **התוכי פּוּקִי**, set the
+6. In the app, go to parent settings (long-press the gear). Under **התוכי פוקי**, set the
    PC's address, for example `192.168.1.151:8790`. A DHCP reservation in the router keeps
    that address from changing.
 
