@@ -94,7 +94,11 @@ def clean(text, lang):
         return None
     if not (ENGLISH_OK if lang == "en" else HEBREW_OK).match(text):
         return None
-    if any(b in text.lower() for b in BANNED):
+    # Whole words only ("רע" is bad, "רעבה" — hungry — is fine); allow Hebrew prefixes like ו/ה
+    words = re.findall(r"[\w']+", text.lower())
+    if any(w == b or w.lstrip("והבלמש") == b for w in words for b in BANNED if " " not in b):
+        return None
+    if any(b in text.lower() for b in BANNED if " " in b):
         return None
     return text
 
@@ -206,6 +210,13 @@ WHISPER = _load_whisper()
 # Whisper "hears" these in silence or noise; treat them as nothing heard
 HALLUCINATIONS = ("כתוביות", "תודה רבה", "תודה שצפיתם", "subtitles", "thank you for watching")
 
+# Words Whisper should expect: the parrot's and child's names and things from the games
+_plain = lambda s: re.sub(r"[֑-ׇ]", "", s)  # noqa: E731 (strip nikud)
+HOTWORDS = " ".join(filter(None, [
+    _plain(COMPANION), _plain(NAME), "היי", "שלום", "פרה", "כלב", "חתול", "סוס", "פיל", "אריה",
+    "ברווז", "תרנגולת", "קוף", "אדום", "כחול", "צהוב", "ירוק", "עיגול", "משולש", "ריבוע",
+]))
+
 
 def transcribe(wav_bytes, lang):
     # Decode the WAV ourselves (Whisper wants 16 kHz mono float samples)
@@ -215,7 +226,7 @@ def transcribe(wav_bytes, lang):
         import librosa
         audio = librosa.resample(audio, orig_sr=sr, target_sr=16000)
     segments, _ = WHISPER.transcribe(
-        audio, language=lang, beam_size=1, vad_filter=True,
+        audio, language=lang, beam_size=1, vad_filter=True, hotwords=HOTWORDS,
         condition_on_previous_text=False,
     )
     heard = " ".join(seg.text.strip() for seg in segments).strip()
@@ -231,7 +242,13 @@ def listen_situation(heard, lang):
         return f'{CHILD} said to the parrot: "{heard}". Answer warmly about what was said; if it does not make sense, just say something sweet.'
     if not heard:
         return f"{CHILD} {'דיברה' if GIRL else 'דיבר'} אל התוכי, אבל לא שמענו מילים ברורות. תגיד משהו מתוק בחזרה."
-    return f'{CHILD} {"אמרה" if GIRL else "אמר"} לתוכי: "{heard}". תענה בחום על מה שנאמר. אם זה לא מובן, פשוט תגיד משהו מתוק.'
+    return (
+        f'{CHILD} {"אמרה" if GIRL else "אמר"} לך: "{heard}". '
+        f"(הדיבור של פעוטה, אז אולי זה נשמע קצת לא מדויק; למשל אם שמענו משהו כמו '{_plain(COMPANION)}' "
+        f"זה כנראה השם שלך.) תענה ישירות על מה {'שהיא' if GIRL else 'שהוא'} אמר{'ה' if GIRL else ''}: "
+        f"אם {'היא' if GIRL else 'הוא'} {'אמרה' if GIRL else 'אמר'} שלום או {'קראה' if GIRL else 'קרא'} לך, תגיד שלום בחזרה; "
+        "אם הוזכר משהו (חיה, צבע, צורה), תגיד עליו משהו. אם לא מובן, תגיד משהו מתוק."
+    )
 
 
 class Handler(BaseHTTPRequestHandler):
