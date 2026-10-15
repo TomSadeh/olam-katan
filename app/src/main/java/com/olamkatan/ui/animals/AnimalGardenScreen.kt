@@ -1,5 +1,6 @@
 package com.olamkatan.ui.animals
 
+import com.olamkatan.ui.components.rememberReactionState
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.scaleIn
@@ -55,6 +56,7 @@ fun AnimalGardenScreen(
     val dragDropState = remember { DragDropState() }
 
     var showRoundSuccess by remember { mutableStateOf(false) }
+    val animalReaction = rememberReactionState(state.roundIndex)
 
     if (state.isLoading) return
 
@@ -94,7 +96,7 @@ fun AnimalGardenScreen(
                         zoneId = state.currentAnimal.id,
                         highlightColor = GrassGreen
                     ) {
-                        AnimalDisplay(animal = state.currentAnimal)
+                        AnimalDisplay(animal = state.currentAnimal, reaction = animalReaction)
                     }
                 }
 
@@ -115,15 +117,22 @@ fun AnimalGardenScreen(
                                         val correct = animalViewModel.onFoodDropped(food.id)
                                         if (correct) {
                                             sfxPlayer.play(Sfx.SUCCESS)
+                                            voicePlayer.playPraise(language)
                                             showRoundSuccess = true
                                             scope.launch {
-                                                delay(1500)
+                                                // Munch the food, then a happy hop
+                                                animalReaction.munch()
+                                                animalReaction.celebrate()
+                                            }
+                                            scope.launch {
+                                                delay(2400)
                                                 showRoundSuccess = false
                                                 animalViewModel.nextRound()
                                             }
                                         } else {
                                             sfxPlayer.play(Sfx.WRONG_GENTLE)
                                             voicePlayer.play("voice_prompt_try_again", language)
+                                            scope.launch { animalReaction.shake() }
                                         }
                                     } else {
                                         sfxPlayer.play(Sfx.WRONG_GENTLE)

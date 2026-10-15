@@ -1,5 +1,7 @@
 package com.olamkatan.ui.colors
 
+import com.olamkatan.ui.components.reaction
+import com.olamkatan.ui.components.rememberReactionState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
@@ -110,24 +112,30 @@ fun ColorSplashScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 state.colorChoices.forEach { color ->
+                    val blobReaction = rememberReactionState(state.roundIndex, color.id)
+                    Box(modifier = Modifier.reaction(blobReaction)) {
                     ColorBlob(
                         color = color.color,
                         onClick = {
                             val correct = viewModel.onColorTapped(color.id)
                             if (correct) {
                                 sfxPlayer.play(Sfx.SUCCESS)
+                                voicePlayer.playPraise(language)
                                 showRoundSuccess = true
+                                scope.launch { blobReaction.celebrate() }
                                 scope.launch {
-                                    delay(1500)
+                                    delay(2000)
                                     showRoundSuccess = false
                                     viewModel.nextRound()
                                 }
                             } else {
                                 sfxPlayer.play(Sfx.WRONG_GENTLE)
                                 voicePlayer.play("voice_prompt_try_again", language)
+                                scope.launch { blobReaction.shake() }
                             }
                         }
                     )
+                    }
                 }
             }
         }

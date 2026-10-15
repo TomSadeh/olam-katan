@@ -1,5 +1,9 @@
 package com.olamkatan.ui.hub
 
+import com.olamkatan.ui.common.LocalLanguage
+import com.olamkatan.ui.common.LocalVoicePlayer
+import kotlinx.coroutines.delay
+import androidx.compose.runtime.LaunchedEffect
 import android.app.Activity
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Canvas
@@ -41,6 +45,8 @@ import com.olamkatan.ui.hub.components.IslandHeight
 import com.olamkatan.ui.hub.components.IslandWidth
 import com.olamkatan.ui.hub.components.StarCounter
 
+private var greetedThisLaunch = false
+
 @Composable
 fun HubScreen(
     onIslandClick: (String) -> Unit,
@@ -50,6 +56,17 @@ fun HubScreen(
     val hubViewModel: HubViewModel = viewModel()
     val progress by hubViewModel.progress.collectAsStateWithLifecycle()
     val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+    val voicePlayer = LocalVoicePlayer.current
+    val language = LocalLanguage.current
+
+    // Say hello (by name, if the personal lines exist) the first time the hub opens
+    LaunchedEffect(Unit) {
+        if (!greetedThisLaunch) {
+            greetedThisLaunch = true
+            delay(600)
+            voicePlayer.play(voicePlayer.personalKey("voice_hello", language), language)
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         HubBackground()

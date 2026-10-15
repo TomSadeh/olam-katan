@@ -1,5 +1,7 @@
 package com.olamkatan.ui.shapes
 
+import com.olamkatan.ui.components.reaction
+import com.olamkatan.ui.components.rememberReactionState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -65,6 +67,7 @@ fun ShapePlaygroundScreen(
     val scope = rememberCoroutineScope()
     val dragDropState = remember { DragDropState() }
     var showRoundSuccess by remember { mutableStateOf(false) }
+    val targetReaction = rememberReactionState(state.roundIndex)
 
     if (state.isLoading) return
 
@@ -109,7 +112,7 @@ fun ShapePlaygroundScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     DropZone(zoneId = "target") {
-                        Canvas(modifier = Modifier.size(150.dp)) {
+                        Canvas(modifier = Modifier.size(150.dp).reaction(targetReaction)) {
                             drawShapeOutline(state.targetShape, size)
                         }
                     }
@@ -122,6 +125,7 @@ fun ShapePlaygroundScreen(
                         modifier = Modifier.padding(bottom = 16.dp)
                     ) {
                         state.shapeChoices.forEach { shape ->
+                            val shapeReaction = rememberReactionState(state.roundIndex, shape.id)
                             DragTarget(
                                 itemId = shape.id,
                                 onDragEnd = { dropTargetId ->
@@ -129,20 +133,23 @@ fun ShapePlaygroundScreen(
                                         val correct = viewModel.onShapeDropped(shape.id)
                                         if (correct) {
                                             sfxPlayer.play(Sfx.SUCCESS)
+                                            voicePlayer.playPraise(language)
                                             showRoundSuccess = true
+                                            scope.launch { targetReaction.celebrate() }
                                             scope.launch {
-                                                delay(1500)
+                                                delay(2000)
                                                 showRoundSuccess = false
                                                 viewModel.nextRound()
                                             }
                                         } else {
                                             sfxPlayer.play(Sfx.WRONG_GENTLE)
                                             voicePlayer.play("voice_prompt_try_again", language)
+                                            scope.launch { shapeReaction.shake() }
                                         }
                                     }
                                 }
                             ) {
-                                Canvas(modifier = Modifier.size(100.dp)) {
+                                Canvas(modifier = Modifier.size(100.dp).reaction(shapeReaction)) {
                                     drawShapeFilled(shape, size)
                                 }
                             }

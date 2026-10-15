@@ -1,5 +1,7 @@
 package com.olamkatan.ui.counting
 
+import com.olamkatan.ui.components.reaction
+import com.olamkatan.ui.components.ReactionState
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.infiniteRepeatable
@@ -122,6 +124,11 @@ fun CountingGardenScreen(
             ) {
                 // A faded outline for every item to count; each tap fills the next one in
                 val target = state.currentRound.targetNumber
+                val itemReactions = remember(state.roundIndex) { List(target) { ReactionState() } }
+                LaunchedEffect(state.roundComplete) {
+                    // All the counted items hop one after another
+                    if (state.roundComplete) itemReactions.forEachIndexed { i, r -> launch { delay(i * 90L); r.celebrate() } }
+                }
                 val itemSize = if (target <= 5) 130.dp else 92.dp
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -139,6 +146,7 @@ fun CountingGardenScreen(
                             contentDescription = null,
                             modifier = Modifier
                                 .size(itemSize)
+                                .reaction(itemReactions[i])
                                 .graphicsLayer { scaleX = itemScale; scaleY = itemScale }
                                 .alpha(if (filled) 1f else 0.22f)
                         )
@@ -180,11 +188,14 @@ fun CountingGardenScreen(
                                 voicePlayer.play("voice_number_$newCount", language)
                             } else {
                                 // Round complete
-                                voicePlayer.play("voice_number_${state.currentRound.targetNumber}", language)
+                                voicePlayer.playSequence(
+                                    listOfNotNull("voice_number_${state.currentRound.targetNumber}", voicePlayer.praiseKey(language)),
+                                    language
+                                )
                                 sfxPlayer.play(Sfx.SUCCESS)
                                 showRoundSuccess = true
                                 scope.launch {
-                                    delay(1500)
+                                    delay(2600)
                                     showRoundSuccess = false
                                     viewModel.nextRound()
                                 }

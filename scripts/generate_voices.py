@@ -10,7 +10,11 @@ Run with the BlueTTS virtualenv, which has blue_onnx installed:
     set PYTHONUTF8=1
     <BlueTTS checkout>\\.venv\\Scripts\\python scripts\\generate_voices.py
     ... --only voice_tidy_shirt,voice_prompt_bath    # just some lines
+    ... --child-name "<name with nikud>" --child-gender girl    # also make the personal lines
     ... --out C:\\temp\\samples --voice lily         # try a voice without touching res/raw
+
+Personal lines (voice_*_name*) say the child's name; they are git-ignored so the
+name stays out of the repo, and the app falls back to the generic lines without them.
 
 Then run scripts/check_voices.py to confirm nothing the app plays is missing.
 """
@@ -213,6 +217,28 @@ voice_lines = [
     ("voice_sticker_trophy", "Trophy", "זה גביע."),
     ("voice_sticker_diamond", "Diamond", "זה יהלום."),
     ("voice_sticker_unicorn", "Unicorn", "זה חד קרן."),
+
+    # --- Praise (VoicePlayer picks one at random after a right answer) ---
+    ("voice_praise_1", "Yay!", "יֵשׁ!"),
+    ("voice_praise_2", "Wonderful!", "יוֹפִי!"),
+    ("voice_praise_3", "You're a champion!", ("אֵיזוֹ אַלּוּפָה!", "אֵיזֶה אַלּוּף!")),
+    ("voice_praise_4", "Wow, excellent!", "וָאוּ, מְצוּיָּן!"),
+    ("voice_praise_5", "You did it!", ("הִצְלַחְתְּ!", "הִצְלַחְתָּ!")),
+
+    # --- Greeting on the hub, and the end of a game ---
+    ("voice_hello", "Hello! Where shall we sail today?", "שָׁלוֹם! לְאָן נָשׁוּט הַיּוֹם?"),
+    ("voice_round_done", "All done! Great job!", ("סִיַּמְתְּ! כָּל הַכָּבוֹד!", "סִיַּמְתָּ! כָּל הַכָּבוֹד!")),
+]
+
+# Lines with the child's name, generated only with --child-name. "{name}" is
+# replaced by the name; (girl, boy) picks the form by --child-gender.
+name_lines = [
+    ("voice_praise_name_1", "כָּל הַכָּבוֹד, {name}!"),
+    ("voice_praise_name_2", ("{name}, אַתְּ אַלּוּפָה!", "{name}, אַתָּה אַלּוּף!")),
+    ("voice_praise_name_3", "יוֹפִי, {name}!"),
+    ("voice_praise_name_4", "וָאוּ {name}, אֵיזֶה יוֹפִי!"),
+    ("voice_hello_name", "שָׁלוֹם {name}! לְאָן נָשׁוּט הַיּוֹם?"),
+    ("voice_round_done_name", ("{name}, סִיַּמְתְּ! כָּל הַכָּבוֹד!", "{name}, סִיַּמְתָּ! כָּל הַכָּבוֹד!")),
 ]
 
 
@@ -235,15 +261,22 @@ def main():
     parser.add_argument("--only", help="comma-separated resource names to generate")
     parser.add_argument("--out", default=RAW_DIR, help="output directory (default: res/raw)")
     parser.add_argument("--bluetts-dir", default=DEFAULT_BLUETTS_DIR)
+    parser.add_argument("--child-name", help="the child's name, with nikud for clear pronunciation")
+    parser.add_argument("--child-gender", choices=["girl", "boy"], default="girl")
     args = parser.parse_args()
 
-    lines = voice_lines
+    lines = list(voice_lines)
+    if args.child_name and args.lang == "he":
+        pick = 0 if args.child_gender == "girl" else 1
+        for name, he in name_lines:
+            text = he[pick] if isinstance(he, tuple) else he
+            lines.append((name, "", text.replace("{name}", args.child_name)))
     if args.only:
         wanted = set(args.only.split(","))
-        unknown = wanted - {name for name, _, _ in voice_lines}
+        unknown = wanted - {name for name, _, _ in lines}
         if unknown:
             sys.exit(f"Unknown voice lines: {', '.join(sorted(unknown))}")
-        lines = [line for line in voice_lines if line[0] in wanted]
+        lines = [line for line in lines if line[0] in wanted]
 
     from blue_onnx import BlueTTS
 

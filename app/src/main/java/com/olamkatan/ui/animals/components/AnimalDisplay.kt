@@ -1,5 +1,9 @@
 package com.olamkatan.ui.animals.components
 
+import com.olamkatan.ui.components.idleBreathing
+import com.olamkatan.ui.components.reaction
+import com.olamkatan.ui.components.rememberReactionState
+import com.olamkatan.ui.components.ReactionState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
@@ -43,7 +47,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun AnimalDisplay(
     animal: AnimalDef,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    reaction: ReactionState = rememberReactionState(animal.id)
 ) {
     val language = LocalLanguage.current
     val voicePlayer = LocalVoicePlayer.current
@@ -86,7 +91,10 @@ fun AnimalDisplay(
                     Image(
                         painter = painterResource(id = animal.drawableRes),
                         contentDescription = animal.name.en,
-                        modifier = Modifier.size(280.dp)
+                        modifier = Modifier
+                            .size(280.dp)
+                            .reaction(reaction)
+                            .idleBreathing()
                     )
                 } else {
                     Text(text = animal.emoji, fontSize = 88.sp)

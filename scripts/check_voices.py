@@ -34,6 +34,9 @@ TEMPLATE_SOURCES = {
     "voice_number_": "CountingRound",  # ids are 1..max targetNumber
 }
 
+# Files whose voice keys are optional by design (e.g. praise variants picked at random)
+OPTIONAL_KEY_FILES = {os.path.join("app", "src", "main", "java", "com", "olamkatan", "audio", "VoicePlayer.kt")}
+
 KEY_RE = re.compile(r'"(voice_[a-z0-9_]*)(\$\{?[^"]*)?"')
 
 
@@ -62,6 +65,8 @@ def find_keys(sources):
     keys = {}
     unknown = []
     for path, code in sources.items():
+        if path in OPTIONAL_KEY_FILES:
+            continue
         for lineno, line in enumerate(code.splitlines(), 1):
             for prefix, template in KEY_RE.findall(line):
                 where = f"{path}:{lineno}"

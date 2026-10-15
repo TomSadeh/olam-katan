@@ -1,5 +1,6 @@
 package com.olamkatan.ui.components
 
+import com.olamkatan.ui.common.LocalVoicePlayer
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.scaleIn
@@ -45,6 +46,7 @@ fun RoundCompleteSheet(
     modifier: Modifier = Modifier
 ) {
     val language = LocalLanguage.current
+    val voicePlayer = LocalVoicePlayer.current
     var showContent by remember { mutableStateOf(false) }
     var showConfetti by remember { mutableStateOf(false) }
 
@@ -52,6 +54,7 @@ fun RoundCompleteSheet(
         delay(200)
         showContent = true
         showConfetti = true
+        voicePlayer.play(voicePlayer.personalKey("voice_round_done", language), language)
     }
 
     Box(

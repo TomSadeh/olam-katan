@@ -8,3 +8,6 @@
 .externalNativeBuild
 .cxx
 /app/build
+
+# Personal voice lines with the child's name (scripts/generate_voices.py --child-name)
+/app/src/main/res/raw/voice_*_name*

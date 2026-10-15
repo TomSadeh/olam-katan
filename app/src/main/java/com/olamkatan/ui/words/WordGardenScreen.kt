@@ -1,5 +1,7 @@
 package com.olamkatan.ui.words
 
+import com.olamkatan.ui.components.reaction
+import com.olamkatan.ui.components.rememberReactionState
 import android.app.Application
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -191,6 +193,7 @@ fun WordGardenScreen(onBack: () -> Unit, viewModel: WordGardenViewModel = viewMo
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 state.letterChoices.forEach { letter ->
+                    val letterReaction = rememberReactionState(state.roundIndex, letter.id)
                     val interactionSource = remember(letter.id) { MutableInteractionSource() }
                     val isPressed by interactionSource.collectIsPressedAsState()
                     val scale by animateFloatAsState(
@@ -201,6 +204,7 @@ fun WordGardenScreen(onBack: () -> Unit, viewModel: WordGardenViewModel = viewMo
 
                     Box(
                         modifier = Modifier
+                            .reaction(letterReaction)
                             .size(120.dp)
                             .graphicsLayer { scaleX = scale; scaleY = scale }
                             .shadow(8.dp, RoundedCornerShape(24.dp))
@@ -211,15 +215,18 @@ fun WordGardenScreen(onBack: () -> Unit, viewModel: WordGardenViewModel = viewMo
                                 val correct = viewModel.onLetterTapped(letter.id)
                                 if (correct) {
                                     sfxPlayer.play(Sfx.SUCCESS)
+                                    voicePlayer.playPraise(language)
                                     showRoundSuccess = true
+                                    scope.launch { letterReaction.celebrate() }
                                     scope.launch {
-                                        delay(1500)
+                                        delay(2000)
                                         showRoundSuccess = false
                                         viewModel.nextRound()
                                     }
                                 } else {
                                     sfxPlayer.play(Sfx.WRONG_GENTLE)
                                     voicePlayer.play("voice_prompt_try_again", language)
+                                    scope.launch { letterReaction.shake() }
                                 }
                             },
                         contentAlignment = Alignment.Center
