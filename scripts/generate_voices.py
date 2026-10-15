@@ -8,7 +8,7 @@ Writes OGG Vorbis files to app/src/main/res/raw, named <key>_<lang>.ogg, or
 Run with the BlueTTS virtualenv, which has blue_onnx installed:
 
     set PYTHONUTF8=1
-    ..\\BlueTTS\\.venv\\Scripts\\python scripts\\generate_voices.py
+    <BlueTTS checkout>\\.venv\\Scripts\\python scripts\\generate_voices.py
     ... --only voice_tidy_shirt,voice_prompt_bath    # just some lines
     ... --out C:\\temp\\samples --voice lily         # try a voice without touching res/raw
 
@@ -25,7 +25,8 @@ import soundfile as sf
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 RAW_DIR = os.path.join(ROOT, "app", "src", "main", "res", "raw")
-DEFAULT_BLUETTS_DIR = os.environ.get("BLUETTS_DIR", os.path.join(ROOT, "..", "BlueTTS"))
+# Default: the BlueTTS checkout whose .venv is running this script
+DEFAULT_BLUETTS_DIR = os.environ.get("BLUETTS_DIR", os.path.dirname(sys.prefix))
 
 # Toddler-friendly: a bit slower than normal speech
 SPEED = 0.9
