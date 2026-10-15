@@ -1,285 +1,277 @@
 #!/usr/bin/env python3
-"""Generate all voice lines for Olam Katan using ElevenLabs Alice.
+"""Generate the voice lines for Olam Katan with BlueTTS (offline, free).
 
-English: eleven_multilingual_v2
-Hebrew: eleven_v3 with language_code="he", single words wrapped in context sentences.
+Writes OGG Vorbis files to app/src/main/res/raw, named <key>_<lang>.ogg, or
+<key>_he_f.ogg / <key>_he_m.ogg for lines that address the child by gender
+(VoicePlayer picks the variant matching the gender setting).
+
+Run with the BlueTTS virtualenv, which has blue_onnx installed:
+
+    set PYTHONUTF8=1
+    ..\\BlueTTS\\.venv\\Scripts\\python scripts\\generate_voices.py
+    ... --only voice_tidy_shirt,voice_prompt_bath    # just some lines
+    ... --out C:\\temp\\samples --voice lily         # try a voice without touching res/raw
+
+Then run scripts/check_voices.py to confirm nothing the app plays is missing.
 """
 
+import argparse
 import os
-import subprocess
-import json
-import time
-import urllib.request
+import sys
+import zlib
 
-RAW_DIR = os.path.join(os.path.dirname(__file__), "..", "app", "src", "main", "res", "raw")
-TEMP_DIR = "/tmp/olam_katan_voices"
+import numpy as np
+import soundfile as sf
 
-ELEVENLABS_KEY = os.environ["ELEVENLABS_API_KEY"]
-ELEVENLABS_VOICE_ID = "Xb7hH8MSUJpSbSDYk0k2"  # Alice
+ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+RAW_DIR = os.path.join(ROOT, "app", "src", "main", "res", "raw")
+DEFAULT_BLUETTS_DIR = os.environ.get("BLUETTS_DIR", os.path.join(ROOT, "..", "BlueTTS"))
 
-os.makedirs(TEMP_DIR, exist_ok=True)
-os.makedirs(RAW_DIR, exist_ok=True)
-
-
-def elevenlabs_tts(text: str, filename: str, lang: str = "en"):
-    """Generate voice line with ElevenLabs Alice."""
-    outpath = os.path.join(TEMP_DIR, f"{filename}.mp3")
-    if os.path.exists(outpath) and os.path.getsize(outpath) > 500:
-        print(f"  [skip] {filename} (cached)")
-        return outpath
-
-    if lang == "he":
-        # Add trailing ellipsis to prevent ElevenLabs from clipping the end
-        padded_text = text.rstrip(".!?") + "..."
-        body_dict = {
-            "text": padded_text,
-            "model_id": "eleven_v3",
-            "language_code": "he",
-            "voice_settings": {"stability": 0.5, "similarity_boost": 0.75},
-        }
-    else:
-        body_dict = {
-            "text": text,
-            "model_id": "eleven_multilingual_v2",
-            "voice_settings": {"stability": 0.5, "similarity_boost": 0.75},
-        }
-
-    body = json.dumps(body_dict).encode("utf-8")
-    req = urllib.request.Request(
-        f"https://api.elevenlabs.io/v1/text-to-speech/{ELEVENLABS_VOICE_ID}",
-        data=body,
-        headers={
-            "Content-Type": "application/json",
-            "xi-api-key": ELEVENLABS_KEY,
-            "Accept": "audio/mpeg",
-        },
-    )
-    try:
-        with urllib.request.urlopen(req) as resp:
-            data = resp.read()
-    except urllib.error.HTTPError as e:
-        print(f"  [ERROR] {filename}: HTTP {e.code}")
-        return None
-    if data[:4] == b'{"de':
-        print(f"  [ERROR] {filename}: {data.decode()[:100]}")
-        return None
-    with open(outpath, "wb") as f:
-        f.write(data)
-    print(f"  [ok] {filename} ({len(data)} bytes)")
-    time.sleep(0.3)
-    return outpath
-
-
-def to_ogg(mp3_path: str, ogg_name: str):
-    """Convert MP3 to OGG and place in res/raw."""
-    ogg_path = os.path.join(RAW_DIR, f"{ogg_name}.ogg")
-    subprocess.run(
-        ["ffmpeg", "-y", "-i", mp3_path, "-c:a", "libvorbis", "-q:a", "4", ogg_path],
-        capture_output=True,
-    )
+# Toddler-friendly: a bit slower than normal speech
+SPEED = 0.9
+STEPS = 8
 
 
 # ============================================================
 # VOICE LINE DEFINITIONS
 # Format: (resource_name, english_text, hebrew_text)
 #
-# For Hebrew single words, we wrap in "זה/זאת X" context so the
-# TTS pronounces them correctly. The context prefix is natural
-# and doesn't hurt — kids hear "this is a cow" which is fine.
+# hebrew_text is either a string, or a (girl, boy) tuple for lines that
+# address the child directly — those become _he_f / _he_m files.
 #
-# For prompts/sentences, Hebrew text is already a full sentence.
-# We mark those with is_sentence=True so they don't get wrapped.
+# Single words are wrapped in "זה/זאת X" so the toddler hears a short,
+# natural sentence ("this is a cow") rather than a bare word.
 # ============================================================
 
-# (resource_name, english_text, hebrew_context_text, is_sentence)
 voice_lines = [
-    # --- Animal names (wrapped: "זאת פרה") ---
-    ("voice_animal_cow", "Cow", "זאת פרה.", False),
-    ("voice_animal_dog", "Dog", "זה כלב.", False),
-    ("voice_animal_cat", "Cat", "זה חתול.", False),
-    ("voice_animal_chicken", "Chicken", "זאת תרנגולת.", False),
-    ("voice_animal_horse", "Horse", "זה סוס.", False),
-    ("voice_animal_pig", "Pig", "זה חזיר.", False),
-    ("voice_animal_sheep", "Sheep", "זאת כבשה.", False),
-    ("voice_animal_duck", "Duck", "זה ברווז.", False),
-    ("voice_animal_rabbit", "Rabbit", "זה ארנב.", False),
-    ("voice_animal_goat", "Goat", "זאת עז.", False),
-    ("voice_animal_lion", "Lion", "זה אריה.", False),
-    ("voice_animal_elephant", "Elephant", "זה פיל.", False),
-    ("voice_animal_monkey", "Monkey", "זה קוף.", False),
-    ("voice_animal_giraffe", "Giraffe", "זאת ג׳ירפה.", False),
-    ("voice_animal_penguin", "Penguin", "זה פינגווין.", False),
+    # --- Animal names ---
+    ("voice_animal_cow", "Cow", "זאת פרה."),
+    ("voice_animal_dog", "Dog", "זה כלב."),
+    ("voice_animal_cat", "Cat", "זה חתול."),
+    ("voice_animal_chicken", "Chicken", "זאת תרנגולת."),
+    ("voice_animal_horse", "Horse", "זה סוס."),
+    ("voice_animal_pig", "Pig", "זה חזיר."),
+    ("voice_animal_sheep", "Sheep", "זאת כבשה."),
+    ("voice_animal_duck", "Duck", "זה ברווז."),
+    ("voice_animal_rabbit", "Rabbit", "זה ארנב."),
+    ("voice_animal_goat", "Goat", "זאת עז."),
+    ("voice_animal_lion", "Lion", "זה אריה."),
+    ("voice_animal_elephant", "Elephant", "זה פיל."),
+    ("voice_animal_monkey", "Monkey", "זה קוף."),
+    ("voice_animal_giraffe", "Giraffe", "זאת ג׳ירפה."),
+    ("voice_animal_penguin", "Penguin", "זה פינגווין."),
 
-    # --- Animal sounds (already expressive, send as-is) ---
-    ("voice_sound_cow", "Moo!", "מוּ!", True),
-    ("voice_sound_dog", "Woof woof!", "הב הב!", True),
-    ("voice_sound_cat", "Meow!", "מיאו!", True),
-    ("voice_sound_chicken", "Cock-a-doodle-doo!", "קוקוריקו!", True),
-    ("voice_sound_horse", "Neigh!", "איהההה!", True),
-    ("voice_sound_pig", "Oink oink!", "חרר חרר!", True),
-    ("voice_sound_sheep", "Baa!", "מעע!", True),
-    ("voice_sound_duck", "Quack quack!", "גע גע!", True),
-    ("voice_sound_goat", "Maa!", "מעע!", True),
-    ("voice_sound_lion", "Roar!", "שאגה!", True),
-    ("voice_sound_elephant", "Trumpet!", "טרררר!", True),
-    ("voice_sound_monkey", "Ooh ooh ah ah!", "או או אה אה!", True),
+    # --- Animal sounds ---
+    ("voice_sound_cow", "Moo!", "מוּ!"),
+    ("voice_sound_dog", "Woof woof!", "הַב הַב!"),
+    ("voice_sound_cat", "Meow!", "מיאו!"),
+    ("voice_sound_chicken", "Cock-a-doodle-doo!", "קוּקוּרִיקוּ!"),
+    ("voice_sound_horse", "Neigh!", "אִיהַהַהָה!"),
+    ("voice_sound_pig", "Oink oink!", "חְרְר חְרְר!"),
+    ("voice_sound_sheep", "Baa!", "מֶעֶעֶ!"),
+    ("voice_sound_duck", "Quack quack!", "גַע גַע!"),
+    ("voice_sound_goat", "Maa!", "מֶעֶעֶ!"),
+    ("voice_sound_lion", "Roar!", "רוֹאַאָר!"),
+    ("voice_sound_elephant", "Trumpet!", "טְרוּוּוּ!"),
+    ("voice_sound_monkey", "Ooh ooh ah ah!", "אוּ אוּ אָה אָה!"),
+    ("voice_sound_rabbit", "Hop hop hop!", "הוֹפּ, הוֹפּ, הוֹפּ!"),
+    ("voice_sound_giraffe", "Munch munch!", "אָם, אָם, אָם!"),
+    ("voice_sound_penguin", "Waddle waddle!", "טִיפּ, טִיפּ, טִיפּ!"),
 
     # --- Food names ---
-    ("voice_food_grass", "Grass", "זה עשב.", False),
-    ("voice_food_bone", "Bone", "זה עצם.", False),
-    ("voice_food_fish", "Fish", "זה דג.", False),
-    ("voice_food_seeds", "Seeds", "אלה גרעינים.", False),
-    ("voice_food_hay", "Hay", "זה חציר.", False),
-    ("voice_food_corn", "Corn", "זה תירס.", False),
-    ("voice_food_clover", "Clover", "זה תלתן.", False),
-    ("voice_food_bread", "Bread", "זה לחם.", False),
-    ("voice_food_carrot", "Carrot", "זה גזר.", False),
-    ("voice_food_leaves", "Leaves", "אלה עלים.", False),
-    ("voice_food_meat", "Meat", "זה בשר.", False),
-    ("voice_food_peanuts", "Peanuts", "אלה בוטנים.", False),
-    ("voice_food_banana", "Banana", "זאת בננה.", False),
+    ("voice_food_grass", "Grass", "זה עשב."),
+    ("voice_food_bone", "Bone", "זאת עצם."),
+    ("voice_food_fish", "Fish", "זה דג."),
+    ("voice_food_seeds", "Seeds", "אלה גרעינים."),
+    ("voice_food_hay", "Hay", "זה חציר."),
+    ("voice_food_corn", "Corn", "זה תירס."),
+    ("voice_food_clover", "Clover", "זה תלתן."),
+    ("voice_food_bread", "Bread", "זה לחם."),
+    ("voice_food_carrot", "Carrot", "זה גזר."),
+    ("voice_food_leaves", "Leaves", "אלה עלים."),
+    ("voice_food_meat", "Meat", "זה בשר."),
+    ("voice_food_peanuts", "Peanuts", "אלה בוטנים."),
+    ("voice_food_banana", "Banana", "זאת בננה."),
 
     # --- Color names ---
-    ("voice_color_red", "Red", "זה אדום.", False),
-    ("voice_color_blue", "Blue", "זה כחול.", False),
-    ("voice_color_yellow", "Yellow", "זה צהוב.", False),
-    ("voice_color_green", "Green", "זה ירוק.", False),
-    ("voice_color_orange", "Orange", "זה כתום.", False),
-    ("voice_color_purple", "Purple", "זה סגול.", False),
-    ("voice_color_pink", "Pink", "זה ורוד.", False),
-    ("voice_color_brown", "Brown", "זה חום.", False),
-    ("voice_color_white", "White", "זה לבן.", False),
-    ("voice_color_black", "Black", "זה שחור.", False),
+    ("voice_color_red", "Red", "זה אדום."),
+    ("voice_color_blue", "Blue", "זה כחול."),
+    ("voice_color_yellow", "Yellow", "זה צהוב."),
+    ("voice_color_green", "Green", "זה ירוק."),
+    ("voice_color_orange", "Orange", "זה כתום."),
+    ("voice_color_purple", "Purple", "זה סגול."),
+    ("voice_color_pink", "Pink", "זה ורוד."),
+    ("voice_color_brown", "Brown", "זה חום."),
+    ("voice_color_white", "White", "זה לבן."),
+    ("voice_color_black", "Black", "זה שחור."),
 
     # --- Shape names ---
-    ("voice_shape_circle", "Circle", "זה עיגול.", False),
-    ("voice_shape_square", "Square", "זה ריבוע.", False),
-    ("voice_shape_triangle", "Triangle", "זה משולש.", False),
-    ("voice_shape_star", "Star", "זה כוכב.", False),
-    ("voice_shape_heart", "Heart", "זה לב.", False),
-    ("voice_shape_diamond", "Diamond", "זה מעוין.", False),
-    ("voice_shape_hexagon", "Hexagon", "זה משושה.", False),
-    ("voice_shape_pentagon", "Pentagon", "זה מחומש.", False),
-    ("voice_shape_octagon", "Octagon", "זה מתומן.", False),
+    ("voice_shape_circle", "Circle", "זה עיגול."),
+    ("voice_shape_square", "Square", "זה ריבוע."),
+    ("voice_shape_triangle", "Triangle", "זה משולש."),
+    ("voice_shape_star", "Star", "זה כוכב."),
+    ("voice_shape_heart", "Heart", "זה לב."),
+    ("voice_shape_diamond", "Diamond", "זה מעוין."),
+    ("voice_shape_hexagon", "Hexagon", "זה משושה."),
+    ("voice_shape_pentagon", "Pentagon", "זה מחומש."),
+    ("voice_shape_octagon", "Octagon", "זה מתומן."),
 
     # --- Numbers 1-10 ---
-    ("voice_number_1", "One", "אחת.", True),
-    ("voice_number_2", "Two", "שתיים.", True),
-    ("voice_number_3", "Three", "שלוש.", True),
-    ("voice_number_4", "Four", "ארבע.", True),
-    ("voice_number_5", "Five", "חמש.", True),
-    ("voice_number_6", "Six", "שש.", True),
-    ("voice_number_7", "Seven", "שבע.", True),
-    ("voice_number_8", "Eight", "שמונה.", True),
-    ("voice_number_9", "Nine", "תשע.", True),
-    ("voice_number_10", "Ten", "עשר.", True),
+    ("voice_number_1", "One", "אחת."),
+    ("voice_number_2", "Two", "שתיים."),
+    ("voice_number_3", "Three", "שלוש."),
+    ("voice_number_4", "Four", "ארבע."),
+    ("voice_number_5", "Five", "חמש."),
+    ("voice_number_6", "Six", "שש."),
+    ("voice_number_7", "Seven", "שבע."),
+    ("voice_number_8", "Eight", "שמונה."),
+    ("voice_number_9", "Nine", "תשע."),
+    ("voice_number_10", "Ten", "עשר."),
 
     # --- Instrument names ---
-    ("voice_instrument_drum", "Drum", "זה תוף.", False),
-    ("voice_instrument_xylophone", "Xylophone", "זה קסילופון.", False),
-    ("voice_instrument_tambourine", "Tambourine", "זה תוף מרים.", False),
-    ("voice_instrument_maracas", "Maracas", "אלה מרקסים.", False),
+    ("voice_instrument_drum", "Drum", "זה תוף."),
+    ("voice_instrument_xylophone", "Xylophone", "זה קסילופון."),
+    ("voice_instrument_tambourine", "Tambourine", "זה תוף מרים."),
+    ("voice_instrument_maracas", "Maracas", "אלה מרקסים."),
 
     # --- Hebrew letters ---
-    ("voice_letter_alef", "Alef", "זאת האות אָלֶף.", False),
-    ("voice_letter_bet", "Bet", "זאת האות בֵּית.", False),
-    ("voice_letter_gimel", "Gimel", "זאת האות גִּימֶל.", False),
-    ("voice_letter_dalet", "Dalet", "זאת האות דָּלֶת.", False),
-    ("voice_letter_he", "He", "זאת האות הֵא.", False),
-    ("voice_letter_vav", "Vav", "זאת האות וָו.", False),
+    ("voice_letter_alef", "Alef", "זאת האות אָלֶף."),
+    ("voice_letter_bet", "Bet", "זאת האות בֵּית."),
+    ("voice_letter_gimel", "Gimel", "זאת האות גִּימֶל."),
+    ("voice_letter_dalet", "Dalet", "זאת האות דָּלֶת."),
+    ("voice_letter_he", "He", "זאת האות הֵא."),
+    ("voice_letter_vav", "Vav", "זאת האות וָו."),
 
     # --- English letters ---
-    ("voice_letter_a", "A, like Apple", "A", True),
-    ("voice_letter_b", "B, like Ball", "B", True),
-    ("voice_letter_c", "C, like Cat", "C", True),
-    ("voice_letter_d", "D, like Dog", "D", True),
-    ("voice_letter_e", "E, like Elephant", "E", True),
-    ("voice_letter_f", "F, like Fish", "F", True),
+    ("voice_letter_a", "A, like Apple", "זאת האות <en>A</en>."),
+    ("voice_letter_b", "B, like Ball", "זאת האות <en>B</en>."),
+    ("voice_letter_c", "C, like Cat", "זאת האות <en>C</en>."),
+    ("voice_letter_d", "D, like Dog", "זאת האות <en>D</en>."),
+    ("voice_letter_e", "E, like Elephant", "זאת האות <en>E</en>."),
+    ("voice_letter_f", "F, like Fish", "זאת האות <en>F</en>."),
 
-    # --- Game prompts (already full sentences) ---
-    ("voice_prompt_whos_hungry", "Who's hungry?", "מי רוצה אוכל?", True),
-    ("voice_prompt_tap_the", "Tap the right one!", "תלחץ על הנכון!", True),
-    ("voice_prompt_drag_it", "Drag it to its place!", "גרור את זה למקום שלו!", True),
-    ("voice_prompt_try_again", "Nope, try again!", "לא, ננסה שוב!", True),
-    ("voice_prompt_great_job", "Great job!", "כל הכבוד!", True),
-    ("voice_prompt_well_done", "Well done!", "יפה מאוד!", True),
-    ("voice_prompt_new_island", "New island unlocked!", "אי חדש נפתח!", True),
-    ("voice_prompt_count_along", "Let's count together!", "בואו נספור ביחד!", True),
+    # --- Game prompts ---
+    ("voice_prompt_whos_hungry", "Who's hungry?", "מי רוצה לאכול?"),
+    ("voice_prompt_tap_the", "Tap the right one!", ("תלחצי על הנכון!", "תלחץ על הנכון!")),
+    ("voice_prompt_drag_it", "Drag it to its place!", ("תזיזי את זה למקום שלו!", "תזיז את זה למקום שלו!")),
+    ("voice_prompt_try_again", "Oops, let's try again!", "אופס! ננסה שוב!"),
+    ("voice_prompt_great_job", "Great job!", "כל הכבוד!"),
+    ("voice_prompt_well_done", "Well done!", "יפה מאוד!"),
+    ("voice_prompt_new_island", "New island unlocked!", "אי חדש נפתח!"),
+    ("voice_prompt_count_along", "Let's count together!", ("בואי נספור ביחד!", "בוא נספור ביחד!")),
 
     # --- My Day prompts ---
-    ("voice_prompt_bath", "Let's take a bath!", "בוא נתרחץ!", True),
-    ("voice_prompt_brush_teeth", "Let's brush our teeth!", "בוא נצחצח שיניים!", True),
-    ("voice_prompt_tidy_up", "Let's tidy up the room!", "בוא נסדר את החדר!", True),
-    ("voice_prompt_get_dressed", "Let's get dressed! What goes on first?", "בוא נתלבש! מה שמים קודם?", True),
-    ("voice_prompt_set_table", "Let's set the table!", "בוא נערוך את השולחן!", True),
-    ("voice_prompt_good_night", "Good night!", "לילה טוב!", True),
-    ("voice_prompt_time_break", "Time for a break!", "הגיע הזמן להפסקה!", True),
+    ("voice_prompt_bath", "Let's take a bath!", ("בואי נתרחץ!", "בוא נתרחץ!")),
+    ("voice_prompt_brush_teeth", "Let's brush our teeth!", ("בואי נצחצח שיניים!", "בוא נצחצח שיניים!")),
+    ("voice_prompt_tidy_up", "Let's tidy up the room!", ("בואי נסדר את החדר!", "בוא נסדר את החדר!")),
+    ("voice_prompt_get_dressed", "Let's get dressed! What goes on first?",
+     ("בואי נתלבש! מה שמים קודם?", "בוא נתלבש! מה שמים קודם?")),
+    ("voice_prompt_set_table", "Let's set the table!", ("בואי נערוך את השולחן!", "בוא נערוך את השולחן!")),
+    ("voice_prompt_good_night", "Good night!", "לילה טוב!"),
+    ("voice_prompt_time_break", "Time for a break!", "הגיע הזמן להפסקה!"),
 
     # --- Body parts ---
-    ("voice_body_arms", "Arms", "אלה ידיים.", False),
-    ("voice_body_legs", "Legs", "אלה רגליים.", False),
-    ("voice_body_tummy", "Tummy", "זאת בטן.", False),
-    ("voice_body_face", "Face", "אלה פנים.", False),
+    ("voice_body_arms", "Arms", "אלה ידיים."),
+    ("voice_body_legs", "Legs", "אלה רגליים."),
+    ("voice_body_tummy", "Tummy", "זאת בטן."),
+    ("voice_body_face", "Face", "אלה פנים."),
 
     # --- Clothing ---
-    ("voice_clothing_underwear", "Underwear", "אלה תחתונים.", False),
-    ("voice_clothing_shirt", "Shirt", "זאת חולצה.", False),
-    ("voice_clothing_pants", "Pants", "אלה מכנסיים.", False),
-    ("voice_clothing_socks", "Socks", "אלה גרביים.", False),
-    ("voice_clothing_shoes", "Shoes", "אלה נעליים.", False),
+    ("voice_clothing_underwear", "Underwear", "אלה תחתונים."),
+    ("voice_clothing_shirt", "Shirt", "זאת חולצה."),
+    ("voice_clothing_pants", "Pants", "אלה מכנסיים."),
+    ("voice_clothing_socks", "Socks", "אלה גרביים."),
+    ("voice_clothing_shoes", "Shoes", "אלה נעליים."),
 
     # --- Table items ---
-    ("voice_table_plate", "Plate", "זאת צלחת.", False),
-    ("voice_table_cup", "Cup", "זאת כוס.", False),
-    ("voice_table_fork", "Fork", "זה מזלג.", False),
-    ("voice_table_spoon", "Spoon", "זאת כפית.", False),
+    ("voice_table_plate", "Plate", "זאת צלחת."),
+    ("voice_table_cup", "Cup", "זאת כוס."),
+    ("voice_table_fork", "Fork", "זה מזלג."),
+    ("voice_table_spoon", "Spoon", "זאת כפית."),
 
     # --- Tidy items ---
-    ("voice_tidy_teddy", "Teddy", "זה דובי.", False),
-    ("voice_tidy_book", "Book", "זה ספר.", False),
-    ("voice_tidy_ball", "Ball", "זה כדור.", False),
+    ("voice_tidy_teddy", "Teddy", "זה דובי."),
+    ("voice_tidy_book", "Book", "זה ספר."),
+    ("voice_tidy_shirt", "Shirt", "זאת חולצה."),
+    ("voice_tidy_ball", "Ball", "זה כדור."),
 
     # --- Sticker names ---
-    ("voice_sticker_rainbow", "Rainbow", "זאת קשת.", False),
-    ("voice_sticker_flower", "Flower", "זה פרח.", False),
-    ("voice_sticker_butterfly", "Butterfly", "זה פרפר.", False),
-    ("voice_sticker_sun", "Sun", "זאת שמש.", False),
-    ("voice_sticker_moon", "Moon", "זה ירח.", False),
-    ("voice_sticker_rocket", "Rocket", "זה טיל.", False),
-    ("voice_sticker_crown", "Crown", "זה כתר.", False),
-    ("voice_sticker_trophy", "Trophy", "זה גביע.", False),
-    ("voice_sticker_diamond", "Diamond", "זה יהלום.", False),
-    ("voice_sticker_unicorn", "Unicorn", "זה חד קרן.", False),
+    ("voice_sticker_cow", "Cow", "זאת פרה."),
+    ("voice_sticker_dog", "Dog", "זה כלב."),
+    ("voice_sticker_cat", "Cat", "זה חתול."),
+    ("voice_sticker_rainbow", "Rainbow", "זאת קשת."),
+    ("voice_sticker_star", "Star", "זה כוכב."),
+    ("voice_sticker_flower", "Flower", "זה פרח."),
+    ("voice_sticker_butterfly", "Butterfly", "זה פרפר."),
+    ("voice_sticker_heart", "Heart", "זה לב."),
+    ("voice_sticker_music", "Music", "זה תו של מוזיקה."),
+    ("voice_sticker_sun", "Sun", "זאת שמש."),
+    ("voice_sticker_moon", "Moon", "זה ירח."),
+    ("voice_sticker_rocket", "Rocket", "זה טיל."),
+    ("voice_sticker_crown", "Crown", "זה כתר."),
+    ("voice_sticker_trophy", "Trophy", "זה גביע."),
+    ("voice_sticker_diamond", "Diamond", "זה יהלום."),
+    ("voice_sticker_unicorn", "Unicorn", "זה חד קרן."),
 ]
 
 
+def outputs_for(name, en_text, he_text, lang):
+    """Yield (file_stem, text) pairs to synthesize for one line."""
+    if lang == "en":
+        yield f"{name}_en", en_text
+    elif isinstance(he_text, tuple):
+        girl, boy = he_text
+        yield f"{name}_he_f", girl
+        yield f"{name}_he_m", boy
+    else:
+        yield f"{name}_he", he_text
+
+
 def main():
-    total = len(voice_lines)
-    print(f"Generating {total} voice lines x 2 languages = {total * 2} audio files")
-    print(f"English: eleven_multilingual_v2 | Hebrew: eleven_v3 with language_code=he\n")
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--lang", choices=["he", "en"], default="he")
+    parser.add_argument("--voice", default="noa", help="BlueTTS voice: noa, lily, daniel, adam")
+    parser.add_argument("--only", help="comma-separated resource names to generate")
+    parser.add_argument("--out", default=RAW_DIR, help="output directory (default: res/raw)")
+    parser.add_argument("--bluetts-dir", default=DEFAULT_BLUETTS_DIR)
+    args = parser.parse_args()
 
-    errors = []
-    for i, (name, en_text, he_text, is_sentence) in enumerate(voice_lines, 1):
-        print(f"[{i}/{total}] {name}")
+    lines = voice_lines
+    if args.only:
+        wanted = set(args.only.split(","))
+        unknown = wanted - {name for name, _, _ in voice_lines}
+        if unknown:
+            sys.exit(f"Unknown voice lines: {', '.join(sorted(unknown))}")
+        lines = [line for line in voice_lines if line[0] in wanted]
 
-        # English
-        en_mp3 = elevenlabs_tts(en_text, f"{name}_en", lang="en")
-        if en_mp3:
-            to_ogg(en_mp3, f"{name}_en")
-        else:
-            errors.append(f"{name}_en")
+    from blue_onnx import BlueTTS
 
-        # Hebrew
-        he_mp3 = elevenlabs_tts(he_text, f"{name}_he", lang="he")
-        if he_mp3:
-            to_ogg(he_mp3, f"{name}_he")
-        else:
-            errors.append(f"{name}_he")
+    bluetts_dir = os.path.abspath(args.bluetts_dir)
+    tts = BlueTTS(
+        onnx_dir=os.path.join(bluetts_dir, "onnx_models"),
+        style_json=os.path.join(bluetts_dir, "voices", f"{args.voice}.json"),
+        config_path=os.path.join(bluetts_dir, "config", "tts.json"),
+    )
+    os.makedirs(args.out, exist_ok=True)
 
-    ogg_files = [f for f in os.listdir(RAW_DIR) if f.startswith("voice_") and f.endswith(".ogg")]
-    print(f"\nDone! Generated {len(ogg_files)} OGG files in res/raw/")
-    if errors:
-        print(f"Errors ({len(errors)}): {', '.join(errors)}")
+    jobs = [job for name, en, he in lines for job in outputs_for(name, en, he, args.lang)]
+    print(f"Generating {len(jobs)} files with BlueTTS voice '{args.voice}' -> {args.out}")
+    for i, (stem, text) in enumerate(jobs, 1):
+        # Seed per file so re-running gives the same take
+        np.random.seed(zlib.crc32(stem.encode()))
+        samples, sr = tts.synthesize(text, lang=args.lang, total_step=STEPS, speed=SPEED)
+        # A short tail so the last syllable isn't cut off by the player
+        samples = np.concatenate([samples, np.zeros(int(sr * 0.15), dtype=np.float32)])
+        sf.write(os.path.join(args.out, f"{stem}.ogg"), samples, sr, format="OGG", subtype="VORBIS")
+        print(f"  [{i}/{len(jobs)}] {stem}  {text}")
+
+    # A line that became gendered leaves a stale plain _he file behind; remove it
+    if args.lang == "he" and os.path.abspath(args.out) == os.path.abspath(RAW_DIR):
+        for name, _, he in lines:
+            stale = os.path.join(args.out, f"{name}_he.ogg")
+            if isinstance(he, tuple) and os.path.exists(stale):
+                os.remove(stale)
+                print(f"  removed {name}_he.ogg (replaced by _he_f / _he_m)")
 
 
 if __name__ == "__main__":
