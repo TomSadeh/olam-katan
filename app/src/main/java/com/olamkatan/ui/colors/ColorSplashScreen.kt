@@ -42,6 +42,7 @@ import com.olamkatan.audio.Sfx
 import com.olamkatan.data.models.BilingualText
 import com.olamkatan.theme.CloudWhite
 import com.olamkatan.ui.common.LocalLanguage
+import com.olamkatan.ui.common.localized
 import com.olamkatan.ui.common.LocalSfxPlayer
 import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.ConfettiOverlay
@@ -93,8 +94,9 @@ fun ColorSplashScreen(
             Text(
                 text = BilingualText(
                     "תלחץ על ${state.targetColor.name.he}!",
-                    "Tap the ${state.targetColor.name.en} one!"
-                ).resolve(language),
+                    "Tap the ${state.targetColor.name.en} one!",
+                    heGirl = "תלחצי על ${state.targetColor.name.he}!"
+                ).localized(),
                 style = MaterialTheme.typography.headlineMedium,
                 color = CloudWhite
             )

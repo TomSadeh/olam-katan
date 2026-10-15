@@ -16,11 +16,11 @@
         android:pathData="M15,40 Q8,52 12,60 Q16,50 20,45Z"/>
     <!-- Eye -->
     <path android:fillColor="#FFFFFF"
-        android:pathData="M55,35 A5,5 0 1,1 55,35.01Z"/>
+        android:pathData="M50,35 A5,5 0 1,1 60,35 A5,5 0 1,1 50,35Z"/>
     <path android:fillColor="#1A237E"
-        android:pathData="M56,35 A3,3 0 1,1 56,35.01Z"/>
+        android:pathData="M53,35 A3,3 0 1,1 59,35 A3,3 0 1,1 53,35Z"/>
     <path android:fillColor="#FFFFFF"
-        android:pathData="M55,33 A1.5,1.5 0 1,1 55,33.01Z"/>
+        android:pathData="M53.5,33 A1.5,1.5 0 1,1 56.5,33 A1.5,1.5 0 1,1 53.5,33Z"/>
     <!-- Fin -->
     <path android:fillColor="#42A5F5"
         android:pathData="M40,22 Q42,12 48,15 Q46,22 40,22Z"/>

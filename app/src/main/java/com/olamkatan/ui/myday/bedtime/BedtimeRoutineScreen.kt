@@ -1,11 +1,14 @@
 package com.olamkatan.ui.myday.bedtime
 
+import com.olamkatan.ui.components.BackArrowIcon
 import android.app.Application
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.AndroidViewModel
@@ -39,6 +43,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.olamkatan.OlamKatanApplication
+import com.olamkatan.R
 import com.olamkatan.audio.Sfx
 import com.olamkatan.data.models.BilingualText
 import com.olamkatan.theme.CloudWhite
@@ -56,16 +61,16 @@ import kotlinx.coroutines.launch
 data class BedtimeStep(
     val id: String,
     val instruction: BilingualText,
-    val emoji: String,
+    @DrawableRes val icon: Int,
     val actionLabel: BilingualText
 )
 
 val bedtimeSteps = listOf(
-    BedtimeStep("pajamas", BilingualText("נלבש פיג'מה!", "Put on pajamas!"), "\uD83E\uDE72", BilingualText("ללבוש", "Wear")),
-    BedtimeStep("brush", BilingualText("נצחצח שיניים!", "Brush your teeth!"), "\uD83E\uDEB5", BilingualText("לצחצח", "Brush")),
-    BedtimeStep("teddy", BilingualText("נשים את הדובי במיטה!", "Put teddy in bed!"), "\uD83E\uDDF8", BilingualText("לשים", "Place")),
-    BedtimeStep("light", BilingualText("נכבה את האור!", "Turn off the light!"), "\uD83D\uDCA1", BilingualText("לכבות", "Off")),
-    BedtimeStep("stars", BilingualText("כוכבים בשמיים! לילה טוב!", "Stars in the sky! Good night!"), "⭐", BilingualText("לילה טוב", "Good night"))
+    BedtimeStep("pajamas", BilingualText("נלבש פיג'מה!", "Put on pajamas!"), R.drawable.ic_clothing_pajamas, BilingualText("ללבוש", "Wear")),
+    BedtimeStep("brush", BilingualText("נצחצח שיניים!", "Brush your teeth!"), R.drawable.ic_myday_toothbrush, BilingualText("לצחצח", "Brush")),
+    BedtimeStep("teddy", BilingualText("נשים את הדובי במיטה!", "Put teddy in bed!"), R.drawable.ic_tidy_teddy, BilingualText("לשים", "Place")),
+    BedtimeStep("light", BilingualText("נכבה את האור!", "Turn off the light!"), R.drawable.ic_bedtime_bulb, BilingualText("לכבות", "Off")),
+    BedtimeStep("stars", BilingualText("כוכבים בשמיים! לילה טוב!", "Stars in the sky! Good night!"), R.drawable.ic_ui_star, BilingualText("לילה טוב", "Good night"))
 )
 
 data class BedtimeState(
@@ -126,7 +131,7 @@ fun BedtimeRoutineScreen(onBack: () -> Unit, viewModel: BedtimeRoutineViewModel 
                 Box(
                     modifier = Modifier.size(56.dp).clip(CircleShape).background(CloudWhite.copy(alpha = 0.3f)).clickable { onBack() },
                     contentAlignment = Alignment.Center
-                ) { Text("◀", fontSize = 24.sp, color = Color.White) }
+                ) { BackArrowIcon() }
                 Text(BilingualText("שינה טובה", "Bedtime").resolve(language), style = MaterialTheme.typography.headlineMedium, color = CloudWhite)
                 Spacer(modifier = Modifier.width(56.dp))
             }
@@ -159,7 +164,7 @@ fun BedtimeRoutineScreen(onBack: () -> Unit, viewModel: BedtimeRoutineViewModel 
                             if (i < state.currentStep) Text("✓", fontSize = 11.sp, color = EarthBrown)
                         }
                         if (i == state.currentStep) {
-                            Text(step.emoji, fontSize = 14.sp, modifier = Modifier.padding(top = 4.dp))
+                            Image(painter = painterResource(step.icon), contentDescription = null, modifier = Modifier.padding(top = 4.dp).size(20.dp))
                         }
                     }
                 }
@@ -179,7 +184,7 @@ fun BedtimeRoutineScreen(onBack: () -> Unit, viewModel: BedtimeRoutineViewModel 
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(step.emoji, fontSize = 100.sp)
+                        Image(painter = painterResource(step.icon), contentDescription = null, modifier = Modifier.size(130.dp))
 
                         Spacer(modifier = Modifier.height(16.dp))
 
@@ -223,20 +228,24 @@ fun BedtimeRoutineScreen(onBack: () -> Unit, viewModel: BedtimeRoutineViewModel 
                 Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                            repeat(7) { Text("⭐", fontSize = 28.sp) }
+                            repeat(7) { Image(painter = painterResource(R.drawable.ic_ui_star), contentDescription = null, modifier = Modifier.size(36.dp)) }
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                         Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
-                            repeat(5) { Text("✨", fontSize = 20.sp) }
+                            repeat(5) { Image(painter = painterResource(R.drawable.ic_myday_sparkle), contentDescription = null, modifier = Modifier.size(26.dp)) }
                         }
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text("\uD83C\uDF19", fontSize = 64.sp)
+                        Image(painter = painterResource(R.drawable.ic_bedtime_moon), contentDescription = null, modifier = Modifier.size(84.dp))
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            BilingualText("לילה טוב! 💤", "Good night! 💤").resolve(language),
-                            style = MaterialTheme.typography.headlineLarge,
-                            color = CloudWhite
-                        )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                BilingualText("לילה טוב!", "Good night!").resolve(language),
+                                style = MaterialTheme.typography.headlineLarge,
+                                color = CloudWhite
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Image(painter = painterResource(R.drawable.ic_bedtime_zzz), contentDescription = null, modifier = Modifier.size(40.dp))
+                        }
                     }
                 }
             }

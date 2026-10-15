@@ -23,9 +23,9 @@
         android:pathData="M42,70 Q42,60 50,58 Q58,60 58,70Z"/>
     <!-- Animal eyes -->
     <path android:fillColor="#4E342E"
-        android:pathData="M46,65 A2,2 0 1,1 46,65.01Z"/>
+        android:pathData="M44,65 A2,2 0 1,1 48,65 A2,2 0 1,1 44,65Z"/>
     <path android:fillColor="#4E342E"
-        android:pathData="M54,65 A2,2 0 1,1 54,65.01Z"/>
+        android:pathData="M52,65 A2,2 0 1,1 56,65 A2,2 0 1,1 52,65Z"/>
     <!-- Animal ears -->
     <path android:fillColor="#FFCC80"
         android:pathData="M42,62 L38,55 L44,60Z"/>

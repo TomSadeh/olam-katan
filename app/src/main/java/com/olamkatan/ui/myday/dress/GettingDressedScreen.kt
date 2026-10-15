@@ -1,8 +1,11 @@
 package com.olamkatan.ui.myday.dress
 
+import com.olamkatan.ui.components.BackArrowIcon
 import android.app.Application
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -33,6 +36,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.AndroidViewModel
@@ -40,6 +44,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.olamkatan.OlamKatanApplication
+import com.olamkatan.R
 import com.olamkatan.audio.Sfx
 import com.olamkatan.data.models.BilingualText
 import com.olamkatan.theme.CloudWhite
@@ -54,15 +59,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-data class ClothingItem(val id: String, val name: BilingualText, val emoji: String, val order: Int)
+data class ClothingItem(val id: String, val name: BilingualText, @DrawableRes val icon: Int, val order: Int)
 
 data class DressState(
     val clothes: List<ClothingItem> = listOf(
-        ClothingItem("underwear", BilingualText("תחתונים", "Underwear"), "\uD83A\uDE80", 0),
-        ClothingItem("shirt", BilingualText("חולצה", "Shirt"), "\uD83D\uDC55", 1),
-        ClothingItem("pants", BilingualText("מכנסיים", "Pants"), "\uD83D\uDC56", 2),
-        ClothingItem("socks", BilingualText("גרביים", "Socks"), "\uD83E\uDDE6", 3),
-        ClothingItem("shoes", BilingualText("נעליים", "Shoes"), "\uD83D\uDC5F", 4)
+        ClothingItem("underwear", BilingualText("תחתונים", "Underwear"), R.drawable.ic_clothing_underwear, 0),
+        ClothingItem("shirt", BilingualText("חולצה", "Shirt"), R.drawable.ic_clothing_shirt, 1),
+        ClothingItem("pants", BilingualText("מכנסיים", "Pants"), R.drawable.ic_clothing_pants, 2),
+        ClothingItem("socks", BilingualText("גרביים", "Socks"), R.drawable.ic_clothing_socks, 3),
+        ClothingItem("shoes", BilingualText("נעליים", "Shoes"), R.drawable.ic_clothing_shoes, 4)
     ),
     val currentStep: Int = 0,
     val isComplete: Boolean = false,
@@ -135,7 +140,7 @@ fun GettingDressedScreen(onBack: () -> Unit, viewModel: GettingDressedViewModel 
                         .background(Color.White.copy(alpha = 0.25f))
                         .clickable { onBack() },
                     contentAlignment = Alignment.Center
-                ) { Text("◀", fontSize = 22.sp, color = Color.White) }
+                ) { BackArrowIcon() }
                 Text(BilingualText("להתלבש", "Getting Dressed").resolve(language), style = MaterialTheme.typography.headlineMedium, color = CloudWhite)
                 Spacer(modifier = Modifier.width(52.dp))
             }
@@ -151,10 +156,10 @@ fun GettingDressedScreen(onBack: () -> Unit, viewModel: GettingDressedViewModel 
                 contentAlignment = Alignment.Center
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("\uD83E\uDDD2", fontSize = 48.sp)
+                    Image(painter = painterResource(R.drawable.ic_myday_child), contentDescription = null, modifier = Modifier.size(64.dp))
                     Row {
                         state.clothes.filter { it.order < state.currentStep }.forEach {
-                            Text(it.emoji, fontSize = 20.sp)
+                            Image(painter = painterResource(it.icon), contentDescription = null, modifier = Modifier.size(26.dp))
                         }
                     }
                 }
@@ -196,7 +201,7 @@ fun GettingDressedScreen(onBack: () -> Unit, viewModel: GettingDressedViewModel 
                                     }
                                 },
                             contentAlignment = Alignment.Center
-                        ) { Text(item.emoji, fontSize = 48.sp) }
+                        ) { Image(painter = painterResource(item.icon), contentDescription = null, modifier = Modifier.size(66.dp)) }
                         Text(item.name.resolve(language), style = MaterialTheme.typography.labelLarge, color = CloudWhite)
                     }
                 }

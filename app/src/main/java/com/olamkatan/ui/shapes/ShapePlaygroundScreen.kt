@@ -37,6 +37,7 @@ import com.olamkatan.data.content.ShapeDef
 import com.olamkatan.data.models.BilingualText
 import com.olamkatan.theme.CloudWhite
 import com.olamkatan.ui.common.LocalLanguage
+import com.olamkatan.ui.common.localized
 import com.olamkatan.ui.common.LocalSfxPlayer
 import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.ConfettiOverlay
@@ -94,9 +95,10 @@ fun ShapePlaygroundScreen(
 
                 Text(
                     text = BilingualText(
-                        "גרור את ה${state.targetShape.name.he}!",
-                        "Drag the ${state.targetShape.name.en}!"
-                    ).resolve(language),
+                        "תזיז את ה${state.targetShape.name.he}!",
+                        "Drag the ${state.targetShape.name.en}!",
+                        heGirl = "תזיזי את ה${state.targetShape.name.he}!"
+                    ).localized(),
                     style = MaterialTheme.typography.headlineMedium,
                     color = CloudWhite
                 )

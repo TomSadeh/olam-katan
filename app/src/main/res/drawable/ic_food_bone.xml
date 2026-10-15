@@ -5,14 +5,14 @@
     android:viewportHeight="80">
     <!-- Left knobs -->
     <path android:fillColor="#F5F5DC"
-        android:pathData="M18,30 A9,9 0 1,1 18,30.01Z"/>
+        android:pathData="M9,30 A9,9 0 1,1 27,30 A9,9 0 1,1 9,30Z"/>
     <path android:fillColor="#F5F5DC"
-        android:pathData="M18,50 A9,9 0 1,1 18,50.01Z"/>
+        android:pathData="M9,50 A9,9 0 1,1 27,50 A9,9 0 1,1 9,50Z"/>
     <!-- Right knobs -->
     <path android:fillColor="#F5F5DC"
-        android:pathData="M62,30 A9,9 0 1,1 62,30.01Z"/>
+        android:pathData="M53,30 A9,9 0 1,1 71,30 A9,9 0 1,1 53,30Z"/>
     <path android:fillColor="#F5F5DC"
-        android:pathData="M62,50 A9,9 0 1,1 62,50.01Z"/>
+        android:pathData="M53,50 A9,9 0 1,1 71,50 A9,9 0 1,1 53,50Z"/>
     <!-- Shaft (centered) -->
     <path android:fillColor="#F5F5DC"
         android:pathData="M18,33 L62,33 L62,47 L18,47Z"/>

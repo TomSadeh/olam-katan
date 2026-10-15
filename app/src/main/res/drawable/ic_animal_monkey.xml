@@ -17,23 +17,23 @@
         android:pathData="M45,38 Q45,28 60,26 Q75,28 75,38 Q75,50 60,52 Q45,50 45,38Z"/>
     <!-- Ears -->
     <path android:fillColor="#A1887F"
-        android:pathData="M38,30 A7,7 0 1,1 38,30.01Z"/>
+        android:pathData="M31,30 A7,7 0 1,1 45,30 A7,7 0 1,1 31,30Z"/>
     <path android:fillColor="#D7CCC8"
-        android:pathData="M38,30 A4,4 0 1,1 38,30.01Z"/>
+        android:pathData="M34,30 A4,4 0 1,1 42,30 A4,4 0 1,1 34,30Z"/>
     <path android:fillColor="#A1887F"
-        android:pathData="M82,30 A7,7 0 1,1 82,30.01Z"/>
+        android:pathData="M75,30 A7,7 0 1,1 89,30 A7,7 0 1,1 75,30Z"/>
     <path android:fillColor="#D7CCC8"
-        android:pathData="M82,30 A4,4 0 1,1 82,30.01Z"/>
+        android:pathData="M78,30 A4,4 0 1,1 86,30 A4,4 0 1,1 78,30Z"/>
     <!-- Eyes -->
     <path android:fillColor="#4E342E"
-        android:pathData="M53,35 A3,3 0 1,1 53,35.01Z"/>
+        android:pathData="M50,35 A3,3 0 1,1 56,35 A3,3 0 1,1 50,35Z"/>
     <path android:fillColor="#4E342E"
-        android:pathData="M67,35 A3,3 0 1,1 67,35.01Z"/>
+        android:pathData="M64,35 A3,3 0 1,1 70,35 A3,3 0 1,1 64,35Z"/>
     <!-- Eye shine -->
     <path android:fillColor="#FFFFFF"
-        android:pathData="M52,33 A1.5,1.5 0 1,1 52,33.01Z"/>
+        android:pathData="M50.5,33 A1.5,1.5 0 1,1 53.5,33 A1.5,1.5 0 1,1 50.5,33Z"/>
     <path android:fillColor="#FFFFFF"
-        android:pathData="M66,33 A1.5,1.5 0 1,1 66,33.01Z"/>
+        android:pathData="M64.5,33 A1.5,1.5 0 1,1 67.5,33 A1.5,1.5 0 1,1 64.5,33Z"/>
     <!-- Nose -->
     <path android:fillColor="#5D4037"
         android:pathData="M58,42 Q58,41 60,41 Q62,41 62,42 Q62,43 60,44 Q58,43 58,42Z"/>

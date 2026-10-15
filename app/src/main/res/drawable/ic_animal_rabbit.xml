@@ -23,14 +23,14 @@
         android:pathData="M71,25 Q69.5,8 72,5 Q74.5,8 73,25Z"/>
     <!-- Eyes -->
     <path android:fillColor="#4E342E"
-        android:pathData="M52,40 A3,3 0 1,1 52,40.01Z"/>
+        android:pathData="M49,40 A3,3 0 1,1 55,40 A3,3 0 1,1 49,40Z"/>
     <path android:fillColor="#4E342E"
-        android:pathData="M68,40 A3,3 0 1,1 68,40.01Z"/>
+        android:pathData="M65,40 A3,3 0 1,1 71,40 A3,3 0 1,1 65,40Z"/>
     <!-- Eye shine -->
     <path android:fillColor="#FFFFFF"
-        android:pathData="M51,38 A1.5,1.5 0 1,1 51,38.01Z"/>
+        android:pathData="M49.5,38 A1.5,1.5 0 1,1 52.5,38 A1.5,1.5 0 1,1 49.5,38Z"/>
     <path android:fillColor="#FFFFFF"
-        android:pathData="M67,38 A1.5,1.5 0 1,1 67,38.01Z"/>
+        android:pathData="M65.5,38 A1.5,1.5 0 1,1 68.5,38 A1.5,1.5 0 1,1 65.5,38Z"/>
     <!-- Nose -->
     <path android:fillColor="#F48FB1"
         android:pathData="M58,47 Q58,45 60,45 Q62,45 62,47 Q62,49 60,49 Q58,49 58,47Z"/>
@@ -41,7 +41,7 @@
         android:pathData="M48,48 L35,45 M48,50 L35,52 M72,48 L85,45 M72,50 L85,52"/>
     <!-- Tail (fluffy ball) -->
     <path android:fillColor="#FAFAFA"
-        android:pathData="M82,72 A6,6 0 1,1 82,72.01Z"/>
+        android:pathData="M76,72 A6,6 0 1,1 88,72 A6,6 0 1,1 76,72Z"/>
     <!-- Feet -->
     <path android:fillColor="#BDBDBD"
         android:pathData="M42,82 Q38,95 42,100 Q50,102 52,95 L50,82Z"/>

@@ -16,7 +16,7 @@
         android:pathData="M55,48 L68,65 Q72,70 68,72 Q64,72 66,68 L54,52Z"/>
     <!-- Bone knob -->
     <path android:fillColor="#EFEBE9"
-        android:pathData="M67,67 A5,5 0 1,1 67,67.01Z"/>
+        android:pathData="M62,67 A5,5 0 1,1 72,67 A5,5 0 1,1 62,67Z"/>
     <!-- Top sear line -->
     <path android:fillColor="#C62828"
         android:pathData="M18,20 Q28,17 38,18 Q48,17 58,20 Q62,22 60,24 Q48,20 38,21 Q28,20 18,24 Q14,22 18,20Z"/>

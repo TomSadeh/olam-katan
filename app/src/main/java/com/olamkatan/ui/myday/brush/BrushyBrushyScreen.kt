@@ -1,11 +1,13 @@
 package com.olamkatan.ui.myday.brush
 
+import com.olamkatan.ui.components.BackArrowIcon
 import android.app.Application
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -37,6 +39,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.AndroidViewModel
@@ -44,10 +47,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.olamkatan.OlamKatanApplication
+import com.olamkatan.R
 import com.olamkatan.audio.Sfx
 import com.olamkatan.data.models.BilingualText
 import com.olamkatan.theme.CloudWhite
 import com.olamkatan.ui.common.LocalLanguage
+import com.olamkatan.ui.common.localized
 import com.olamkatan.ui.common.LocalSfxPlayer
 import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.GameBackground
@@ -112,7 +117,7 @@ fun BrushyBrushyScreen(onBack: () -> Unit, viewModel: BrushyBrushyViewModel = vi
                         .background(Color.White.copy(alpha = 0.25f))
                         .clickable { onBack() },
                     contentAlignment = Alignment.Center
-                ) { Text("◀", fontSize = 22.sp, color = Color.White) }
+                ) { BackArrowIcon() }
                 Text(BilingualText("צחצוח שיניים", "Brushy Brushy").resolve(language), style = MaterialTheme.typography.headlineMedium, color = CloudWhite)
                 Spacer(modifier = Modifier.width(52.dp))
             }
@@ -164,9 +169,9 @@ fun BrushyBrushyScreen(onBack: () -> Unit, viewModel: BrushyBrushyViewModel = vi
             Spacer(modifier = Modifier.height(16.dp))
 
             // Toothbrush
-            Text("\uD83E\uDEB5", fontSize = 64.sp)
+            Image(painter = painterResource(R.drawable.ic_myday_toothbrush), contentDescription = null, modifier = Modifier.size(84.dp))
             Text(
-                BilingualText("תלחץ על כל שן!", "Tap each tooth!").resolve(language),
+                BilingualText("תלחץ על כל שן!", "Tap each tooth!", heGirl = "תלחצי על כל שן!").localized(),
                 style = MaterialTheme.typography.bodyLarge,
                 color = CloudWhite
             )
@@ -203,7 +208,7 @@ private fun Tooth(isClean: Boolean, onClick: () -> Unit) {
         contentAlignment = Alignment.Center
     ) {
         if (isClean) {
-            Text("✨", fontSize = 24.sp)
+            Image(painter = painterResource(R.drawable.ic_myday_sparkle), contentDescription = null, modifier = Modifier.size(34.dp))
         }
     }
 }

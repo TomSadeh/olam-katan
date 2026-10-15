@@ -3,32 +3,35 @@
     android:height="80dp"
     android:viewportWidth="80"
     android:viewportHeight="80">
-    <!-- Tambourine body (ring) -->
-    <path android:fillColor="#FFEE58"
-        android:pathData="M40,40 A25,25 0 1,1 40,40.01Z"/>
-    <!-- Inner hole -->
-    <path android:fillColor="#FFF9C4"
-        android:pathData="M40,40 A18,18 0 1,1 40,40.01Z"/>
-    <!-- Jingles (small circles around rim) -->
-    <path android:fillColor="#FFD54F"
-        android:pathData="M40,15 A4,4 0 1,1 40,15.01Z"/>
-    <path android:fillColor="#FFD54F"
-        android:pathData="M58,20 A4,4 0 1,1 58,20.01Z"/>
-    <path android:fillColor="#FFD54F"
-        android:pathData="M65,40 A4,4 0 1,1 65,40.01Z"/>
-    <path android:fillColor="#FFD54F"
-        android:pathData="M58,58 A4,4 0 1,1 58,58.01Z"/>
-    <path android:fillColor="#FFD54F"
-        android:pathData="M40,65 A4,4 0 1,1 40,65.01Z"/>
-    <path android:fillColor="#FFD54F"
-        android:pathData="M22,58 A4,4 0 1,1 22,58.01Z"/>
-    <path android:fillColor="#FFD54F"
-        android:pathData="M15,40 A4,4 0 1,1 15,40.01Z"/>
-    <path android:fillColor="#FFD54F"
-        android:pathData="M22,22 A4,4 0 1,1 22,22.01Z"/>
-    <!-- Jingle shine -->
-    <path android:fillColor="#FFFFFF"
-        android:pathData="M39,14 A1.5,1.5 0 1,1 39,14.01Z"/>
-    <path android:fillColor="#FFFFFF"
-        android:pathData="M64,39 A1.5,1.5 0 1,1 64,39.01Z"/>
+    <!-- Wooden frame -->
+    <path android:fillColor="#E53935"
+        android:pathData="M10,40 A30,30 0 1,1 70,40 A30,30 0 1,1 10,40Z"/>
+    <!-- Drum skin -->
+    <path android:fillColor="#FFF3E0"
+        android:pathData="M18,40 A22,22 0 1,1 62,40 A22,22 0 1,1 18,40Z"/>
+    <!-- Skin decoration -->
+    <path android:fillColor="#FFCC80"
+        android:pathData="M30,40 A10,10 0 1,1 50,40 A10,10 0 1,1 30,40Z"/>
+    <!-- Jingle slots with metal cymbals -->
+    <group>
+        <path android:fillColor="#B71C1C" android:pathData="M34,8 L46,8 L46,14 L34,14Z"/>
+        <path android:fillColor="#CFD8DC" android:strokeColor="#78909C" android:strokeWidth="1" android:pathData="M36,11 A4,3 0 1,1 44,11 A4,3 0 1,1 36,11Z"/>
+    </group>
+    <group android:rotation="90" android:pivotX="40" android:pivotY="40">
+        <path android:fillColor="#B71C1C" android:pathData="M34,8 L46,8 L46,14 L34,14Z"/>
+        <path android:fillColor="#CFD8DC" android:strokeColor="#78909C" android:strokeWidth="1" android:pathData="M36,11 A4,3 0 1,1 44,11 A4,3 0 1,1 36,11Z"/>
+    </group>
+    <group android:rotation="180" android:pivotX="40" android:pivotY="40">
+        <path android:fillColor="#B71C1C" android:pathData="M34,8 L46,8 L46,14 L34,14Z"/>
+        <path android:fillColor="#CFD8DC" android:strokeColor="#78909C" android:strokeWidth="1" android:pathData="M36,11 A4,3 0 1,1 44,11 A4,3 0 1,1 36,11Z"/>
+    </group>
+    <group android:rotation="270" android:pivotX="40" android:pivotY="40">
+        <path android:fillColor="#B71C1C" android:pathData="M34,8 L46,8 L46,14 L34,14Z"/>
+        <path android:fillColor="#CFD8DC" android:strokeColor="#78909C" android:strokeWidth="1" android:pathData="M36,11 A4,3 0 1,1 44,11 A4,3 0 1,1 36,11Z"/>
+    </group>
+    <!-- Ribbons -->
+    <path android:strokeColor="#42A5F5" android:strokeWidth="3" android:strokeLineCap="round"
+        android:pathData="M64,62 Q70,70 66,77"/>
+    <path android:strokeColor="#FFEB3B" android:strokeWidth="3" android:strokeLineCap="round"
+        android:pathData="M60,66 Q63,73 58,78"/>
 </vector>

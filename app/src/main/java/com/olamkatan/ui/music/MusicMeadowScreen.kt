@@ -49,6 +49,7 @@ import com.olamkatan.data.models.BilingualText
 import com.olamkatan.theme.CloudWhite
 import com.olamkatan.theme.EarthBrown
 import com.olamkatan.ui.common.LocalLanguage
+import com.olamkatan.ui.common.localized
 import com.olamkatan.ui.common.LocalSfxPlayer
 import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.GameBackground
@@ -174,8 +175,8 @@ fun MusicMeadowScreen(onBack: () -> Unit, viewModel: MusicMeadowViewModel = view
 
             Text(
                 text = when (state.phase) {
-                    MusicPhase.FREE_PLAY -> BilingualText("תלחץ על כלי נגינה! כשמוכן, לחץ 'התחל'", "Tap instruments! When ready, press 'Start'").resolve(language)
-                    MusicPhase.SHOW_PATTERN -> BilingualText("תקשיב ותזכור...", "Listen and remember...").resolve(language)
+                    MusicPhase.FREE_PLAY -> BilingualText("תלחץ על הכלים ותנגן!", "Tap the instruments and play!", heGirl = "תלחצי על הכלים ותנגני!").localized()
+                    MusicPhase.SHOW_PATTERN -> BilingualText("תקשיב ותזכור...", "Listen and remember...", heGirl = "תקשיבי ותזכרי...").localized()
                     MusicPhase.PLAYER_TURN -> BilingualText("עכשיו תורך!", "Your turn!").resolve(language)
                     MusicPhase.SUCCESS -> BilingualText("מצוין!", "Awesome!").resolve(language)
                     MusicPhase.SESSION_COMPLETE -> ""
@@ -263,7 +264,7 @@ fun MusicMeadowScreen(onBack: () -> Unit, viewModel: MusicMeadowViewModel = view
                         .clickable { viewModel.startSimonSays() },
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(BilingualText("התחל!", "Start!").resolve(language), style = MaterialTheme.typography.titleLarge, color = CloudWhite)
+                    Text(BilingualText("מתחילים!", "Let's go!").resolve(language), style = MaterialTheme.typography.titleLarge, color = CloudWhite)
                 }
             }
 

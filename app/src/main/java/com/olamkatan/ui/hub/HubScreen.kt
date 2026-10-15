@@ -1,6 +1,10 @@
 package com.olamkatan.ui.hub
 
+import android.app.Activity
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
@@ -10,31 +14,33 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import android.app.Activity
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.olamkatan.data.models.BilingualText
-import com.olamkatan.theme.EarthBrown
+import com.olamkatan.R
 import com.olamkatan.ui.hub.components.HubBackground
 import com.olamkatan.ui.hub.components.IslandButton
+import com.olamkatan.ui.hub.components.IslandHeight
+import com.olamkatan.ui.hub.components.IslandWidth
 import com.olamkatan.ui.hub.components.StarCounter
-import com.olamkatan.ui.common.LocalLanguage
-import androidx.compose.material3.Text
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HubScreen(
     onIslandClick: (String) -> Unit,
@@ -43,35 +49,63 @@ fun HubScreen(
 ) {
     val hubViewModel: HubViewModel = viewModel()
     val progress by hubViewModel.progress.collectAsStateWithLifecycle()
-    val layoutDirection = LocalLayoutDirection.current
+    val isRtl = LocalLayoutDirection.current == LayoutDirection.Rtl
 
     Box(modifier = Modifier.fillMaxSize()) {
         HubBackground()
 
         BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-            val density = LocalDensity.current
-            val maxWidthPx = with(density) { maxWidth.toPx() }
-            val maxHeightPx = with(density) { maxHeight.toPx() }
+            val width = maxWidth
+            val height = maxHeight
+            fun fx(island: IslandDef) = if (isRtl) 1f - island.fractionalX else island.fractionalX
 
-            allIslands.forEach { island ->
-                val fx = if (layoutDirection == LayoutDirection.Rtl) {
-                    1f - island.fractionalX
-                } else {
-                    island.fractionalX
+            // Dotted sea route linking the islands in order, like a treasure map
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                val points = allIslands.map { Offset(size.width * fx(it), size.height * it.fractionalY + 40.dp.toPx()) }
+                val route = Path().apply {
+                    moveTo(points.first().x, points.first().y)
+                    for (i in 1 until points.size) {
+                        val a = points[i - 1]
+                        val b = points[i]
+                        // Bow each leg slightly so the route meanders
+                        val bend = if (i % 2 == 0) 1f else -1f
+                        val mid = Offset((a.x + b.x) / 2, (a.y + b.y) / 2)
+                        val ctrl = mid + Offset(-(b.y - a.y), b.x - a.x) * (0.18f * bend)
+                        quadraticBezierTo(ctrl.x, ctrl.y, b.x, b.y)
+                    }
                 }
-                val offsetX = with(density) { (maxWidthPx * fx - 50.dp.toPx()).toDp() }
-                val offsetY = with(density) { (maxHeightPx * island.fractionalY - 50.dp.toPx()).toDp() }
+                drawPath(
+                    route,
+                    Color.White.copy(alpha = 0.75f),
+                    style = Stroke(
+                        width = 7.dp.toPx(),
+                        cap = StrokeCap.Round,
+                        pathEffect = PathEffect.dashPathEffect(floatArrayOf(1f, 22.dp.toPx()))
+                    )
+                )
+            }
 
+            // Islands nearer the horizon are drawn a little smaller, for depth
+            allIslands.forEachIndexed { index, island ->
+                val depthScale = 0.82f + 0.35f * ((island.fractionalY - 0.42f) / 0.38f).coerceIn(0f, 1f)
                 IslandButton(
                     island = island,
                     isUnlocked = true,
                     onClick = { onIslandClick(island.route) },
-                    modifier = Modifier.offset(x = offsetX, y = offsetY)
+                    palmOnLeft = index % 2 == 0,
+                    modifier = Modifier
+                        .offset(
+                            x = width * fx(island) - IslandWidth / 2,
+                            y = height * island.fractionalY - IslandHeight / 2
+                        )
+                        .graphicsLayer {
+                            scaleX = depthScale
+                            scaleY = depthScale
+                        }
                 )
             }
         }
 
-        // Star counter — top center
         StarCounter(
             stars = progress.totalStars,
             modifier = Modifier
@@ -79,70 +113,60 @@ fun HubScreen(
                 .padding(top = 16.dp)
         )
 
-        // Sticker album button — top start
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(16.dp)
-                .size(56.dp)
-                .clip(CircleShape)
-                .background(EarthBrown.copy(alpha = 0.7f))
-                .combinedClickable(onClick = { onStickersClick() }),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(text = "📖", fontSize = 28.sp)
-        }
+        // Sticker album — top start
+        CornerButton(
+            icon = R.drawable.ic_ui_stickers,
+            onClick = onStickersClick,
+            modifier = Modifier.align(Alignment.TopStart)
+        )
 
-        // Settings gear — top end (long-press to open)
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(16.dp)
-                .size(56.dp)
-                .clip(CircleShape)
-                .background(EarthBrown.copy(alpha = 0.7f))
-                .combinedClickable(
-                    onClick = { },
-                    onLongClick = { onSettingsClick() }
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(text = "⚙️", fontSize = 28.sp)
-        }
+        // Settings — top end, long-press so the child doesn't open it by accident
+        CornerButton(
+            icon = R.drawable.ic_ui_settings,
+            onLongClick = onSettingsClick,
+            modifier = Modifier.align(Alignment.TopEnd)
+        )
 
-        // Quit button — bottom start (double-tap to exit)
+        // Quit — bottom start, double-tap to exit
         val activity = LocalContext.current as? Activity
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(16.dp)
-                .size(56.dp)
-                .clip(CircleShape)
-                .background(EarthBrown.copy(alpha = 0.7f))
-                .combinedClickable(
-                    onClick = { },
-                    onDoubleClick = { activity?.finishAndRemoveTask() }
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(text = "\uD83D\uDEAA", fontSize = 28.sp)
-        }
+        CornerButton(
+            icon = R.drawable.ic_ui_exit,
+            onDoubleClick = { activity?.finishAndRemoveTask() },
+            modifier = Modifier.align(Alignment.BottomStart)
+        )
 
-        // Canvas button — bottom end
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
-                .size(56.dp)
-                .clip(CircleShape)
-                .background(EarthBrown.copy(alpha = 0.7f))
-                .combinedClickable(onClick = {
-                    onIslandClick("canvas")
-                }),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(text = "\uD83C\uDFA8", fontSize = 28.sp)
-        }
+        // Free canvas — bottom end
+        CornerButton(
+            icon = R.drawable.ic_ui_canvas,
+            onClick = { onIslandClick("canvas") },
+            modifier = Modifier.align(Alignment.BottomEnd)
+        )
+    }
+}
 
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun CornerButton(
+    @DrawableRes icon: Int,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
+    onLongClick: (() -> Unit)? = null,
+    onDoubleClick: (() -> Unit)? = null
+) {
+    Box(
+        modifier = modifier
+            .padding(16.dp)
+            .size(64.dp)
+            .shadow(6.dp, CircleShape)
+            .clip(CircleShape)
+            .background(Color.White.copy(alpha = 0.9f))
+            .combinedClickable(onClick = onClick, onLongClick = onLongClick, onDoubleClick = onDoubleClick),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = painterResource(icon),
+            contentDescription = null,
+            modifier = Modifier.size(40.dp)
+        )
     }
 }

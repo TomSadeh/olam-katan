@@ -16,22 +16,22 @@
         android:pathData="M78,22 L88,10 L74,18Z"/>
     <!-- Eyes -->
     <path android:fillColor="#4E342E"
-        android:pathData="M50,34 A3,3 0 1,1 50,34.01Z"/>
+        android:pathData="M47,34 A3,3 0 1,1 53,34 A3,3 0 1,1 47,34Z"/>
     <path android:fillColor="#4E342E"
-        android:pathData="M70,34 A3,3 0 1,1 70,34.01Z"/>
+        android:pathData="M67,34 A3,3 0 1,1 73,34 A3,3 0 1,1 67,34Z"/>
     <!-- Eye shine -->
     <path android:fillColor="#FFFFFF"
-        android:pathData="M49,32 A1.5,1.5 0 1,1 49,32.01Z"/>
+        android:pathData="M47.5,32 A1.5,1.5 0 1,1 50.5,32 A1.5,1.5 0 1,1 47.5,32Z"/>
     <path android:fillColor="#FFFFFF"
-        android:pathData="M69,32 A1.5,1.5 0 1,1 69,32.01Z"/>
+        android:pathData="M67.5,32 A1.5,1.5 0 1,1 70.5,32 A1.5,1.5 0 1,1 67.5,32Z"/>
     <!-- Snout -->
     <path android:fillColor="#F48FB1"
         android:pathData="M50,40 Q50,36 60,36 Q70,36 70,40 Q70,48 60,50 Q50,48 50,40Z"/>
     <!-- Nostrils -->
     <path android:fillColor="#E91E63"
-        android:pathData="M56,42 A2,2 0 1,1 56,42.01Z"/>
+        android:pathData="M54,42 A2,2 0 1,1 58,42 A2,2 0 1,1 54,42Z"/>
     <path android:fillColor="#E91E63"
-        android:pathData="M64,42 A2,2 0 1,1 64,42.01Z"/>
+        android:pathData="M62,42 A2,2 0 1,1 66,42 A2,2 0 1,1 62,42Z"/>
     <!-- Mouth -->
     <path android:fillColor="@android:color/transparent"
         android:strokeColor="#E91E63"

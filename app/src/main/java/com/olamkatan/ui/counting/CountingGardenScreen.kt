@@ -1,10 +1,20 @@
 package com.olamkatan.ui.counting
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.draw.alpha
+import androidx.compose.foundation.border
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.scaleIn
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -37,6 +47,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -104,24 +115,33 @@ fun CountingGardenScreen(
                     .weight(1f)
                     .fillMaxWidth()
                     .padding(horizontal = 32.dp)
-                    .clip(RoundedCornerShape(24.dp))
-                    .background(Color(0xFF4CAF50).copy(alpha = 0.3f)),
+                    .clip(RoundedCornerShape(32.dp))
+                    .background(Brush.verticalGradient(listOf(Color(0xFFE8F5E9), Color(0xFFA5D6A7))))
+                    .border(BorderStroke(6.dp, Color.White.copy(alpha = 0.8f)), RoundedCornerShape(32.dp)),
                 contentAlignment = Alignment.Center
             ) {
+                // A faded outline for every item to count; each tap fills the next one in
+                val target = state.currentRound.targetNumber
+                val itemSize = if (target <= 5) 130.dp else 92.dp
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    repeat(state.currentCount) { i ->
-                        AnimatedVisibility(
-                            visible = true,
-                            enter = scaleIn() + fadeIn()
-                        ) {
-                            Text(
-                                text = state.currentRound.itemEmoji,
-                                fontSize = 48.sp
-                            )
-                        }
+                    repeat(target) { i ->
+                        val filled = i < state.currentCount
+                        val itemScale by animateFloatAsState(
+                            targetValue = if (filled) 1f else 0.75f,
+                            animationSpec = spring(dampingRatio = 0.35f, stiffness = 300f),
+                            label = "item_scale_$i"
+                        )
+                        Image(
+                            painter = painterResource(state.currentRound.itemIcon),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(itemSize)
+                                .graphicsLayer { scaleX = itemScale; scaleY = itemScale }
+                                .alpha(if (filled) 1f else 0.22f)
+                        )
                     }
                 }
             }
@@ -138,13 +158,21 @@ fun CountingGardenScreen(
                     label = "tap_scale"
                 )
 
+                val pulse by rememberInfiniteTransition(label = "tap_pulse").animateFloat(
+                    initialValue = 1f,
+                    targetValue = if (state.currentCount == 0) 1.1f else 1f,
+                    animationSpec = infiniteRepeatable(tween(700), RepeatMode.Reverse),
+                    label = "tap_pulse_scale"
+                )
+
                 Box(
                     modifier = Modifier
-                        .graphicsLayer { scaleX = tapScale; scaleY = tapScale }
-                        .size(120.dp)
+                        .graphicsLayer { scaleX = tapScale * pulse; scaleY = tapScale * pulse }
+                        .size(130.dp)
                         .shadow(8.dp, CircleShape)
                         .clip(CircleShape)
                         .background(state.currentRound.itemColor)
+                        .border(BorderStroke(6.dp, Color.White), CircleShape)
                         .clickable(interactionSource = interactionSource, indication = null) {
                             val newCount = viewModel.onItemTapped()
                             sfxPlayer.play(Sfx.POP)
@@ -164,7 +192,11 @@ fun CountingGardenScreen(
                         },
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = state.currentRound.itemEmoji, fontSize = 56.sp)
+                    Image(
+                        painter = painterResource(state.currentRound.itemIcon),
+                        contentDescription = null,
+                        modifier = Modifier.size(76.dp)
+                    )
                 }
             }
 

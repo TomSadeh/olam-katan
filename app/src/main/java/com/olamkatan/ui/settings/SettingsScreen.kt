@@ -1,5 +1,7 @@
 package com.olamkatan.ui.settings
 
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,10 +24,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.olamkatan.R
 import com.olamkatan.data.models.BilingualText
 import com.olamkatan.data.models.Gender
 import com.olamkatan.data.models.Language
@@ -75,7 +78,7 @@ fun SettingsScreen(
             ) {
                 SettingsToggleRow(
                     label = BilingualText("שפה", "Language").resolve(language),
-                    emoji = "\uD83C\uDF10",
+                    icon = R.drawable.ic_ui_globe,
                     checked = language == Language.HEBREW,
                     labelOn = "עברית",
                     labelOff = "English",
@@ -84,16 +87,18 @@ fun SettingsScreen(
 
                 SettingsToggleRow(
                     label = BilingualText("ילד/ה", "Boy/Girl").resolve(language),
-                    emoji = "\uD83E\uDDD2",
+                    icon = R.drawable.ic_ui_child,
                     checked = settings.gender == Gender.GIRL,
-                    labelOn = BilingualText("ילדה 👧", "Girl 👧").resolve(language),
-                    labelOff = BilingualText("ילד 👦", "Boy 👦").resolve(language),
+                    labelOn = BilingualText("ילדה", "Girl").resolve(language),
+                    labelOff = BilingualText("ילד", "Boy").resolve(language),
+                    labelOnIcon = R.drawable.ic_ui_girl,
+                    labelOffIcon = R.drawable.ic_ui_boy,
                     onToggle = { settingsViewModel.toggleGender(settings.gender) }
                 )
 
                 SettingsToggleRow(
                     label = BilingualText("צלילים", "Sounds").resolve(language),
-                    emoji = "\uD83D\uDD0A",
+                    icon = R.drawable.ic_ui_speaker,
                     checked = settings.soundEnabled,
                     labelOn = BilingualText("פועל", "On").resolve(language),
                     labelOff = BilingualText("כבוי", "Off").resolve(language),
@@ -102,7 +107,7 @@ fun SettingsScreen(
 
                 SettingsToggleRow(
                     label = BilingualText("מוזיקה", "Music").resolve(language),
-                    emoji = "\uD83C\uDFB5",
+                    icon = R.drawable.ic_ui_music_note,
                     checked = settings.musicEnabled,
                     labelOn = BilingualText("פועל", "On").resolve(language),
                     labelOff = BilingualText("כבוי", "Off").resolve(language),
@@ -116,7 +121,11 @@ fun SettingsScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(text = "⏰", fontSize = 28.sp)
+                        Image(
+                            painter = painterResource(R.drawable.ic_ui_clock),
+                            contentDescription = null,
+                            modifier = Modifier.size(36.dp)
+                        )
                         Spacer(modifier = Modifier.width(12.dp))
                         Text(
                             text = BilingualText("הגבלת זמן", "Time Limit").resolve(language),
@@ -167,11 +176,13 @@ fun SettingsScreen(
 @Composable
 private fun SettingsToggleRow(
     label: String,
-    emoji: String,
+    @DrawableRes icon: Int,
     checked: Boolean,
     labelOn: String,
     labelOff: String,
-    onToggle: () -> Unit
+    onToggle: () -> Unit,
+    @DrawableRes labelOnIcon: Int? = null,
+    @DrawableRes labelOffIcon: Int? = null
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -179,7 +190,11 @@ private fun SettingsToggleRow(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(text = emoji, fontSize = 28.sp)
+            Image(
+                painter = painterResource(icon),
+                contentDescription = null,
+                modifier = Modifier.size(36.dp)
+            )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
                 text = label,
@@ -188,6 +203,15 @@ private fun SettingsToggleRow(
             )
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
+            val labelIcon = if (checked) labelOnIcon else labelOffIcon
+            if (labelIcon != null) {
+                Image(
+                    painter = painterResource(labelIcon),
+                    contentDescription = null,
+                    modifier = Modifier.size(32.dp)
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+            }
             Text(
                 text = if (checked) labelOn else labelOff,
                 style = MaterialTheme.typography.bodyLarge,

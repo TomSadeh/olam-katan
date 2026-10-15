@@ -3,6 +3,7 @@ package com.olamkatan.ui.words
 import android.app.Application
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -37,6 +38,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.AndroidViewModel
@@ -53,6 +55,7 @@ import com.olamkatan.data.models.Language
 import com.olamkatan.theme.CloudWhite
 import com.olamkatan.theme.EarthBrown
 import com.olamkatan.ui.common.LocalLanguage
+import com.olamkatan.ui.common.localized
 import com.olamkatan.ui.common.LocalSfxPlayer
 import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.ConfettiOverlay
@@ -161,14 +164,18 @@ fun WordGardenScreen(onBack: () -> Unit, viewModel: WordGardenViewModel = viewMo
             // Example picture
             if (state.letterChoices.isNotEmpty()) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(state.targetLetter.exampleEmoji, fontSize = 64.sp)
+                    Image(
+                        painter = painterResource(state.targetLetter.exampleIcon),
+                        contentDescription = null,
+                        modifier = Modifier.size(96.dp)
+                    )
                     Text(
                         state.targetLetter.exampleWord.resolve(language),
                         style = MaterialTheme.typography.titleLarge,
                         color = EarthBrown
                     )
                     Text(
-                        BilingualText("מצא את: ${state.targetLetter.hebrewLetter}", "Find: ${state.targetLetter.englishLetter}").resolve(language),
+                        BilingualText("תמצא את: ${state.targetLetter.hebrewLetter}", "Find: ${state.targetLetter.englishLetter}", heGirl = "תמצאי את: ${state.targetLetter.hebrewLetter}").localized(),
                         style = MaterialTheme.typography.headlineMedium,
                         color = EarthBrown
                     )

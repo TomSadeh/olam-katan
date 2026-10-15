@@ -3,6 +3,7 @@ package com.olamkatan.ui.components
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.scaleIn
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,8 +27,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.olamkatan.R
 import com.olamkatan.data.models.BilingualText
 import com.olamkatan.theme.CloudWhite
 import com.olamkatan.theme.GrassGreen
@@ -70,16 +73,30 @@ fun RoundCompleteSheet(
                     .padding(40.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
-                    text = BilingualText("כל הכבוד! 🎉", "Great job! 🎉").resolve(language),
-                    style = MaterialTheme.typography.headlineLarge
-                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = BilingualText("כל הכבוד!", "Great job!").resolve(language),
+                        style = MaterialTheme.typography.headlineLarge
+                    )
+                    Image(
+                        painter = painterResource(R.drawable.ic_ui_party),
+                        contentDescription = null,
+                        modifier = Modifier.size(48.dp)
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     repeat(starsEarned) {
-                        Text(text = "⭐", fontSize = 40.sp)
+                        Image(
+                            painter = painterResource(R.drawable.ic_ui_star),
+                            contentDescription = null,
+                            modifier = Modifier.size(52.dp)
+                        )
                     }
                 }
 

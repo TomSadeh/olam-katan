@@ -20,10 +20,10 @@
         android:pathData="M35,42 Q28,45 25,55 Q22,65 25,72 Q28,78 32,75 Q28,68 28,60 Q30,50 38,48Z"/>
     <!-- Eye -->
     <path android:fillColor="#4E342E"
-        android:pathData="M62,34 A3.5,3.5 0 1,1 62,34.01Z"/>
+        android:pathData="M58.5,34 A3.5,3.5 0 1,1 65.5,34 A3.5,3.5 0 1,1 58.5,34Z"/>
     <!-- Eye shine -->
     <path android:fillColor="#FFFFFF"
-        android:pathData="M61,32 A1.5,1.5 0 1,1 61,32.01Z"/>
+        android:pathData="M59.5,32 A1.5,1.5 0 1,1 62.5,32 A1.5,1.5 0 1,1 59.5,32Z"/>
     <!-- Tusk -->
     <path android:fillColor="#FAFAFA"
         android:pathData="M42,52 Q38,60 40,65 Q42,62 44,55Z"/>

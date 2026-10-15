@@ -31,9 +31,9 @@
         android:pathData="M78,18 L86,6 L73,16Z"/>
     <!-- Eyes -->
     <path android:fillColor="#66BB6A"
-        android:pathData="M48,28 A5,5 0 1,1 48,28.01Z"/>
+        android:pathData="M43,28 A5,5 0 1,1 53,28 A5,5 0 1,1 43,28Z"/>
     <path android:fillColor="#66BB6A"
-        android:pathData="M72,28 A5,5 0 1,1 72,28.01Z"/>
+        android:pathData="M67,28 A5,5 0 1,1 77,28 A5,5 0 1,1 67,28Z"/>
     <!-- Pupils (slit) -->
     <path android:fillColor="#1B5E20"
         android:pathData="M50,25 Q51,28 50,31 Q49,28 50,25Z"/>
@@ -41,9 +41,9 @@
         android:pathData="M70,25 Q71,28 70,31 Q69,28 70,25Z"/>
     <!-- Eye shine -->
     <path android:fillColor="#FFFFFF"
-        android:pathData="M47,26 A1.5,1.5 0 1,1 47,26.01Z"/>
+        android:pathData="M45.5,26 A1.5,1.5 0 1,1 48.5,26 A1.5,1.5 0 1,1 45.5,26Z"/>
     <path android:fillColor="#FFFFFF"
-        android:pathData="M67,26 A1.5,1.5 0 1,1 67,26.01Z"/>
+        android:pathData="M65.5,26 A1.5,1.5 0 1,1 68.5,26 A1.5,1.5 0 1,1 65.5,26Z"/>
     <!-- Nose -->
     <path android:fillColor="#EF9A9A"
         android:pathData="M57,36 L60,33 L63,36Z"/>

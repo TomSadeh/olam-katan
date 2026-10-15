@@ -14,10 +14,10 @@
         android:pathData="M35,40 Q35,18 55,15 Q70,18 70,35 Q70,50 55,52 Q35,50 35,40Z"/>
     <!-- Eye -->
     <path android:fillColor="#4E342E"
-        android:pathData="M48,30 A3.5,3.5 0 1,1 48,30.01Z"/>
+        android:pathData="M44.5,30 A3.5,3.5 0 1,1 51.5,30 A3.5,3.5 0 1,1 44.5,30Z"/>
     <!-- Eye shine -->
     <path android:fillColor="#FFFFFF"
-        android:pathData="M47,28 A1.5,1.5 0 1,1 47,28.01Z"/>
+        android:pathData="M45.5,28 A1.5,1.5 0 1,1 48.5,28 A1.5,1.5 0 1,1 45.5,28Z"/>
     <!-- Beak -->
     <path android:fillColor="#FF8F00"
         android:pathData="M30,38 L20,35 L20,42 Z"/>

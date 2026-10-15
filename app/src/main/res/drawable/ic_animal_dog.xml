@@ -24,20 +24,20 @@
         android:pathData="M85,28 Q93,25 94,35 Q92,43 86,39Z"/>
     <!-- Eyes -->
     <path android:fillColor="#3E2723"
-        android:pathData="M50,30 A4,4 0 1,1 50,30.01Z"/>
+        android:pathData="M46,30 A4,4 0 1,1 54,30 A4,4 0 1,1 46,30Z"/>
     <path android:fillColor="#3E2723"
-        android:pathData="M70,30 A4,4 0 1,1 70,30.01Z"/>
+        android:pathData="M66,30 A4,4 0 1,1 74,30 A4,4 0 1,1 66,30Z"/>
     <!-- Eye shine -->
     <path android:fillColor="#FFFFFF"
-        android:pathData="M48,28 A2,2 0 1,1 48,28.01Z"/>
+        android:pathData="M46,28 A2,2 0 1,1 50,28 A2,2 0 1,1 46,28Z"/>
     <path android:fillColor="#FFFFFF"
-        android:pathData="M68,28 A2,2 0 1,1 68,28.01Z"/>
+        android:pathData="M66,28 A2,2 0 1,1 70,28 A2,2 0 1,1 66,28Z"/>
     <!-- Nose -->
     <path android:fillColor="#3E2723"
         android:pathData="M55,37 Q55,34 60,34 Q65,34 65,37 Q65,40 60,41 Q55,40 55,37Z"/>
     <!-- Nose shine -->
     <path android:fillColor="#5D4037"
-        android:pathData="M57,35 A1.5,1 0 1,1 57,35.01Z"/>
+        android:pathData="M55.5,35 A1.5,1 0 1,1 58.5,35 A1.5,1 0 1,1 55.5,35Z"/>
     <!-- Mouth -->
     <path android:fillColor="@android:color/transparent"
         android:strokeColor="#5D4037"

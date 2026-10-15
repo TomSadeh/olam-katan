@@ -1,6 +1,9 @@
 package com.olamkatan.ui.myday.table
 
+import com.olamkatan.ui.components.BackArrowIcon
 import android.app.Application
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.AndroidViewModel
@@ -35,6 +39,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.olamkatan.OlamKatanApplication
+import com.olamkatan.R
 import com.olamkatan.audio.Sfx
 import com.olamkatan.data.models.BilingualText
 import com.olamkatan.theme.CloudWhite
@@ -54,14 +59,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-data class PlaceSetting(val id: String, val name: BilingualText, val emoji: String, val placed: Boolean = false)
+data class PlaceSetting(val id: String, val name: BilingualText, @DrawableRes val icon: Int, val placed: Boolean = false)
 
 data class TableState(
     val items: List<PlaceSetting> = listOf(
-        PlaceSetting("plate", BilingualText("צלחת", "Plate"), "\uD83C\uDF7D\uFE0F"),
-        PlaceSetting("cup", BilingualText("כוס", "Cup"), "\uD83E\uDD64"),
-        PlaceSetting("fork", BilingualText("מזלג", "Fork"), "\uD83C\uDF74"),
-        PlaceSetting("spoon", BilingualText("כפית", "Spoon"), "\uD83E\uDD44")
+        PlaceSetting("plate", BilingualText("צלחת", "Plate"), R.drawable.ic_table_plate),
+        PlaceSetting("cup", BilingualText("כוס", "Cup"), R.drawable.ic_table_cup),
+        PlaceSetting("fork", BilingualText("מזלג", "Fork"), R.drawable.ic_table_fork),
+        PlaceSetting("spoon", BilingualText("כפית", "Spoon"), R.drawable.ic_table_spoon)
     ),
     val isComplete: Boolean = false
 )
@@ -114,7 +119,7 @@ fun TableTimeScreen(onBack: () -> Unit, viewModel: TableTimeViewModel = viewMode
                             .background(Color.White.copy(alpha = 0.25f))
                             .clickable { onBack() },
                         contentAlignment = Alignment.Center
-                    ) { Text("◀", fontSize = 22.sp, color = Color.White) }
+                    ) { BackArrowIcon() }
                     Text(BilingualText("ארוחה", "Table Time").resolve(language), style = MaterialTheme.typography.headlineMedium, color = CloudWhite)
                     Spacer(modifier = Modifier.width(52.dp))
                 }
@@ -145,7 +150,7 @@ fun TableTimeScreen(onBack: () -> Unit, viewModel: TableTimeViewModel = viewMode
                                     contentAlignment = Alignment.Center
                                 ) {
                                     if (item.placed) {
-                                        Text(item.emoji, fontSize = 36.sp)
+                                        Image(painter = painterResource(item.icon), contentDescription = null, modifier = Modifier.size(52.dp))
                                     } else {
                                         Text("?", fontSize = 28.sp, color = Color.Gray)
                                     }
@@ -187,7 +192,7 @@ fun TableTimeScreen(onBack: () -> Unit, viewModel: TableTimeViewModel = viewMode
                                 contentAlignment = Alignment.Center
                             ) {
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    Text(item.emoji, fontSize = 40.sp)
+                                    Image(painter = painterResource(item.icon), contentDescription = null, modifier = Modifier.size(56.dp))
                                     Text(item.name.resolve(language), fontSize = 10.sp, color = EarthBrown)
                                 }
                             }

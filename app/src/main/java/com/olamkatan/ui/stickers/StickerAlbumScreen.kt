@@ -1,8 +1,14 @@
 package com.olamkatan.ui.stickers
 
+import com.olamkatan.ui.hub.components.StarCounter
+import androidx.compose.ui.draw.alpha
+import androidx.compose.foundation.layout.aspectRatio
+import com.olamkatan.ui.components.BackArrowIcon
 import android.app.Application
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -36,12 +42,14 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.olamkatan.OlamKatanApplication
+import com.olamkatan.R
 import com.olamkatan.audio.Sfx
 import com.olamkatan.data.models.BilingualText
 import com.olamkatan.data.models.GameProgress
@@ -56,27 +64,27 @@ import kotlinx.coroutines.flow.StateFlow
 data class StickerDef(
     val id: String,
     val name: BilingualText,
-    val emoji: String,
+    @DrawableRes val icon: Int,
     val starsRequired: Int
 )
 
 val allStickers = listOf(
-    StickerDef("cow", BilingualText("פרה", "Cow"), "\uD83D\uDC04", 0),
-    StickerDef("dog", BilingualText("כלב", "Dog"), "\uD83D\uDC36", 2),
-    StickerDef("cat", BilingualText("חתול", "Cat"), "\uD83D\uDC31", 4),
-    StickerDef("rainbow", BilingualText("קשת", "Rainbow"), "\uD83C\uDF08", 6),
-    StickerDef("star", BilingualText("כוכב", "Star"), "⭐", 8),
-    StickerDef("flower", BilingualText("פרח", "Flower"), "\uD83C\uDF3B", 10),
-    StickerDef("butterfly", BilingualText("פרפר", "Butterfly"), "\uD83E\uDD8B", 14),
-    StickerDef("heart", BilingualText("לב", "Heart"), "❤\uFE0F", 18),
-    StickerDef("music", BilingualText("מוזיקה", "Music"), "\uD83C\uDFB5", 22),
-    StickerDef("sun", BilingualText("שמש", "Sun"), "☀\uFE0F", 26),
-    StickerDef("moon", BilingualText("ירח", "Moon"), "\uD83C\uDF19", 30),
-    StickerDef("rocket", BilingualText("טיל", "Rocket"), "\uD83D\uDE80", 40),
-    StickerDef("crown", BilingualText("כתר", "Crown"), "\uD83D\uDC51", 50),
-    StickerDef("trophy", BilingualText("גביע", "Trophy"), "\uD83C\uDFC6", 60),
-    StickerDef("diamond", BilingualText("יהלום", "Diamond"), "\uD83D\uDC8E", 80),
-    StickerDef("unicorn", BilingualText("חד קרן", "Unicorn"), "\uD83E\uDD84", 100)
+    StickerDef("cow", BilingualText("פרה", "Cow"), R.drawable.ic_animal_cow, 0),
+    StickerDef("dog", BilingualText("כלב", "Dog"), R.drawable.ic_animal_dog, 2),
+    StickerDef("cat", BilingualText("חתול", "Cat"), R.drawable.ic_animal_cat, 4),
+    StickerDef("rainbow", BilingualText("קשת", "Rainbow"), R.drawable.ic_sticker_rainbow, 6),
+    StickerDef("star", BilingualText("כוכב", "Star"), R.drawable.ic_sticker_star, 8),
+    StickerDef("flower", BilingualText("פרח", "Flower"), R.drawable.ic_sticker_flower, 10),
+    StickerDef("butterfly", BilingualText("פרפר", "Butterfly"), R.drawable.ic_sticker_butterfly, 14),
+    StickerDef("heart", BilingualText("לב", "Heart"), R.drawable.ic_sticker_heart, 18),
+    StickerDef("music", BilingualText("מוזיקה", "Music"), R.drawable.ic_sticker_music, 22),
+    StickerDef("sun", BilingualText("שמש", "Sun"), R.drawable.ic_sticker_sun, 26),
+    StickerDef("moon", BilingualText("ירח", "Moon"), R.drawable.ic_sticker_moon, 30),
+    StickerDef("rocket", BilingualText("טיל", "Rocket"), R.drawable.ic_sticker_rocket, 40),
+    StickerDef("crown", BilingualText("כתר", "Crown"), R.drawable.ic_sticker_crown, 50),
+    StickerDef("trophy", BilingualText("גביע", "Trophy"), R.drawable.ic_sticker_trophy, 60),
+    StickerDef("diamond", BilingualText("יהלום", "Diamond"), R.drawable.ic_sticker_diamond, 80),
+    StickerDef("unicorn", BilingualText("חד קרן", "Unicorn"), R.drawable.ic_sticker_unicorn, 100)
 )
 
 class StickerAlbumViewModel(application: Application) : AndroidViewModel(application) {
@@ -109,15 +117,16 @@ fun StickerAlbumScreen(onBack: () -> Unit, viewModel: StickerAlbumViewModel = vi
                 Box(
                     modifier = Modifier.size(56.dp).clip(CircleShape).background(EarthBrown.copy(alpha = 0.7f)).clickable { onBack() },
                     contentAlignment = Alignment.Center
-                ) { Text("◀", fontSize = 24.sp, color = Color.White) }
+                ) { BackArrowIcon() }
                 Text(BilingualText("אלבום מדבקות", "Sticker Album").resolve(language), style = MaterialTheme.typography.headlineMedium, color = CloudWhite)
-                Text("⭐ ${progress.totalStars}", fontSize = 24.sp, color = CloudWhite)
+                StarCounter(stars = progress.totalStars)
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.weight(1f))
 
+            // Two rows of eight square stickers, like a page in a real album
             LazyVerticalGrid(
-                columns = GridCells.Fixed(4),
+                columns = GridCells.Fixed(8),
                 contentPadding = PaddingValues(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -134,11 +143,11 @@ fun StickerAlbumScreen(onBack: () -> Unit, viewModel: StickerAlbumViewModel = vi
 
                     Box(
                         modifier = Modifier
-                            .size(100.dp)
+                            .aspectRatio(1f)
                             .graphicsLayer { scaleX = scale; scaleY = scale }
-                            .shadow(4.dp, RoundedCornerShape(16.dp))
-                            .clip(RoundedCornerShape(16.dp))
-                            .background(if (isUnlocked) Color.White else Color.Gray.copy(alpha = 0.3f))
+                            .shadow(if (isUnlocked) 6.dp else 2.dp, RoundedCornerShape(20.dp))
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(if (isUnlocked) Color.White else Color(0xFFF3E5F5))
                             .clickable(interactionSource = interactionSource, indication = null) {
                                 if (isUnlocked) {
                                     sfxPlayer.play(Sfx.POP)
@@ -149,18 +158,35 @@ fun StickerAlbumScreen(onBack: () -> Unit, viewModel: StickerAlbumViewModel = vi
                     ) {
                         if (isUnlocked) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(sticker.emoji, fontSize = 40.sp)
-                                Text(sticker.name.resolve(language), fontSize = 10.sp, color = EarthBrown)
+                                Image(
+                                    painter = painterResource(sticker.icon),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(84.dp)
+                                )
+                                Text(sticker.name.resolve(language), style = MaterialTheme.typography.labelLarge.copy(shadow = null), color = EarthBrown)
                             }
                         } else {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text("\uD83D\uDD12", fontSize = 28.sp)
-                                Text("⭐ ${sticker.starsRequired}", fontSize = 10.sp, color = Color.Gray)
+                                Image(
+                                    painter = painterResource(R.drawable.ic_sticker_locked),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(72.dp).alpha(0.8f)
+                                )
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Image(
+                                        painter = painterResource(R.drawable.ic_ui_star),
+                                        contentDescription = null,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                    Text("${sticker.starsRequired}", style = MaterialTheme.typography.labelLarge.copy(shadow = null), color = EarthBrown)
+                                }
                             }
                         }
                     }
                 }
             }
+
+            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }

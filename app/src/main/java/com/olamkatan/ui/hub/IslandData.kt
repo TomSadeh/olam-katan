@@ -33,8 +33,8 @@ val allIslands = listOf(
         emoji = "\uD83D\uDC04",
         drawableRes = R.drawable.ic_island_animals,
         starsToUnlock = 0,
-        fractionalX = 0.12f,
-        fractionalY = 0.35f
+        fractionalX = 0.14f,
+        fractionalY = 0.50f
     ),
     IslandDef(
         id = "colors",
@@ -44,8 +44,8 @@ val allIslands = listOf(
         emoji = "\uD83C\uDFA8",
         drawableRes = R.drawable.ic_island_colors,
         starsToUnlock = 4,
-        fractionalX = 0.32f,
-        fractionalY = 0.28f
+        fractionalX = 0.33f,
+        fractionalY = 0.42f
     ),
     IslandDef(
         id = "shapes",
@@ -55,8 +55,8 @@ val allIslands = listOf(
         emoji = "\uD83D\uDD37",
         drawableRes = R.drawable.ic_island_shapes,
         starsToUnlock = 10,
-        fractionalX = 0.50f,
-        fractionalY = 0.32f
+        fractionalX = 0.52f,
+        fractionalY = 0.53f
     ),
     IslandDef(
         id = "counting",
@@ -66,8 +66,8 @@ val allIslands = listOf(
         emoji = "\uD83C\uDF3B",
         drawableRes = R.drawable.ic_island_counting,
         starsToUnlock = 18,
-        fractionalX = 0.68f,
-        fractionalY = 0.28f
+        fractionalX = 0.71f,
+        fractionalY = 0.43f
     ),
     IslandDef(
         id = "music",
@@ -77,8 +77,8 @@ val allIslands = listOf(
         emoji = "\uD83C\uDFB5",
         drawableRes = R.drawable.ic_island_music,
         starsToUnlock = 40,
-        fractionalX = 0.85f,
-        fractionalY = 0.35f
+        fractionalX = 0.87f,
+        fractionalY = 0.63f
     ),
     IslandDef(
         id = "words",
@@ -88,8 +88,8 @@ val allIslands = listOf(
         emoji = "\uD83D\uDCD6",
         drawableRes = R.drawable.ic_island_words,
         starsToUnlock = 60,
-        fractionalX = 0.88f,
-        fractionalY = 0.60f
+        fractionalX = 0.66f,
+        fractionalY = 0.80f
     ),
     IslandDef(
         id = "myday",
@@ -99,7 +99,7 @@ val allIslands = listOf(
         emoji = "\uD83C\uDFE0",
         drawableRes = R.drawable.ic_island_myday,
         starsToUnlock = 25,
-        fractionalX = 0.50f,
-        fractionalY = 0.70f
+        fractionalX = 0.37f,
+        fractionalY = 0.80f
     )
 )

@@ -17,14 +17,14 @@
         android:pathData="M85,40 Q92,50 90,65 Q88,70 84,68 L82,45Z"/>
     <!-- Eyes -->
     <path android:fillColor="#4E342E"
-        android:pathData="M52,35 A3.5,3.5 0 1,1 52,35.01Z"/>
+        android:pathData="M48.5,35 A3.5,3.5 0 1,1 55.5,35 A3.5,3.5 0 1,1 48.5,35Z"/>
     <path android:fillColor="#4E342E"
-        android:pathData="M68,35 A3.5,3.5 0 1,1 68,35.01Z"/>
+        android:pathData="M64.5,35 A3.5,3.5 0 1,1 71.5,35 A3.5,3.5 0 1,1 64.5,35Z"/>
     <!-- Eye shine -->
     <path android:fillColor="#FFFFFF"
-        android:pathData="M51,33 A1.5,1.5 0 1,1 51,33.01Z"/>
+        android:pathData="M49.5,33 A1.5,1.5 0 1,1 52.5,33 A1.5,1.5 0 1,1 49.5,33Z"/>
     <path android:fillColor="#FFFFFF"
-        android:pathData="M67,33 A1.5,1.5 0 1,1 67,33.01Z"/>
+        android:pathData="M65.5,33 A1.5,1.5 0 1,1 68.5,33 A1.5,1.5 0 1,1 65.5,33Z"/>
     <!-- Beak -->
     <path android:fillColor="#FF8F00"
         android:pathData="M55,42 L60,50 L65,42Z"/>

@@ -1,8 +1,11 @@
 package com.olamkatan.ui.myday.bath
 
+import com.olamkatan.ui.components.BackArrowIcon
 import android.app.Application
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.AndroidViewModel
@@ -37,6 +41,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.olamkatan.OlamKatanApplication
+import com.olamkatan.R
 import com.olamkatan.audio.Sfx
 import com.olamkatan.data.models.BilingualText
 import com.olamkatan.theme.CloudWhite
@@ -56,14 +61,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-data class BodyPart(val id: String, val name: BilingualText, val emoji: String, val cleaned: Boolean = false)
+data class BodyPart(val id: String, val name: BilingualText, @DrawableRes val icon: Int, val cleaned: Boolean = false)
 
 data class BathState(
     val bodyParts: List<BodyPart> = listOf(
-        BodyPart("arms", BilingualText("ידיים", "Arms"), "\uD83D\uDCAA"),
-        BodyPart("legs", BilingualText("רגליים", "Legs"), "\uD83E\uDDB5"),
-        BodyPart("tummy", BilingualText("בטן", "Tummy"), "🫃"),
-        BodyPart("face", BilingualText("פנים", "Face"), "\uD83D\uDE0A")
+        BodyPart("arms", BilingualText("ידיים", "Arms"), R.drawable.ic_body_arm),
+        BodyPart("legs", BilingualText("רגליים", "Legs"), R.drawable.ic_body_leg),
+        BodyPart("tummy", BilingualText("בטן", "Tummy"), R.drawable.ic_body_tummy),
+        BodyPart("face", BilingualText("פנים", "Face"), R.drawable.ic_body_face)
     ),
     val showRinse: Boolean = false,
     val isComplete: Boolean = false
@@ -124,7 +129,7 @@ fun BathTimeScreen(onBack: () -> Unit, viewModel: BathTimeViewModel = viewModel(
                             .background(Color.White.copy(alpha = 0.25f))
                             .clickable { onBack() },
                         contentAlignment = Alignment.Center
-                    ) { Text("◀", fontSize = 22.sp, color = Color.White) }
+                    ) { BackArrowIcon() }
                     Text(BilingualText("אמבטיה", "Bath Time").resolve(language), style = MaterialTheme.typography.headlineMedium, color = CloudWhite)
                     Spacer(modifier = Modifier.width(52.dp))
                 }
@@ -148,8 +153,8 @@ fun BathTimeScreen(onBack: () -> Unit, viewModel: BathTimeViewModel = viewModel(
                                 contentAlignment = Alignment.Center
                             ) {
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    Text(part.emoji, fontSize = 36.sp)
-                                    if (part.cleaned) Text("✨", fontSize = 16.sp)
+                                    Image(painter = painterResource(part.icon), contentDescription = null, modifier = Modifier.size(52.dp))
+                                    if (part.cleaned) Image(painter = painterResource(R.drawable.ic_myday_sparkle), contentDescription = null, modifier = Modifier.size(22.dp))
                                 }
                             }
                         }
@@ -172,7 +177,7 @@ fun BathTimeScreen(onBack: () -> Unit, viewModel: BathTimeViewModel = viewModel(
                                 viewModel.onRinse()
                             },
                         contentAlignment = Alignment.Center
-                    ) { Text("\uD83D\uDEBF", fontSize = 56.sp) }
+                    ) { Image(painter = painterResource(R.drawable.ic_myday_shower), contentDescription = null, modifier = Modifier.size(76.dp)) }
                 } else if (!state.showRinse) {
                     // Soap draggable
                     DragTarget(
@@ -189,7 +194,7 @@ fun BathTimeScreen(onBack: () -> Unit, viewModel: BathTimeViewModel = viewModel(
                         Box(
                             modifier = Modifier.size(100.dp).shadow(6.dp, CircleShape).clip(CircleShape).background(Color(0xFFFFF9C4)),
                             contentAlignment = Alignment.Center
-                        ) { Text("\uD83E\uDDFC", fontSize = 48.sp) }
+                        ) { Image(painter = painterResource(R.drawable.ic_myday_soap), contentDescription = null, modifier = Modifier.size(66.dp)) }
                     }
                 }
 

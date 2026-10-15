@@ -1,6 +1,9 @@
 package com.olamkatan.ui.myday.tidy
 
+import com.olamkatan.ui.components.BackArrowIcon
 import android.app.Application
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.AndroidViewModel
@@ -36,6 +40,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.olamkatan.OlamKatanApplication
+import com.olamkatan.R
 import com.olamkatan.audio.Sfx
 import com.olamkatan.data.models.BilingualText
 import com.olamkatan.theme.CloudWhite
@@ -55,21 +60,21 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-data class TidyItem(val id: String, val name: BilingualText, val emoji: String, val homeId: String, val tidied: Boolean = false)
-data class TidyHome(val id: String, val name: BilingualText, val emoji: String)
+data class TidyItem(val id: String, val name: BilingualText, @DrawableRes val icon: Int, val homeId: String, val tidied: Boolean = false)
+data class TidyHome(val id: String, val name: BilingualText, @DrawableRes val icon: Int)
 
 data class TidyState(
     val items: List<TidyItem> = listOf(
-        TidyItem("teddy", BilingualText("דובי", "Teddy"), "\uD83E\uDDF8", "shelf"),
-        TidyItem("book", BilingualText("ספר", "Book"), "\uD83D\uDCD5", "bookcase"),
-        TidyItem("shirt", BilingualText("חולצה", "Shirt"), "\uD83D\uDC55", "hamper"),
-        TidyItem("ball", BilingualText("כדור", "Ball"), "⚽", "toybox")
+        TidyItem("teddy", BilingualText("דובי", "Teddy"), R.drawable.ic_tidy_teddy, "shelf"),
+        TidyItem("book", BilingualText("ספר", "Book"), R.drawable.ic_tidy_book, "bookcase"),
+        TidyItem("shirt", BilingualText("חולצה", "Shirt"), R.drawable.ic_clothing_shirt, "hamper"),
+        TidyItem("ball", BilingualText("כדור", "Ball"), R.drawable.ic_tidy_ball, "toybox")
     ),
     val homes: List<TidyHome> = listOf(
-        TidyHome("shelf", BilingualText("מדף", "Shelf"), "\uD83D\uDDC4\uFE0F"),
-        TidyHome("bookcase", BilingualText("ארון ספרים", "Bookcase"), "\uD83D\uDCDA"),
-        TidyHome("hamper", BilingualText("סל כביסה", "Hamper"), "\uD83E\uDDFA"),
-        TidyHome("toybox", BilingualText("ארגז צעצועים", "Toy Box"), "\uD83D\uDCE6")
+        TidyHome("shelf", BilingualText("מדף", "Shelf"), R.drawable.ic_tidy_shelf),
+        TidyHome("bookcase", BilingualText("ארון ספרים", "Bookcase"), R.drawable.ic_tidy_bookcase),
+        TidyHome("hamper", BilingualText("סל כביסה", "Hamper"), R.drawable.ic_tidy_hamper),
+        TidyHome("toybox", BilingualText("ארגז צעצועים", "Toy Box"), R.drawable.ic_tidy_toybox)
     ),
     val isComplete: Boolean = false
 )
@@ -123,7 +128,7 @@ fun TidyUpScreen(onBack: () -> Unit, viewModel: TidyUpViewModel = viewModel()) {
                             .background(Color.White.copy(alpha = 0.25f))
                             .clickable { onBack() },
                         contentAlignment = Alignment.Center
-                    ) { Text("◀", fontSize = 22.sp, color = Color.White) }
+                    ) { BackArrowIcon() }
                     Text(BilingualText("סידור חדר", "Tidy Up").resolve(language), style = MaterialTheme.typography.headlineMedium, color = CloudWhite)
                     Spacer(modifier = Modifier.width(52.dp))
                 }
@@ -146,7 +151,7 @@ fun TidyUpScreen(onBack: () -> Unit, viewModel: TidyUpViewModel = viewModel()) {
                                 contentAlignment = Alignment.Center
                             ) {
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    Text(home.emoji, fontSize = 32.sp)
+                                    Image(painter = painterResource(home.icon), contentDescription = null, modifier = Modifier.size(50.dp))
                                     Text(home.name.resolve(language), fontSize = 10.sp, color = EarthBrown)
                                 }
                             }
@@ -184,7 +189,7 @@ fun TidyUpScreen(onBack: () -> Unit, viewModel: TidyUpViewModel = viewModel()) {
                                     .clip(RoundedCornerShape(20.dp))
                                     .background(Color(0xFFFFF3E0)),
                                 contentAlignment = Alignment.Center
-                            ) { Text(item.emoji, fontSize = 44.sp) }
+                            ) { Image(painter = painterResource(item.icon), contentDescription = null, modifier = Modifier.size(62.dp)) }
                         }
                     }
                 }

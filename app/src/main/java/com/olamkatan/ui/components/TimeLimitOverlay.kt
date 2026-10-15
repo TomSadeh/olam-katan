@@ -1,20 +1,25 @@
 package com.olamkatan.ui.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.olamkatan.R
 import com.olamkatan.data.models.BilingualText
 import com.olamkatan.theme.CloudWhite
 import com.olamkatan.ui.common.LocalLanguage
@@ -36,7 +41,11 @@ fun TimeLimitOverlay(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(32.dp)
         ) {
-            Text("\uD83D\uDC4B", fontSize = 80.sp)
+            Image(
+                painter = painterResource(R.drawable.ic_ui_wave),
+                contentDescription = null,
+                modifier = Modifier.size(110.dp)
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -48,11 +57,21 @@ fun TimeLimitOverlay(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text(
-                text = BilingualText("נתראה בקרוב! 😊", "See you soon! 😊").resolve(language),
-                style = MaterialTheme.typography.headlineMedium,
-                color = CloudWhite
-            )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = BilingualText("נתראה בקרוב!", "See you soon!").resolve(language),
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = CloudWhite
+                )
+                Image(
+                    painter = painterResource(R.drawable.ic_ui_smile),
+                    contentDescription = null,
+                    modifier = Modifier.size(40.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -70,7 +89,7 @@ fun TimeLimitOverlay(
                         .padding(horizontal = 24.dp, vertical = 12.dp)
                 ) {
                     Text(
-                        text = BilingualText("לחץ ארוך לסגירה", "Long press to dismiss").resolve(language),
+                        text = BilingualText("לחיצה ארוכה לסגירה", "Long press to dismiss").resolve(language),
                         style = MaterialTheme.typography.bodyLarge,
                         color = CloudWhite
                     )

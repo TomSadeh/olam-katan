@@ -1,7 +1,11 @@
 package com.olamkatan.ui.canvas
 
+import androidx.compose.foundation.gestures.detectTapGestures
+import com.olamkatan.ui.components.BackArrowIcon
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -31,26 +35,37 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.olamkatan.R
 import com.olamkatan.data.models.BilingualText
 import com.olamkatan.theme.EarthBrown
 import com.olamkatan.ui.common.LocalLanguage
 
 data class DrawPath(val path: List<Offset>, val color: Color, val strokeWidth: Float)
-data class Stamp(val position: Offset, val emoji: String)
+data class Stamp(val position: Offset, @DrawableRes val icon: Int)
 
 private val canvasColors = listOf(
     Color(0xFFEF5350), Color(0xFF42A5F5), Color(0xFFFFEE58),
     Color(0xFF66BB6A), Color(0xFFAB47BC), Color(0xFFFF9800)
 )
 
-private val stampEmojis = listOf("⭐", "\uD83C\uDF3B", "\uD83D\uDC1E", "\uD83E\uDD8B", "❤\uFE0F", "\uD83C\uDF08")
+private val stampIcons = listOf(
+    R.drawable.ic_sticker_star,
+    R.drawable.ic_sticker_flower,
+    R.drawable.ic_stamp_ladybug,
+    R.drawable.ic_sticker_butterfly,
+    R.drawable.ic_sticker_heart,
+    R.drawable.ic_sticker_rainbow
+)
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -58,10 +73,11 @@ fun FreeCanvasScreen(onBack: () -> Unit) {
     val language = LocalLanguage.current
     var selectedColor by remember { mutableStateOf(canvasColors[0]) }
     var brushSize by remember { mutableStateOf(8f) }
-    var selectedStamp by remember { mutableStateOf<String?>(null) }
+    var selectedStamp by remember { mutableStateOf<Int?>(null) }
     val paths = remember { mutableStateListOf<DrawPath>() }
     val stamps = remember { mutableStateListOf<Stamp>() }
     var currentPath by remember { mutableStateOf(listOf<Offset>()) }
+    val stampPainters = stampIcons.associateWith { painterResource(it) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         // Canvas area
@@ -71,13 +87,10 @@ fun FreeCanvasScreen(onBack: () -> Unit) {
                 .background(Color.White)
                 .pointerInput(selectedColor, brushSize, selectedStamp) {
                     if (selectedStamp != null) {
-                        detectDragGestures(
-                            onDragStart = { offset ->
-                                stamps.add(Stamp(offset, selectedStamp!!))
-                            },
-                            onDrag = { _, _ -> },
-                            onDragEnd = {}
-                        )
+                        // A tap places the selected stamp where the finger touched
+                        detectTapGestures { offset ->
+                            stamps.add(Stamp(offset, selectedStamp!!))
+                        }
                     } else {
                         detectDragGestures(
                             onDragStart = { offset ->
@@ -120,18 +133,15 @@ fun FreeCanvasScreen(onBack: () -> Unit) {
                 }
                 drawPath(path, selectedColor, style = Stroke(width = brushSize, cap = StrokeCap.Round))
             }
-        }
 
-        // Stamps drawn as text overlay
-        stamps.forEach { stamp ->
-            Text(
-                text = stamp.emoji,
-                fontSize = 32.sp,
-                modifier = Modifier.padding(
-                    start = (stamp.position.x / 3).dp,
-                    top = (stamp.position.y / 3).dp
-                )
-            )
+            // Draw stamps centered on where they were placed
+            val stampSize = 88.dp.toPx()
+            stamps.forEach { stamp ->
+                val painter = stampPainters.getValue(stamp.icon)
+                translate(left = stamp.position.x - stampSize / 2, top = stamp.position.y - stampSize / 2) {
+                    with(painter) { draw(Size(stampSize, stampSize)) }
+                }
+            }
         }
 
         // Back button
@@ -144,7 +154,7 @@ fun FreeCanvasScreen(onBack: () -> Unit) {
                 .background(EarthBrown.copy(alpha = 0.7f))
                 .clickable { onBack() },
             contentAlignment = Alignment.Center
-        ) { Text("◀", fontSize = 24.sp, color = Color.White) }
+        ) { BackArrowIcon() }
 
         // Clear button (long press)
         Box(
@@ -162,7 +172,13 @@ fun FreeCanvasScreen(onBack: () -> Unit) {
                     }
                 ),
             contentAlignment = Alignment.Center
-        ) { Text("\uD83D\uDDD1\uFE0F", fontSize = 24.sp) }
+        ) {
+            Image(
+                painter = painterResource(R.drawable.ic_stamp_trash),
+                contentDescription = null,
+                modifier = Modifier.size(36.dp)
+            )
+        }
 
         // Bottom toolbar
         Row(
@@ -209,15 +225,21 @@ fun FreeCanvasScreen(onBack: () -> Unit) {
             Spacer(modifier = Modifier.width(8.dp))
 
             // Stamps
-            stampEmojis.forEach { emoji ->
+            stampIcons.forEach { icon ->
                 Box(
                     modifier = Modifier
-                        .size(40.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(if (selectedStamp == emoji) Color(0xFFE0E0E0) else Color.Transparent)
-                        .clickable { selectedStamp = if (selectedStamp == emoji) null else emoji },
+                        .size(60.dp)
+                        .clip(RoundedCornerShape(14.dp))
+                        .background(if (selectedStamp == icon) Color(0xFFE0E0E0) else Color.Transparent)
+                        .clickable { selectedStamp = if (selectedStamp == icon) null else icon },
                     contentAlignment = Alignment.Center
-                ) { Text(emoji, fontSize = 24.sp) }
+                ) {
+                    Image(
+                        painter = painterResource(icon),
+                        contentDescription = null,
+                        modifier = Modifier.size(50.dp)
+                    )
+                }
             }
         }
     }
