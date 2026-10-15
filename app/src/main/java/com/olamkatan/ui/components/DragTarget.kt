@@ -27,6 +27,7 @@ fun DragTarget(
     itemId: String,
     modifier: Modifier = Modifier,
     onDragEnd: (dropTargetId: String?) -> Unit = {},
+    onDragStart: () -> Unit = {},
     content: @Composable () -> Unit
 ) {
     val dragDropState = LocalDragDropState.current
@@ -54,6 +55,7 @@ fun DragTarget(
             .pointerInput(itemId) {
                 detectDragGestures(
                     onDragStart = {
+                        onDragStart()
                         isDragging = true
                         dragDropState.draggedItemId = itemId
                         dragDropState.isDragging = true

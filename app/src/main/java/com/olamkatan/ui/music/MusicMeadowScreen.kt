@@ -139,13 +139,17 @@ fun MusicMeadowScreen(onBack: () -> Unit, viewModel: MusicMeadowViewModel = view
 
     LaunchedEffect(Unit) {
         delay(500)
-        voicePlayer.play("voice_prompt_tap_the", language)
+        voicePlayer.play("voice_music_free", language)
     }
 
     // Show pattern animation
     LaunchedEffect(state.phase) {
+        if (state.phase == MusicPhase.PLAYER_TURN) voicePlayer.play("voice_music_your_turn", language)
+        if (state.phase == MusicPhase.SUCCESS) voicePlayer.playPraise(language)
         if (state.phase == MusicPhase.SHOW_PATTERN) {
-            delay(500)
+            // "Listen and remember!" first, then the pattern
+            voicePlayer.play("voice_music_listen", language)
+            delay(1800)
             for (noteIndex in state.pattern) {
                 viewModel.setHighlight(noteIndex)
                 sfxPlayer.play(Sfx.POP)

@@ -1,5 +1,6 @@
 package com.olamkatan.ui.animals.components
 
+import com.olamkatan.ui.common.LocalVoicePlayer
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -23,10 +24,11 @@ fun FoodItem(
     modifier: Modifier = Modifier
 ) {
     val language = LocalLanguage.current
-
+    val voicePlayer = LocalVoicePlayer.current
     DragTarget(
         itemId = food.id,
         onDragEnd = onDropped,
+        onDragStart = { voicePlayer.play("voice_food_${food.id}", language) },
         modifier = modifier
     ) {
         Column(

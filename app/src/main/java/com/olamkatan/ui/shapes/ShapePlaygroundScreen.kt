@@ -128,6 +128,7 @@ fun ShapePlaygroundScreen(
                             val shapeReaction = rememberReactionState(state.roundIndex, shape.id)
                             DragTarget(
                                 itemId = shape.id,
+                                onDragStart = { voicePlayer.play("voice_shape_${shape.id}", language) },
                                 onDragEnd = { dropTargetId ->
                                     if (dropTargetId == "target") {
                                         val correct = viewModel.onShapeDropped(shape.id)

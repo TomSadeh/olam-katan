@@ -225,7 +225,7 @@ fun WordGardenScreen(onBack: () -> Unit, viewModel: WordGardenViewModel = viewMo
                                     }
                                 } else {
                                     sfxPlayer.play(Sfx.WRONG_GENTLE)
-                                    voicePlayer.play("voice_prompt_try_again", language)
+                                    voicePlayer.playSequence(listOf("voice_letter_${letter.id}", "voice_prompt_try_again"), language)
                                     scope.launch { letterReaction.shake() }
                                 }
                             },

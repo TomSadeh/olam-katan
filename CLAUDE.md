@@ -16,7 +16,7 @@ See `olam-katan-claude-code-prompt.md` for the full game design document.
 - **Architecture:** Single-activity, MVVM. One `ViewModel` per mini-game screen.
 - **Navigation:** Compose Navigation (`NavHost` / `NavController`)
 - **Persistence:** Jetpack DataStore (Preferences) for progress, stars, stickers, difficulty levels, settings. No Room unless complexity demands it later.
-- **Audio:** Android `TextToSpeech` API for speech. `SoundPool` for short SFX. `MediaPlayer` for background music loops.
+- **Audio:** Pre-recorded voice lines (OGG in `res/raw`, generated offline with BlueTTS by `scripts/generate_voices.py`) played by `VoicePlayer`. `SoundPool` for short SFX. `MediaPlayer` for background music loops.
 - **Graphics:** Vector drawables + Compose `Canvas` for custom drawings and particle effects. No Lottie, no third-party animation libraries.
 - **Orientation:** Landscape only (locked in manifest).
 
@@ -26,7 +26,7 @@ See `olam-katan-claude-code-prompt.md` for the full game design document.
 
 ```
 app/src/main/java/com/olamkatan/
-├── MainActivity.kt              # Single activity, sets up Compose + TTS
+├── MainActivity.kt              # Single activity, sets up Compose + audio players
 ├── OlamKatanApp.kt              # Top-level composable, NavHost lives here
 ├── navigation/
 │   └── NavGraph.kt              # All routes defined here
@@ -49,7 +49,7 @@ app/src/main/java/com/olamkatan/
 │   ├── ProgressRepository.kt   # Stars, stickers, difficulty levels
 │   └── SettingsRepository.kt   # Language, sound, time limit
 ├── audio/
-│   ├── TtsManager.kt           # TextToSpeech wrapper (singleton, lifecycle-aware)
+│   ├── VoicePlayer.kt          # Plays recorded voice lines (gendered Hebrew variants, praise, personal lines)
 │   └── SfxPlayer.kt            # SoundPool wrapper for tap/success/error sounds
 └── theme/
     ├── Theme.kt
@@ -97,7 +97,6 @@ Build and reuse these across all islands:
 - All user-facing strings go through a bilingual content system, NOT Android string resources (since we switch language at runtime without recreating the activity).
 - Create a `BilingualText` data class: `data class BilingualText(val he: String, val en: String)`. Access via a `currentLanguage` state.
 - Layout direction switches with language: wrap content in `CompositionLocalProvider(LocalLayoutDirection provides if (isHebrew) LayoutDirection.Rtl else LayoutDirection.Ltr)`.
-- TTS locale switches with language: `ttsManager.setLanguage(if (isHebrew) Locale("he", "IL") else Locale.US)`.
 
 ### Drag and Drop
 
@@ -117,8 +116,9 @@ Build and reuse these across all islands:
 
 ### Audio
 
-- `TtsManager` is a singleton scoped to `Application`. Initialize in `onCreate`, shutdown in `onDestroy`.
-- Queue TTS utterances with `TextToSpeech.QUEUE_FLUSH` for immediate speech, `QUEUE_ADD` for sequences (counting: "one… two… three…").
+- All speech is recorded: add a line to `scripts/generate_voices.py`, generate it, then run `scripts/check_voices.py` to confirm nothing the app plays is missing. Play with `voicePlayer.play(key)` or `playSequence(keys)` for sequences (counting: "one… two… three…").
+- Lines that address the child come as `_he_f` / `_he_m` files; `VoicePlayer` picks the one matching the gender setting.
+- Personal lines with the child's name (`voice_*_name*`) are git-ignored and optional; use `voicePlayer.personalKey(...)` / `playPraise(...)`, which fall back to generic lines.
 - `SfxPlayer` uses `SoundPool` with max 6 streams. Preload all SFX on app start. Keep the pool small (<20 sounds total).
 - Background music via `MediaPlayer` with `isLooping = true`. Fade out on pause/stop.
 - Respect settings: check `SettingsRepository` before playing any audio.

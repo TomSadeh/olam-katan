@@ -9,12 +9,10 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.olamkatan.audio.MusicPlayer
 import com.olamkatan.audio.SfxPlayer
-import com.olamkatan.audio.TtsManager
 import com.olamkatan.audio.VoicePlayer
 
 class MainActivity : ComponentActivity() {
 
-    private lateinit var ttsManager: TtsManager
     private lateinit var sfxPlayer: SfxPlayer
     private lateinit var musicPlayer: MusicPlayer
     private lateinit var voicePlayer: VoicePlayer
@@ -23,7 +21,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        ttsManager = TtsManager(this)
         sfxPlayer = SfxPlayer(this)
         musicPlayer = MusicPlayer(this)
         voicePlayer = VoicePlayer(this)
@@ -39,7 +36,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             OlamKatanApp(
-                ttsManager = ttsManager,
                 sfxPlayer = sfxPlayer,
                 musicPlayer = musicPlayer,
                 voicePlayer = voicePlayer,
@@ -61,7 +57,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        ttsManager.shutdown()
         sfxPlayer.release()
         musicPlayer.release()
         voicePlayer.release()

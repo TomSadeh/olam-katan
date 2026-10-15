@@ -31,6 +31,8 @@ TEMPLATE_SOURCES = {
     "voice_table_": "PlaceSetting",
     "voice_tidy_": "TidyItem",
     "voice_sticker_": "StickerDef",
+    "voice_food_": "FoodDef",
+    "voice_bedtime_": "BedtimeStep",
     "voice_number_": "CountingRound",  # ids are 1..max targetNumber
 }
 

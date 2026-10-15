@@ -114,7 +114,7 @@ fun BedtimeRoutineScreen(onBack: () -> Unit, viewModel: BedtimeRoutineViewModel 
     LaunchedEffect(state.currentStep) {
         if (!state.isComplete && state.currentStep < bedtimeSteps.size) {
             delay(500)
-            voicePlayer.play("voice_prompt_good_night", language)
+            voicePlayer.play("voice_bedtime_${bedtimeSteps[state.currentStep].id}", language)
         }
     }
 

@@ -130,7 +130,7 @@ fun ColorSplashScreen(
                                 }
                             } else {
                                 sfxPlayer.play(Sfx.WRONG_GENTLE)
-                                voicePlayer.play("voice_prompt_try_again", language)
+                                voicePlayer.playSequence(listOf("voice_color_${color.id}", "voice_prompt_try_again"), language)
                                 scope.launch { blobReaction.shake() }
                             }
                         }

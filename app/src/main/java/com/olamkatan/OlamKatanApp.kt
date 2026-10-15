@@ -19,7 +19,6 @@ import androidx.navigation.compose.rememberNavController
 import com.olamkatan.audio.MusicPlayer
 import com.olamkatan.audio.Sfx
 import com.olamkatan.audio.SfxPlayer
-import com.olamkatan.audio.TtsManager
 import com.olamkatan.audio.VoicePlayer
 import com.olamkatan.data.ProgressRepository
 import com.olamkatan.data.SettingsRepository
@@ -32,14 +31,12 @@ import com.olamkatan.ui.common.LocalLanguage
 import com.olamkatan.ui.common.LocalGender
 import com.olamkatan.ui.common.LocalMusicPlayer
 import com.olamkatan.ui.common.LocalSfxPlayer
-import com.olamkatan.ui.common.LocalTtsManager
 import com.olamkatan.ui.common.LocalVoicePlayer
 import com.olamkatan.ui.components.TimeLimitOverlay
 import kotlinx.coroutines.delay
 
 @Composable
 fun OlamKatanApp(
-    ttsManager: TtsManager,
     sfxPlayer: SfxPlayer,
     musicPlayer: MusicPlayer,
     voicePlayer: VoicePlayer,
@@ -61,13 +58,8 @@ fun OlamKatanApp(
         musicPlayer.play(R.raw.music_hub)
     }
 
-    LaunchedEffect(language) {
-        ttsManager.setLanguage(language)
-    }
-
     LaunchedEffect(settings.soundEnabled) {
         sfxPlayer.enabled = settings.soundEnabled
-        ttsManager.enabled = settings.soundEnabled
         voicePlayer.enabled = settings.soundEnabled
     }
 
@@ -104,7 +96,6 @@ fun OlamKatanApp(
             LocalLanguage provides language,
             LocalGender provides settings.gender,
             LocalAppSettings provides settings,
-            LocalTtsManager provides ttsManager,
             LocalSfxPlayer provides sfxPlayer,
             LocalMusicPlayer provides musicPlayer,
             LocalVoicePlayer provides voicePlayer,

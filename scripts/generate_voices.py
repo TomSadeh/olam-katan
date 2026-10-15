@@ -218,6 +218,18 @@ voice_lines = [
     ("voice_sticker_diamond", "Diamond", "זה יהלום."),
     ("voice_sticker_unicorn", "Unicorn", "זה חד קרן."),
 
+    # --- Bedtime steps ---
+    ("voice_bedtime_pajamas", "Let's put on pajamas!", "נִלְבַּשׁ פִּיגָ׳מָה!"),
+    ("voice_bedtime_brush", "Let's brush our teeth!", "נְצַחְצֵחַ שִׁנַּיִם!"),
+    ("voice_bedtime_teddy", "Let's put teddy in bed!", "נָשִׂים אֶת הַדֻּבִּי בַּמִּטָּה!"),
+    ("voice_bedtime_light", "Let's turn off the light!", "נְכַבֶּה אֶת הָאוֹר!"),
+    ("voice_bedtime_stars", "Stars in the sky! Good night!", "כּוֹכָבִים בַּשָּׁמַיִם! לַיְלָה טוֹב!"),
+
+    # --- Music Meadow ---
+    ("voice_music_free", "Tap the instruments and play!", ("תִּלְחֲצִי עַל הַכֵּלִים וּתְנַגְּנִי!", "תִּלְחַץ עַל הַכֵּלִים וּתְנַגֵּן!")),
+    ("voice_music_listen", "Listen and remember!", ("תַּקְשִׁיבִי וְתִזְכְּרִי!", "תַּקְשִׁיב וְתִזְכֹּר!")),
+    ("voice_music_your_turn", "Your turn!", ("עַכְשָׁיו תּוֹרֵךְ!", "עַכְשָׁיו תּוֹרְךָ!")),
+
     # --- Praise (VoicePlayer picks one at random after a right answer) ---
     ("voice_praise_1", "Yay!", "יֵשׁ!"),
     ("voice_praise_2", "Wonderful!", "יוֹפִי!"),
