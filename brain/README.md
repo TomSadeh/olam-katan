@@ -33,7 +33,9 @@ tablet ──Wi-Fi──▶ doorbell.py :8790 ──starts on demand──▶ ll
    C:/Users/user/Documents/olam-brain/.venv/Scripts/pip install "C:/Users/user/Documents/Reading Aloud/BlueTTS" -r brain/requirements.txt
    ```
    Then download [ivrit-ai/whisper-large-v3-turbo-ct2](https://huggingface.co/ivrit-ai/whisper-large-v3-turbo-ct2)
-   into `C:/Users/user/Documents/olam-brain/models/whisper-ivrit-turbo`. BlueTTS's model files
+   into `C:/Users/user/Documents/olam-brain/models/whisper-ivrit-turbo`, and for English
+   [mobiuslabsgmbh/faster-whisper-large-v3-turbo](https://huggingface.co/mobiuslabsgmbh/faster-whisper-large-v3-turbo)
+   into `C:/Users/user/Documents/olam-brain/models/whisper-large-v3-turbo`. BlueTTS's model files
    are read from `bluetts_dir`. Whisper runs on the GPU when `whisper_min_free_vram_mb`
    is free, otherwise on the CPU. Gemma and Whisper together use about 5.6 GB of VRAM.
 3. Create `brain/config.json`. It's git-ignored, so the child's name stays out of the repo,

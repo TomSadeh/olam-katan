@@ -14,10 +14,12 @@
   "mmproj": "C:/Users/user/Documents/olam-brain/models/mmproj-gemma-4-E4B-F16.gguf",
   "brain_python": "C:/Users/user/Documents/olam-brain/.venv/Scripts/python.exe",
   "whisper_model": "C:/Users/user/Documents/olam-brain/models/whisper-ivrit-turbo",
+  "whisper_model_en": "C:/Users/user/Documents/olam-brain/models/whisper-large-v3-turbo",
   "whisper_min_free_vram_mb": 2000,
   "bluetts_dir": "C:/Users/user/Documents/Reading Aloud/BlueTTS",
   "voice": "noa",
   "companion_name": "פוקי",
+  "companion_name_en": "Puki",
   "child_name": "",
   "child_gender": "girl"
 }
