@@ -46,22 +46,44 @@ tablet ──Wi-Fi──▶ doorbell.py :8790 ──starts on demand──▶ ll
    ```powershell
    New-NetFirewallRule -DisplayName "Olam Katan companion" -Direction Inbound -Protocol TCP -LocalPort 8790 -Profile Private -Action Allow
    ```
-   Your Wi-Fi network must be set to *Private* in Windows network settings.
+   Your Wi-Fi must be set to *Private* in Windows network settings. Don't let Python itself
+   through the firewall: if Windows asks when the doorbell first starts, choose **Cancel**,
+   so the rule above (port 8790, home networks only) is the only way in, and the PC stays
+   closed on public Wi-Fi.
 5. Start it automatically at login. Put a shortcut in `shell:startup` with this target:
    ```
    pythonw.exe "C:\Users\user\Documents\olam-katan\brain\doorbell.py"
    ```
 6. In the app, go to parent settings (long-press the gear). Under **התוכי פוקי**, set the
-   PC's address, for example `192.168.1.151:8790`. A DHCP reservation in the router keeps
-   that address from changing.
+   PC's address, for example `192.168.1.151:8790`, and the [pairing code](#pairing-code).
+   A DHCP reservation in the router keeps that address from changing.
+
+## Pairing code
+
+The doorbell answers only requests that carry its **pairing code**, so another device on
+the network (a guest's phone, a smart TV) can't make Puki talk or send it recordings.
+
+- The code is made the first time the doorbell starts, printed in its console
+  (`pairing code: K7M2-QX9P`), and kept in `brain/pairing_code.txt` (git-ignored). With
+  `pythonw` there's no console, so open that file.
+- Type it once in the app's parent settings, under the PC address. Case and the dash don't
+  matter. Below the field, the app shows whether it's connected, the code is wrong, or the
+  PC can't be found.
+- Wrong codes are answered after a 1-second delay, and an address that sends 10 wrong codes
+  within 10 minutes is shut out for 15 minutes.
+- `python doorbell.py --new-code` makes a new code, for example if it leaked. Every tablet
+  then needs the new code.
+- The code travels unencrypted over the home Wi-Fi (plain HTTP). It keeps strangers'
+  devices out; it isn't meant to protect against someone who already controls your network.
 
 ## Trying it
 
 ```
 python brain/doorbell.py
-curl -X POST localhost:8790/wake
-curl localhost:8790/health        # wait for "ready"
+curl -X POST -H "X-Puki-Code: K7M2-QX9P" localhost:8790/wake      # your code from pairing_code.txt
+curl -H "X-Puki-Code: K7M2-QX9P" localhost:8790/health            # wait for "ready"
 ```
+Every request needs the `X-Puki-Code` header; without it the doorbell answers 401.
 `/say` takes `{"situation": "...", "lang": "he"}` and returns OGG audio, with the line
 itself in the `X-Text` header. `/listen?lang=he` takes a WAV recording and returns the
 same, plus `X-Heard` with what Whisper heard.
