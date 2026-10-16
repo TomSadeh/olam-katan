@@ -19,7 +19,7 @@ tablet ──Wi-Fi──▶ doorbell.py :8790 ──starts on demand──▶ ll
   Warming up takes about 30 s.
 - After `idle_minutes` without requests, both heavy processes exit and the VRAM is freed.
 
-## Quick setup (Windows)
+## Quick setup (Windows and Linux)
 
 With [Python 3.12](https://www.python.org/downloads/) installed (or `winget install Python.Python.3.12`),
 run this from the repo folder:
@@ -71,7 +71,20 @@ and opens a window that runs this installer there. Python comes along via
 After that it's just the tray icon, and it starts at login. It's unsigned, so Windows
 SmartScreen may warn the first time; the build prints its SHA-256 to compare against.
 
-The steps below are the same thing by hand (for Linux and macOS too).
+**On Linux** (tested for Ubuntu-like systems with an NVIDIA driver), run the same installer
+with the system's Python 3.10+ (`sudo apt install python3-venv` if `venv` is missing):
+
+```
+python3 brain/install.py
+```
+
+The differences: it downloads llama.cpp's Linux build (CUDA 12.8 or 13.4, matching the driver,
+or the CPU build), starts Puki at login as a systemd user service (`systemctl --user status
+puki`; `sudo loginctl enable-linger $USER` makes it start before anyone logs in), and if `ufw`
+is on, offers to open port 8790 to the home network only (with `sudo`). There's no tray icon
+on Linux; the dashboard works the same. `--update` and `--uninstall` work too.
+
+The steps below are the same thing by hand (for macOS too).
 
 ## Setup
 
