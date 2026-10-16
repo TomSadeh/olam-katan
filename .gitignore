@@ -33,3 +33,5 @@ __pycache__/
 
 # Kotlin compiler caches
 .kotlin/
+/brain/reports.jsonl
+safety_results.json
