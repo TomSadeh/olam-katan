@@ -244,6 +244,7 @@ fun SettingsScreen(
                         value = address,
                         onValueChange = { address = it },
                         label = { Text(BilingualText("כתובת המחשב", "PC address").resolve(language)) },
+                        placeholder = { Text("192.168.1.20:8790") },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri, imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = { settingsViewModel.setCompanionAddress(address) }),
@@ -342,6 +343,10 @@ fun SettingsScreen(
                     }
                 }
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            UpdateCard()
 
             Spacer(modifier = Modifier.height(32.dp))
 
