@@ -17,7 +17,9 @@ data class AppSettings(
     val companionEnabled: Boolean = true,
     val companionAddress: String = DEFAULT_COMPANION_ADDRESS,
     /** Shown by brain/doorbell.py on the PC; without it the PC won't answer. */
-    val companionCode: String = ""
+    val companionCode: String = "",
+    /** Puki thinks on this device instead of the PC (high-end phones, models downloaded). */
+    val brainOnDevice: Boolean = false
 )
 
 /** The family PC running brain/doorbell.py, on the home network. */
