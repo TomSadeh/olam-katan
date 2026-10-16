@@ -61,6 +61,9 @@ def load_config():
     if os.path.exists(local):
         with open(local, encoding="utf-8") as f:
             cfg.update(json.load(f))
+    # "~" in paths means the user's home folder
+    for key in ("llama_dir", "model", "mmproj", "brain_python", "whisper_model", "parakeet_model", "model_12b", "mmproj_12b", "bluetts_dir"):
+        cfg[key] = os.path.expanduser(cfg[key])
     return cfg
 
 
