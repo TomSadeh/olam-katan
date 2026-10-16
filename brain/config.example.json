@@ -21,6 +21,7 @@
   "parakeet_model": "C:/Users/user/Documents/olam-brain/models/parakeet-tdt-0.6b-v2-onnx",
   "whisper_min_free_vram_mb": 2000,
   "bluetts_dir": "C:/Users/user/Documents/Reading Aloud/BlueTTS",
+  "safety_threshold": 0.95,
   "voice": "noa",
   "companion_name": "פוקי",
   "companion_name_en": "Puki",
