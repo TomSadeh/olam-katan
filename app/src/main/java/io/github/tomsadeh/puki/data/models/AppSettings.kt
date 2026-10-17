@@ -21,7 +21,9 @@ data class AppSettings(
     /** The PC's HTTPS certificate fingerprint (hex); empty until scanned or learned. */
     val companionPin: String = "",
     /** Puki thinks on this device instead of the PC (high-end phones, models downloaded). */
-    val brainOnDevice: Boolean = false
+    val brainOnDevice: Boolean = false,
+    /** After a game's question, Puki listens a few seconds for the answer said out loud. */
+    val answersOutLoud: Boolean = true
 )
 
 /** The family PC running brain/doorbell.py, on the home network. */
