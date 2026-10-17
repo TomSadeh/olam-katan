@@ -209,6 +209,12 @@ no updater, no REQUEST_INSTALL_PACKAGES, via `BuildConfig.SELF_UPDATE` and `app/
 The Play bundle: `./gradlew bundlePlayRelease` (app/build/outputs/bundle/playRelease/app-play-release.aab).
 All builds are signed with the release key in `~/keys` (puki-release.jks + puki-signing.properties,
 never in git); without it they fall back to the debug key, which release.py won't publish.
+The PC brain's updates are signed the same way: release.py adds `puki-brain-<version>.zip` (the brain
+folder, with `brain/release.txt`) and its `.sig`, made with `~/keys/puki-update` (an ssh-keygen ed25519
+key, never in git), and `install.py --update` uses a release only if it verifies against
+`brain/update_signers`. Losing that key means installed PCs can't take signed updates any more; a new
+key reaches them only in a release signed with the old one. (Releases are published from puki; this
+repo has none, so a family PC updates with `git pull` and the installer itself.)
 
 ---
 
