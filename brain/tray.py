@@ -16,12 +16,12 @@ just the tray icon.
 import ctypes
 import os
 import shutil
-import socket
 import sys
 import threading
 import time
 import webbrowser
 
+from common import port_open
 from bundle import FILES as BRAIN_FILES  # the files the brain needs on disk (brain.py runs in its own Python)
 
 FROZEN = getattr(sys, "frozen", False)
@@ -32,12 +32,6 @@ DASHBOARD = "http://127.0.0.1:8793"
 
 def message(text, error=False):
     ctypes.windll.user32.MessageBoxW(0, text, "Puki", 0x10 if error else 0x40)
-
-
-def port_open(port):
-    with socket.socket() as s:
-        s.settimeout(0.5)
-        return s.connect_ex(("127.0.0.1", port)) == 0
 
 
 def home():

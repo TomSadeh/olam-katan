@@ -22,6 +22,7 @@
   "whisper_min_free_vram_mb": 2000,
   "bluetts_dir": "C:/Users/user/Documents/Reading Aloud/BlueTTS",
   "safety_threshold": 0.8,
+  "log_text": false,
   "voice": "noa",
   "companion_name": "פוקי",
   "companion_name_en": "Puki",
