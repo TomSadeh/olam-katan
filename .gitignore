@@ -35,3 +35,6 @@ __pycache__/
 .kotlin/
 /brain/reports.jsonl
 safety_results.json
+# Puki's line packs (lines may say the child's name)
+/brain/pack.json
+/brain/pack/
