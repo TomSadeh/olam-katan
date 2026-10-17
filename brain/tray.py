@@ -57,6 +57,20 @@ def prepare():
     return brain_dir
 
 
+def build_time(stamp):
+    """When a build was made, from its build.txt stamp ("<revision> YYYY-MM-DD HH:MM"), as text
+    that sorts by time; "" if the stamp has no date."""
+    parts = stamp.split()
+    return " ".join(parts[-2:]) if len(parts) >= 3 else ""
+
+
+def is_older_build(brain_dir):
+    """True if this Puki.exe was built before the build already in [brain_dir]: running it
+    would put older files (and an older update key and pins) over a newer install."""
+    mine, there = build_time(read(os.path.join(BUNDLE, "build.txt"))), build_time(read(os.path.join(brain_dir, "build.txt")))
+    return bool(mine and there) and mine < there
+
+
 def read(path):
     try:
         with open(path, encoding="utf-8") as f:
@@ -152,6 +166,10 @@ def main():
     if os.name != "nt":
         print("On Linux, Puki runs as a service (set up by  python3 brain/install.py); there's no tray icon.")
         print(f"The dashboard is at {DASHBOARD}, and  systemctl --user status puki  shows how it's doing.")
+        return
+    if FROZEN and is_older_build(os.path.join(home(), "brain")):
+        message("This Puki.exe is older than the Puki on this PC, so it won't replace it. "
+                "Open the newer Puki.exe (or download the latest one).", error=True)
         return
     brain_dir = prepare()
     if port_open(PORT):
