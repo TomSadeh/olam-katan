@@ -27,7 +27,7 @@ __pycache__/
 # Release APKs (scripts/release.py)
 /dist/
 
-# whisper.cpp source and build folders (native/whisper/build.py)
+# Left over from the whisper.cpp build (the ears before kol-stream)
 /native/whisper/.whisper.cpp/
 /native/whisper/.build/
 
