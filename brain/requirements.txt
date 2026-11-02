@@ -1,5 +1,5 @@
 # Python packages for brain.py (in its own virtualenv, see README.md)
-# BlueTTS itself: pip install "C:/Users/user/Documents/Reading Aloud/BlueTTS"
+# BlueTTS itself: pip install ~/puki-brain/BlueTTS
 faster-whisper==1.2.1
 nvidia-cublas-cu12
 nvidia-cudnn-cu12==9.*

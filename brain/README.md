@@ -1,5 +1,29 @@
 # פוקי's brain (companion server)
 
+> **Retired in 0.9.0.** Puki's brain now runs on the device itself (parent settings, **Puki on
+> this device**), and the app no longer talks to a PC. This folder takes no new features. It is
+> kept only because `safety.py`, `persona.py` and `pronunciation.tsv` are the source that
+> `scripts/sync_safety_kt.py` (for the app's `Safety.kt`) uses.
+>
+> **If your family used the PC brain:** update the app, turn on **Puki on this device**, then
+> remove the PC program and its models (about 10 GB):
+>
+> - **Puki.exe (Windows):** right-click Puki's tray icon (behind the **^** arrow if you don't see
+>   it), choose **Uninstall Puki...**, and answer yes to each part. Then delete Puki.exe.
+> - **Installed with the installer:** `python brain\install.py --uninstall` on Windows, or
+>   `python3 brain/install.py --uninstall` on Linux (add `--dir <folder>` if you installed it
+>   somewhere other than `~/puki-brain`). It stops Puki and asks before removing each part: the
+>   login shortcut (on Linux, the `puki` systemd user service), the firewall rule (on Linux, the
+>   `ufw` rule for port 8790), the models, llama.cpp, BlueTTS and the Python environment, and
+>   your settings, pairing code and certificate.
+> - **Set up by hand (the steps below):** quit Puki (end `pythonw.exe`); delete the shortcut to
+>   `doorbell.py` from `shell:startup`; in an administrator PowerShell, run
+>   `Remove-NetFirewallRule -DisplayName "Olam Katan companion"` (or `"Puki companion"`, the
+>   installer's name for it); then delete the folder it ran from (for example `~/puki-brain`)
+>   and `brain/config.json`.
+>
+> The rest of this page describes the old PC brain, for reference.
+
 The parrot in the games gets its words from the family PC: Gemma 4 E4B writes a
 short line about what just happened, and BlueTTS speaks it with the Noa voice.
 Holding the parrot records the child; ivrit.ai's Hebrew-tuned Whisper transcribes
@@ -112,20 +136,20 @@ The steps below are the same thing by hand (for macOS too).
 ## Setup
 
 1. Download [llama.cpp](https://github.com/ggml-org/llama.cpp/releases) (Windows CUDA build
-   plus the matching `cudart` zip) into `C:/Users/user/Documents/olam-brain/llama`, and
+   plus the matching `cudart` zip) into `~/puki-brain/llama`, and
    `gemma-4-E4B-it-Q4_0.gguf` from
    [unsloth/gemma-4-E4B-it-GGUF](https://huggingface.co/unsloth/gemma-4-E4B-it-GGUF) into
-   `C:/Users/user/Documents/olam-brain/models`. You can change these paths in the config.
-2. A separate virtualenv for brain.py (kept apart from BlueTTS's own, so the read-aloud
-   app is never affected), at the path set by `brain_python`:
+   `~/puki-brain/models`. You can change these paths in the config.
+2. A separate virtualenv for brain.py (kept apart from any other BlueTTS environment), at
+   the path set by `brain_python`:
    ```
-   python -m venv C:/Users/user/Documents/olam-brain/.venv
-   C:/Users/user/Documents/olam-brain/.venv/Scripts/pip install "C:/Users/user/Documents/Reading Aloud/BlueTTS" -r brain/requirements.txt
+   python -m venv ~/puki-brain/.venv
+   ~/puki-brain/.venv/Scripts/pip install ~/puki-brain/BlueTTS -r brain/requirements.txt
    ```
    Then download [ivrit-ai/whisper-large-v3-turbo-ct2](https://huggingface.co/ivrit-ai/whisper-large-v3-turbo-ct2)
-   into `C:/Users/user/Documents/olam-brain/models/whisper-ivrit-turbo`, and for English
+   into `~/puki-brain/models/whisper-ivrit-turbo`, and for English
    `encoder-model.int8.onnx`, `decoder_joint-model.int8.onnx`, `nemo128.onnx`, `vocab.txt` and `config.json` from [istupakov/parakeet-tdt-0.6b-v2-onnx](https://huggingface.co/istupakov/parakeet-tdt-0.6b-v2-onnx)
-   into `C:/Users/user/Documents/olam-brain/models/parakeet-tdt-0.6b-v2-onnx` (Parakeet, on the CPU). BlueTTS's model files
+   into `~/puki-brain/models/parakeet-tdt-0.6b-v2-onnx` (Parakeet, on the CPU). BlueTTS's model files
    are read from `bluetts_dir`. Whisper runs on the GPU when `whisper_min_free_vram_mb`
    is free, otherwise on the CPU. Gemma and Whisper together use about 5.6 GB of VRAM.
 3. Create `brain/config.json`. It's git-ignored, so the child's name stays out of the repo,
@@ -144,10 +168,10 @@ The steps below are the same thing by hand (for macOS too).
    closed on public Wi-Fi.
 5. Start it automatically at login. Put a shortcut in `shell:startup` with this target:
    ```
-   pythonw.exe "C:\Users\user\Documents\olam-katan\brain\doorbell.py"
+   pythonw.exe "C:\path\to\olam-katan\brain\doorbell.py"
    ```
 6. In the app, go to parent settings (long-press the gear). Under **התוכי פוקי**, set the
-   PC's address, for example `192.168.1.151:8790`, and the [pairing code](#pairing-code).
+   PC's address, for example `192.168.1.20:8790`, and the [pairing code](#pairing-code).
    A DHCP reservation in the router keeps that address from changing.
 
 ## Pairing code
